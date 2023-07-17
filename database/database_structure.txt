@@ -1,0 +1,81 @@
+Invoice Stainless Bali
+
+users
+- id
+- name
+- email
+- role
+- created_at
+- updated_at
+
+customers
+- id
+- name
+- gender
+- address
+- phone_number
+- role
+- created_at
+- updated_at
+
+
+items
+- id
+- description
+- image
+- brand
+- model
+- width
+- depth
+- height
+- price
+- qty
+- status
+- created_at
+- updated_at
+
+transactions
+- id
+- user_id
+- handled_by
+- date
+- total_price
+- discount_nominal
+- discount_percentage
+- payment_terms
+- status
+- note
+- created_at
+- updated_at
+
+transaction_breakdowns
+- id
+- transaction_id
+- breakdown_name
+- created_at
+- updated_at
+
+transaction_items
+- id
+- transaction_breakdown_id
+- item_id
+- description
+- image
+- brand
+- model
+- width
+- depth
+- height
+- price
+- qty
+- created_at
+- updated_at
+
+payments
+- id
+- transaction_id
+- amount
+- term_no
+- status
+- created_at
+- updated_at
