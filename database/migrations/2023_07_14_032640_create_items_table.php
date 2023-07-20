@@ -17,11 +17,11 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('brand')->nullable();
             $table->string('model')->nullable();
-            $table->double('width');
-            $table->double('depth');
-            $table->double('height');
-            $table->double('price');
-            $table->integer('qty');
+            $table->double('width')->default(0);
+            $table->double('depth')->default(0);
+            $table->double('height')->default(0);
+            $table->double('price')->default(0);
+            $table->integer('qty')->default(0);
             $table->string('status');
             $table->timestamps();
         });

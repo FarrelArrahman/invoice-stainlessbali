@@ -13,6 +13,18 @@ return new class extends Migration
     {
         Schema::create('transaction_items', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('transaction_breakdown_id')->constrained('transaction_breakdowns');
+            $table->foreignId('item_id')->nullable()->constrained('items');
+            $table->text('description')->nullable();
+            $table->string('image')->nullable();
+            $table->string('brand')->nullable();
+            $table->string('model')->nullable();
+            $table->double('width')->default(0);
+            $table->double('depth')->default(0);
+            $table->double('height')->default(0);
+            $table->double('price')->default(0);
+            $table->integer('qty')->default(0);
+            $table->string('status');
             $table->timestamps();
         });
     }

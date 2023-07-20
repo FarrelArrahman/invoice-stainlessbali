@@ -45,4 +45,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'user_id');
+    }
+
+    public function handledTransactions()
+    {
+        return $this->hasMany(TransactionBreakdown::class, 'handled_by');
+    }
 }

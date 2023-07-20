@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('transaction_breakdowns', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('transaction_id')->constrained('transactions');
+            $table->string('breakdown_name');
             $table->timestamps();
         });
     }

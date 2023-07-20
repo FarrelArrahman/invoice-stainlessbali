@@ -27,7 +27,14 @@
 
     @include('layout.sidebar')
 
-    @yield('content')
+    <main class="content">
+
+        @include('layout.navbar')
+
+        @yield('content')
+
+        @include('layout.footer')
+    </main>
 
     @include('layout.scripts')
 

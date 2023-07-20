@@ -13,20 +13,19 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->string('code');
             $table->foreignId('user_id')->constrained('users');
+            $table->unsignedBigInteger('handled_by');
             $table->foreign('handled_by', 'transaction_admin_foreign')
                 ->references('id')
                 ->on('users')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->string('image')->nullable();
-            $table->string('brand')->nullable();
-            $table->string('model')->nullable();
-            $table->double('width');
-            $table->double('depth');
-            $table->double('height');
-            $table->double('price');
-            $table->integer('qty');
+            $table->datetime('date')->nullable();
+            $table->double('total_price')->default(0);
+            $table->double('discount_nominal')->default(0);
+            $table->double('discount_percentage')->default(0);
+            $table->integer('payment_terms')->default(2);
             $table->string('status');
             $table->text('note')->nullable();
             $table->timestamps();

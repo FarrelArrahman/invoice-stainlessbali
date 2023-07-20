@@ -41,6 +41,12 @@
     <!-- Volt CSS -->
     <link type="text/css" href="{{ asset('css/volt.css') }}" rel="stylesheet">
 
+    <!-- Datatables -->
+    <link href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css">
+
+    <!-- FontAwesome -->
+    <script src="https://use.fontawesome.com/b960bebf32.js"></script>
+
     <!-- NOTICE: You can use the _analytics.html partial to include production code specific code & trackers -->
 
 </head>

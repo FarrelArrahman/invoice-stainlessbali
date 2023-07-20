@@ -36,5 +36,10 @@
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 
+    <!-- Datatables -->
+    <script src="https://unpkg.com/vanilla-datatables@latest/dist/vanilla-dataTables.min.js" type="text/javascript"></script>
+
     <!-- Volt JS -->
     <script src="{{ asset('assets/js/volt.js') }}"></script>
+
+    @stack('custom-scripts')

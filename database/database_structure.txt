@@ -36,6 +36,7 @@ items
 
 transactions
 - id
+- code
 - user_id
 - handled_by
 - date
