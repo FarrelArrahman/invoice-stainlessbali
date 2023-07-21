@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\StatusEnum;
 use App\Models\Item;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
+use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
@@ -13,7 +15,10 @@ class ItemController extends Controller
      */
     public function index()
     {
-        return view('admin.items.index');
+        $items = Item::all();
+        return view('admin.items.index', [
+            'items' => $items
+        ]);
     }
 
     /**
@@ -21,7 +26,7 @@ class ItemController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.items.create');
     }
 
     /**
@@ -29,7 +34,23 @@ class ItemController extends Controller
      */
     public function store(StoreItemRequest $request)
     {
-        //
+        $data = [
+            'name' => $request->name,
+            'brand' => $request->brand ?? "*CUSTOM",
+            'model' => $request->model,
+            'width' => $request->width,
+            'depth' => $request->depth,
+            'height' => $request->height,
+            'price' => $request->price,
+            'status' => StatusEnum::Available,
+            'image' => $request->file('image')->store('public/items'),
+        ];
+
+        Item::create($data);
+
+        return to_route('items.index')
+            ->with('message', "Berhasil menambahkan item baru.")
+            ->with('status', 'success');
     }
 
     /**
@@ -45,7 +66,9 @@ class ItemController extends Controller
      */
     public function edit(Item $item)
     {
-        //
+        return view('admin.items.edit', [
+            'item' => $item
+        ]);
     }
 
     /**
@@ -53,7 +76,29 @@ class ItemController extends Controller
      */
     public function update(UpdateItemRequest $request, Item $item)
     {
-        //
+        $data = [
+            'name' => $request->name,
+            'brand' => $request->brand ?? "*CUSTOM",
+            'model' => $request->model,
+            'width' => $request->width,
+            'depth' => $request->depth,
+            'height' => $request->height,
+            'price' => $request->price,
+            'status' => StatusEnum::Available,
+        ];
+
+        if($request->hasFile('image')) {
+            if($item->image != "") {
+                Storage::delete($item->image);
+            }
+            $data['image'] = $request->file('image')->store('public/items');
+        }
+
+        $item->update($data);
+
+        return to_route('items.index')
+            ->with('message', "Berhasil memperbarui data item.")
+            ->with('status', 'success');
     }
 
     /**
@@ -61,6 +106,13 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        //
+        if($item->image != "") {
+            Storage::delete($item->image);
+        }
+
+        $item->delete();
+        return to_route('items.index')
+            ->with('message', "Berhasil menghapus data item.")
+            ->with('status', 'success');
     }
 }

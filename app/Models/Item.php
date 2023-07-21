@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\StatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +16,7 @@ class Item extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'description',
+        'name',
         'image',
         'brand',
         'model',
@@ -42,6 +43,6 @@ class Item extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        // 
+        'status' => StatusEnum::class
     ];
 }
