@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->string('code');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('customer_id')->constrained('customers');
             $table->unsignedBigInteger('handled_by');
             $table->foreign('handled_by', 'transaction_admin_foreign')
                 ->references('id')

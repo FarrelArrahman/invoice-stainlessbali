@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,3 +24,10 @@ Route::get('/dashboard', function () {
 })->name('dashboard');
 
 Route::resource('items', ItemController::class);
+Route::resource('transactions', TransactionController::class);
+
+// API
+Route::prefix('/api/v1')->group(function() {
+    Route::get('items', [ItemController::class, 'getItems'])->name('api.getItems');
+    Route::get('item/{item}', [ItemController::class, 'getItem'])->name('api.getItem');
+});

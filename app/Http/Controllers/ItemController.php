@@ -22,6 +22,19 @@ class ItemController extends Controller
     }
 
     /**
+     * Display a listing of the resource as JSON.
+     */
+    public function getItems()
+    {
+        $items = Item::all();
+        return response()->json([
+            'success' => true,
+            'message' => "Daftar item",
+            'data' => $items
+        ], 200);
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
@@ -106,10 +119,6 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        if($item->image != "") {
-            Storage::delete($item->image);
-        }
-
         $item->delete();
         return to_route('items.index')
             ->with('message', "Berhasil menghapus data item.")

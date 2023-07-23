@@ -46,7 +46,11 @@
 
     <!-- FontAwesome -->
     <script src="https://use.fontawesome.com/b960bebf32.js"></script>
+    
+    <!-- Nice Select2 -->
+    <link type="text/css" href="{{ asset('css/nice-select2.css') }}" rel="stylesheet">
 
     <!-- NOTICE: You can use the _analytics.html partial to include production code specific code & trackers -->
 
+    <style></style>
 </head>

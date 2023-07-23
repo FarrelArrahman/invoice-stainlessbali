@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use App\Enums\StatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Item extends Model
+class Customer extends Model
 {
     use HasFactory;
 
@@ -17,15 +16,9 @@ class Item extends Model
      */
     protected $fillable = [
         'name',
-        'image',
-        'brand',
-        'model',
-        'width',
-        'depth',
-        'height',
-        'price',
-        'qty',
-        'status',
+        'gender',
+        'address',
+        'phone_number',
     ];
 
     /**
@@ -43,16 +36,11 @@ class Item extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'status' => StatusEnum::class
+        // 
     ];
 
-    public function getDimensionAttribute()
+    public function transactions()
     {
-        return "{$this->width} x {$this->depth} x {$this->height}";
-    }
-
-    public function getFormattedPriceAttribute()
-    {
-        return "Rp. " . number_format($this->price, 0, '', '.');
+        return $this->hasMany(Transaction::class, 'customer_id');
     }
 }

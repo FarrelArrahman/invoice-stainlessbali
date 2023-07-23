@@ -20,10 +20,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'email_verified_at',
         'password',
-        'gender',
-        'address',
-        'phone_number',
+        'role',
     ];
 
     /**
@@ -45,11 +44,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    public function transactions()
-    {
-        return $this->hasMany(Transaction::class, 'user_id');
-    }
 
     public function handledTransactions()
     {
