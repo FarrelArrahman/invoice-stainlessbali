@@ -238,7 +238,7 @@ Transaksi
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="add-new-form">
+                <form id="add-new-form" runat="server">
                     @csrf
                     <div class="mb-3">
                         <label for="name">Nama</label>
@@ -246,7 +246,9 @@ Transaksi
                     </div>
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Foto</label>
-                        <input class="form-control" type="file" id="image" name="image">
+                        <br>
+                        <img width="128" id="add-new-image-preview" class="d-none">
+                        <input class="form-control" type="file" id="add-new-image-input" name="image">
                     </div>
                     <div class="mb-3">
                         <label for="brand" aria-describedby="brandHelp">Brand</label>
@@ -306,6 +308,8 @@ Transaksi
     let itemSelected = false
     
     const addBreakdown = document.getElementById('addBreakdown')
+    const addNewImageInput = document.getElementById('add-new-image-input')
+    const addNewImagePreview = document.getElementById('add-new-image-preview')
     const addItemToBreakdown = document.querySelectorAll('.add-to-breakdown')
     const itemQty = document.querySelectorAll('.item-qty')
     const breakdowns = document.getElementById('breakdowns')
@@ -394,6 +398,9 @@ Transaksi
 
     breakdowns.addEventListener('keyup', function(e) {
         if(e.target.classList.contains('item-qty')) {
+            if(e.target.value == "" || e.target.value < 1) {
+                e.target.value = 1
+            }
             let totalPrice = e.target.value * e.target.getAttribute('data-price')
             const totalPriceText = breakdowns.querySelector(e.target.getAttribute('data-total-price'))
             totalPriceText.innerHTML = rupiahFormat.format(totalPrice)
@@ -463,7 +470,7 @@ Transaksi
             <th class="border-0 rounded-start">
                 <div class="row">
                     <div class="col-2">
-                        <button class="btn btn-sm btn-link text-danger remove-item" data-remove-item="${currentBreakdown}-item${++itemCounter}">
+                        <button id="item${itemCounter}-remove-button" class="btn btn-sm btn-link text-danger remove-item" data-remove-item="#${currentBreakdown}-item${itemCounter}">
                             <i class="fa fa-times"></i>
                         </button>
                     </div>
@@ -488,9 +495,11 @@ Transaksi
         `
 
         let table = breakdowns.querySelector('#' + currentBreakdown + '-table')
-        console.log('#' + currentBreakdown + '-table')
         table.appendChild(item)
-        console.log(table)
+
+        breakdowns.querySelector(`#item${itemCounter}-remove-button`).addEventListener('click', function (e) {
+            breakdowns.querySelector(this.getAttribute('data-remove-item')).remove()
+        })
     }
     
     addItemToBreakdown.forEach((item) => {
@@ -515,6 +524,15 @@ Transaksi
         niceSelect.clear()
     })
 
-    
+    addNewImageInput.onchange = e => {
+        const file = e.target.files[0]
+        if(file) {
+            addNewImagePreview.classList.remove('d-none')
+            addNewImagePreview.src = URL.createObjectURL(file)
+        } else {
+            addNewImagePreview.classList.add('d-none')
+            addNewImagePreview.src = ""
+        }
+    }
 </script>
 @endpush
