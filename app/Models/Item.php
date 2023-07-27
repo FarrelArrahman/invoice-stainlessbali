@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\StatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Item extends Model
 {
@@ -54,5 +55,10 @@ class Item extends Model
     public function getFormattedPriceAttribute()
     {
         return "Rp. " . number_format($this->price, 0, '', '.');
+    }
+
+    public function getImageRealPathAttribute()
+    {
+        return Storage::url($this->image);
     }
 }

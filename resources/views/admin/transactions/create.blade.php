@@ -76,11 +76,12 @@ Transaksi
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="breakdown">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#breakdownCollapse" aria-expanded="false" aria-controls="breakdownCollapse">
-                                        <span class="breakdown-title">Breakdown #1</span>
+                                        <span class="breakdown-title" id="breakdown1-title">Breakdown #1</span>
                                     </button>
                                 </h2>
                                 <div id="breakdownCollapse" class="accordion-collapse collapse show" aria-labelledby="breakdown" data-bs-parent="#accordionBreakdown">
                                     <div class="accordion-body">
+                                        <label for="">Nama Breakdown</label>
                                         <input type="text" class="form-control w-100 my-2 breakdown-input" data-breakdown-title="breakdown1-title" data-breakdown-title-default="Breakdown #1" name="name" placeholder="Masukkan nama breakdown...">
                                         <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-manual" data-breakdown="breakdown1"><i class="fa fa-plus me-1"></i> Tambah Manual</button>
                                         <button class="select-item-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal-select-item" data-breakdown="breakdown1"><i class="fa fa-plus me-1"></i> Pilih Item</button>
@@ -94,13 +95,13 @@ Transaksi
                                                         <th width="25%" class="border-0 rounded-end text-end">Total</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
-                                                    @foreach($items as $item)
-                                                    <tr>
+                                                <tbody class="breakdown-table" id="breakdown1-table">
+                                                    <!-- @foreach($items as $item)
+                                                    <tr id="breakdown1-item{{ $loop->iteration }}">
                                                         <th class="border-0 rounded-start">
                                                             <div class="row">
                                                                 <div class="col-2">
-                                                                    <button class="btn btn-sm btn-link text-danger">
+                                                                    <button class="btn btn-sm btn-link text-danger remove-item" data-remove-item="#breakdown1-item{{ $loop->iteration }}">
                                                                         <i class="fa fa-times"></i>
                                                                     </button>
                                                                 </div>
@@ -122,7 +123,7 @@ Transaksi
                                                             {{ $item->formatted_price }}
                                                         </th>
                                                     </tr>
-                                                    @endforeach
+                                                    @endforeach -->
                                                 </tbody>
                                             </table>
                                         </div>
@@ -157,21 +158,31 @@ Transaksi
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('items.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="select-item-form">
                     @csrf
                     <div class="mb-3">
-                        <label for="items">Nama</label>
-                        <select name="items" id="a-select" class="select-item w-100">
-                            <option value=""></option>
+                        <label for="a-select" class="form-label">Nama</label>
+                        <select name="items" id="a-select" class="select-item w-100" placeholder="Pilih item...">
+                            <option value="" disabled selected>--- Pilih item ---</option>
                             @foreach($items as $item)
-                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            <option 
+                                value="{{ $item->id }}"
+                                data-image="{{ $item->image_real_path }}"
+                                data-brand="{{ $item->brand }}"
+                                data-model="{{ $item->model }}"
+                                data-width="{{ $item->width }}"
+                                data-depth="{{ $item->depth }}"
+                                data-height="{{ $item->height }}"
+                                data-price="{{ $item->price }}">{{ $item->name }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="item-detail d-none">
+                    <div id="item-detail" class="d-none">
                         <div class="mb-3">
-                            <label for="formFile" class="form-label">Foto</label>
-                            <input class="form-control" type="file" id="image" name="image">
+                            <label for="formFile" class="form-label mt-3">Foto</label>
+                            <br>
+                            <img class="d-none" width="128" id="image-preview" src="" alt="">
+                            <input class="form-control" type="file" id="input-file" name="image">
                         </div>
                         <div class="mb-3">
                             <label for="brand" aria-describedby="brandHelp">Brand</label>
@@ -211,7 +222,7 @@ Transaksi
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary">Tambah ke Breakdown</button>
+                <button type="button" id="select-existing-item-button" class="btn btn-secondary add-to-breakdown">Tambah ke Breakdown</button>
                 <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -226,7 +237,7 @@ Transaksi
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('items.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="add-new-form">
                     @csrf
                     <div class="mb-3">
                         <label for="name">Nama</label>
@@ -273,7 +284,7 @@ Transaksi
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary">Tambah ke Breakdown</button>
+                <button type="button" id="add-new-item-button" class="btn btn-secondary add-to-breakdown" data-bs-dismiss="modal">Tambah ke Breakdown</button>
                 <button type="button" class="btn btn-danger">Reset</button>
                 <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">Close</button>
             </div>
@@ -284,7 +295,7 @@ Transaksi
 
 @push('custom-scripts')
 <script type="text/javascript">
-    NiceSelect.bind(document.getElementById("a-select"), {
+    let niceSelect = NiceSelect.bind(document.getElementById("a-select"), {
         searchable: true
     })
 
@@ -295,6 +306,10 @@ Transaksi
     const breakdowns = document.getElementById('breakdowns')
     const breakdown = document.getElementById('accordionBreakdown')
     const inputTitle = document.querySelectorAll('.breakdown-input')
+    const inputFile = document.getElementById('input-file')
+    const imagePreview = document.getElementById('image-preview')
+    const itemSelect = document.getElementById('a-select')
+    const itemDetail = document.getElementById('item-detail')
 
     addBreakdown.addEventListener('click', function() {
         const clonedBreakdown = breakdown.cloneNode(true)
@@ -305,6 +320,7 @@ Transaksi
         clonedBreakdownTitle.innerHTML = 'Breakdown #' + counter
         
         const clonedBreakdownInput = clonedBreakdown.querySelector('.breakdown-input')
+        clonedBreakdownInput.value = ""
         clonedBreakdownInput.setAttribute('data-breakdown-title', 'breakdown' + counter + '-title')
         clonedBreakdownInput.setAttribute('data-breakdown-title-default', 'Breakdown #' + counter)
         
@@ -318,6 +334,9 @@ Transaksi
         const clonedBreakdownAccordionCollapse = clonedBreakdown.querySelector('.accordion-collapse')
         clonedBreakdownAccordionCollapse.setAttribute('id', 'breakdownCollapse' + counter)
         clonedBreakdownAccordionCollapse.setAttribute('data-bs-parent', '#accordionBreakdown' + counter)
+
+        const clonedBreakdownTable = clonedBreakdown.querySelector('.breakdown-table')
+        clonedBreakdownTable.replaceChildren()
         
         const deleteBreakdownButton = document.createElement("button")
         deleteBreakdownButton.setAttribute("class", "btn btn-danger deleteBreakdownButton")
@@ -335,23 +354,77 @@ Transaksi
         })
     })
 
+    inputTitle[0].addEventListener('keyup', e => {
+        const title = document.getElementById(e.target.getAttribute('data-breakdown-title'))
+        title.innerHTML = ! inputTitle[0].value || ! inputTitle[0].value.trim().length 
+            ? e.target.getAttribute('data-breakdown-title-default')
+            : inputTitle[0].value
+    })
+
     breakdowns.addEventListener('click', function(e) {
         if(e.target.classList.contains('deleteBreakdownButton')) {
             // alert(e.target.getAttribute('data-remove'))
-            deleteBreakdown(e.target.getAttribute('data-remove'))
-        }
-    })
-
-    let deleteBreakdown = (id) => {
-        const breakdown = document.querySelector(id)
-        breakdown.remove()
-    }
-
-    breakdowns.addEventListener('click', function(e) {
-        if(e.target.classList.contains('add-manual-button') || e.target.classList.contains('select-item-button')) {
+            deleteElement(e.target.getAttribute('data-remove'))
+        } else if(e.target.classList.contains('add-manual-button') || e.target.classList.contains('select-item-button')) {
             currentBreakdown = e.target.getAttribute('data-breakdown')
             console.log(currentBreakdown)
         }
+    })
+
+    itemSelect.onchange = function(e) {
+        if(! itemSelect.value || ! itemSelect.value.trim().length) {
+            showItemDetail(false)
+        } else {
+            showItemDetail(true)
+            setItemDetail(e.target.options[e.target.selectedIndex].dataset)
+        }
+    }
+
+    let showItemDetail = (toggle) => {
+        toggle ? itemDetail.classList.remove('d-none') : itemDetail.classList.add('d-none')
+    }
+
+    let setItemDetail = (data) => {
+        setImagePreview(data.image)
+        const selectItemForm = document.getElementById('select-item-form')
+        
+        if(Object.keys(data).length === 0 && data.constructor === Object) {
+            selectItemForm.reset()
+        } else {
+            const inputs = selectItemForm.elements
+            inputs.namedItem("brand").value = data.brand
+            inputs.namedItem("model").value = data.model
+            inputs.namedItem("width").value = data.width
+            inputs.namedItem("depth").value = data.depth
+            inputs.namedItem("height").value = data.height
+            inputs.namedItem("price").value = data.price
+        }
+    }
+
+    let setImagePreview = (image) => {
+        if(! image || ! image.trim().length) {
+            inputFile.classList.remove('d-none')
+
+            imagePreview.setAttribute('src', "")
+            imagePreview.classList.add('d-none')
+        } else {
+            inputFile.classList.add('d-none')
+    
+            imagePreview.setAttribute('src', image)
+            imagePreview.classList.remove('d-none')
+        }
+    }
+
+    let deleteElement = (id) => {
+        const element = document.querySelector(id)
+        element.remove()
+    }
+
+    var modalSelectItem = document.getElementById('modal-select-item')
+    modalSelectItem.addEventListener('hidden.bs.modal', function (event) {
+        showItemDetail(false)
+        setItemDetail({})
+        niceSelect.clear()
     })
 </script>
 @endpush
