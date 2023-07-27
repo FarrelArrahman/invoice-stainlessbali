@@ -84,7 +84,7 @@ Transaksi
                                         <label for="">Nama Breakdown</label>
                                         <input type="text" class="form-control w-100 my-2 breakdown-input" data-breakdown-title="breakdown1-title" data-breakdown-title-default="Breakdown #1" name="name" placeholder="Masukkan nama breakdown...">
                                         <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-manual" data-breakdown="breakdown1"><i class="fa fa-plus me-1"></i> Tambah Manual</button>
-                                        <button class="select-item-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal-select-item" data-breakdown="breakdown1"><i class="fa fa-plus me-1"></i> Pilih Item</button>
+                                        <button class="select-item-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal-select-item" data-breakdown="breakdown1"><i class="fa fa-list me-1"></i> Pilih Item</button>
                                         <span class="deleteBreakdownPlaceholder"></span>
                                         <div class="table-responsive">
                                             <table class="table table-centered mb-0 rounded">
@@ -162,7 +162,7 @@ Transaksi
                     @csrf
                     <div class="mb-3">
                         <label for="a-select" class="form-label">Nama</label>
-                        <select name="items" id="a-select" class="select-item w-100" placeholder="Pilih item...">
+                        <select name="name" id="a-select" class="select-item w-100" placeholder="Pilih item...">
                             <option value="" disabled selected>--- Pilih item ---</option>
                             @foreach($items as $item)
                             <option 
@@ -183,6 +183,7 @@ Transaksi
                             <br>
                             <img class="d-none" width="128" id="image-preview" src="" alt="">
                             <input class="form-control" type="file" id="input-file" name="image">
+                            <input type="hidden" name="image_path">
                         </div>
                         <div class="mb-3">
                             <label for="brand" aria-describedby="brandHelp">Brand</label>
@@ -222,7 +223,7 @@ Transaksi
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="select-existing-item-button" class="btn btn-secondary add-to-breakdown">Tambah ke Breakdown</button>
+                <button type="button" id="select-existing-item-button" class="btn btn-secondary add-to-breakdown disabled" data-bs-dismiss="modal">Tambah ke Breakdown</button>
                 <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -299,10 +300,14 @@ Transaksi
         searchable: true
     })
 
-    let counter = 1
+    let breakdownCounter = 1
+    let itemCounter = 1
     let currentBreakdown = "breakdown1"
+    let itemSelected = false
     
     const addBreakdown = document.getElementById('addBreakdown')
+    const addItemToBreakdown = document.querySelectorAll('.add-to-breakdown')
+    const itemQty = document.querySelectorAll('.item-qty')
     const breakdowns = document.getElementById('breakdowns')
     const breakdown = document.getElementById('accordionBreakdown')
     const inputTitle = document.querySelectorAll('.breakdown-input')
@@ -310,37 +315,50 @@ Transaksi
     const imagePreview = document.getElementById('image-preview')
     const itemSelect = document.getElementById('a-select')
     const itemDetail = document.getElementById('item-detail')
+    const addNewForm = document.getElementById('add-new-form')
+    const addNewItemButton = document.getElementById('add-new-item-button')
+    const selectItemForm = document.getElementById('select-item-form')
+    const selectExistingItemButton = document.getElementById('select-existing-item-button')
 
+    const rupiahFormat = new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        maximumFractionDigits: 0
+    });
+
+
+    // Add new breakdown upon clicking
     addBreakdown.addEventListener('click', function() {
         const clonedBreakdown = breakdown.cloneNode(true)
-        clonedBreakdown.id = 'accordionBreakdown' + ++counter
+        clonedBreakdown.id = 'accordionBreakdown' + ++breakdownCounter
         
         const clonedBreakdownTitle = clonedBreakdown.querySelector('.breakdown-title')
-        clonedBreakdownTitle.setAttribute('id', 'breakdown' + counter + '-title')
-        clonedBreakdownTitle.innerHTML = 'Breakdown #' + counter
+        clonedBreakdownTitle.setAttribute('id', 'breakdown' + breakdownCounter + '-title')
+        clonedBreakdownTitle.innerHTML = 'Breakdown #' + breakdownCounter
         
         const clonedBreakdownInput = clonedBreakdown.querySelector('.breakdown-input')
         clonedBreakdownInput.value = ""
-        clonedBreakdownInput.setAttribute('data-breakdown-title', 'breakdown' + counter + '-title')
-        clonedBreakdownInput.setAttribute('data-breakdown-title-default', 'Breakdown #' + counter)
+        clonedBreakdownInput.setAttribute('data-breakdown-title', 'breakdown' + breakdownCounter + '-title')
+        clonedBreakdownInput.setAttribute('data-breakdown-title-default', 'Breakdown #' + breakdownCounter)
         
-        clonedBreakdown.querySelector('.add-manual-button').setAttribute('data-breakdown', 'breakdown' + counter)
-        clonedBreakdown.querySelector('.select-item-button').setAttribute('data-breakdown', 'breakdown' + counter)
+        clonedBreakdown.querySelector('.add-manual-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
+        clonedBreakdown.querySelector('.select-item-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
 
         const clonedBreakdownAccordionButton = clonedBreakdown.querySelector('.accordion-button')
-        clonedBreakdownAccordionButton.setAttribute('data-bs-target', '#breakdownCollapse' + counter)
-        clonedBreakdownAccordionButton.setAttribute('aria-controls', '#breakdownCollapse' + counter)
+        clonedBreakdownAccordionButton.setAttribute('data-bs-target', '#breakdownCollapse' + breakdownCounter)
+        clonedBreakdownAccordionButton.setAttribute('aria-controls', '#breakdownCollapse' + breakdownCounter)
 
         const clonedBreakdownAccordionCollapse = clonedBreakdown.querySelector('.accordion-collapse')
-        clonedBreakdownAccordionCollapse.setAttribute('id', 'breakdownCollapse' + counter)
-        clonedBreakdownAccordionCollapse.setAttribute('data-bs-parent', '#accordionBreakdown' + counter)
+        clonedBreakdownAccordionCollapse.setAttribute('id', 'breakdownCollapse' + breakdownCounter)
+        clonedBreakdownAccordionCollapse.setAttribute('data-bs-parent', '#accordionBreakdown' + breakdownCounter)
 
         const clonedBreakdownTable = clonedBreakdown.querySelector('.breakdown-table')
         clonedBreakdownTable.replaceChildren()
+        clonedBreakdownTable.setAttribute('id', 'breakdown' + breakdownCounter + '-table')
         
         const deleteBreakdownButton = document.createElement("button")
         deleteBreakdownButton.setAttribute("class", "btn btn-danger deleteBreakdownButton")
-        deleteBreakdownButton.setAttribute("data-remove", `#accordionBreakdown${counter}`)
+        deleteBreakdownButton.setAttribute("data-remove", `#accordionBreakdown${breakdownCounter}`)
         deleteBreakdownButton.innerHTML = "Hapus Breakdown"
 
         clonedBreakdown.querySelector('.deleteBreakdownPlaceholder').appendChild(deleteBreakdownButton)
@@ -354,6 +372,7 @@ Transaksi
         })
     })
 
+    // Change breakdown title dynamically
     inputTitle[0].addEventListener('keyup', e => {
         const title = document.getElementById(e.target.getAttribute('data-breakdown-title'))
         title.innerHTML = ! inputTitle[0].value || ! inputTitle[0].value.trim().length 
@@ -363,18 +382,31 @@ Transaksi
 
     breakdowns.addEventListener('click', function(e) {
         if(e.target.classList.contains('deleteBreakdownButton')) {
-            // alert(e.target.getAttribute('data-remove'))
             deleteElement(e.target.getAttribute('data-remove'))
         } else if(e.target.classList.contains('add-manual-button') || e.target.classList.contains('select-item-button')) {
             currentBreakdown = e.target.getAttribute('data-breakdown')
-            console.log(currentBreakdown)
+        } else if(e.target.classList.contains('item-qty')) {
+            let totalPrice = e.target.value * e.target.getAttribute('data-price')
+            const totalPriceText = breakdowns.querySelector(e.target.getAttribute('data-total-price'))
+            totalPriceText.innerHTML = rupiahFormat.format(totalPrice)
         }
     })
 
+    breakdowns.addEventListener('keyup', function(e) {
+        if(e.target.classList.contains('item-qty')) {
+            let totalPrice = e.target.value * e.target.getAttribute('data-price')
+            const totalPriceText = breakdowns.querySelector(e.target.getAttribute('data-total-price'))
+            totalPriceText.innerHTML = rupiahFormat.format(totalPrice)
+        }
+    })
+
+    // Show item detail upon selection changing
     itemSelect.onchange = function(e) {
         if(! itemSelect.value || ! itemSelect.value.trim().length) {
+            selectExistingItemButton.classList.add('disabled')
             showItemDetail(false)
         } else {
+            selectExistingItemButton.classList.remove('disabled')
             showItemDetail(true)
             setItemDetail(e.target.options[e.target.selectedIndex].dataset)
         }
@@ -386,12 +418,14 @@ Transaksi
 
     let setItemDetail = (data) => {
         setImagePreview(data.image)
-        const selectItemForm = document.getElementById('select-item-form')
         
         if(Object.keys(data).length === 0 && data.constructor === Object) {
+            itemSelected = false
             selectItemForm.reset()
         } else {
+            itemSelected = true
             const inputs = selectItemForm.elements
+            inputs.namedItem("image_path").value = data.image
             inputs.namedItem("brand").value = data.brand
             inputs.namedItem("model").value = data.model
             inputs.namedItem("width").value = data.width
@@ -420,11 +454,67 @@ Transaksi
         element.remove()
     }
 
-    var modalSelectItem = document.getElementById('modal-select-item')
+    let addItem = (data) => {
+        let item = document.createElement("tr")
+        item.id = `${currentBreakdown}-item${++itemCounter}`
+        
+        item.innerHTML = 
+        `
+            <th class="border-0 rounded-start">
+                <div class="row">
+                    <div class="col-2">
+                        <button class="btn btn-sm btn-link text-danger remove-item" data-remove-item="${currentBreakdown}-item${++itemCounter}">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="col-2">
+                        <img src="${data.image}">
+                    </div>
+                    <div class="col-8">
+                        <h6 class="item-name mt-2">${data.name}</h6>
+                        <span class="item-brand">Brand: ${data.brand}</span> <br>
+                        <span class="item-model">Model: ${data.model}</span> <br>
+                        <span class="item-dimension">Dimension: ${data.dimension}</span> <br>
+                        <span class="item-dimension">Price: ${rupiahFormat.format(data.price)}</span> <br>
+                    </div>
+                </div>
+            </th>
+            <th class="border-0 text-center">
+                <input type="number" name="item-qty" data-price="${data.price}" data-total-price="#item${itemCounter}-total-price" class="form-control item-qty" min="1" value="1">
+            </th>
+            <th id="item${itemCounter}-total-price" class="border-0 rounded-end text-end">
+                ${rupiahFormat.format(data.price)}
+            </th>
+        `
+
+        let table = breakdowns.querySelector('#' + currentBreakdown + '-table')
+        console.log('#' + currentBreakdown + '-table')
+        table.appendChild(item)
+        console.log(table)
+    }
+    
+    addItemToBreakdown.forEach((item) => {
+        item.addEventListener('click', function (e) {
+            const el = selectItemForm.elements
+            const data = {
+                name: itemSelect.options[el.namedItem("name").value].text,
+                image: el.namedItem("image_path").value,
+                brand: el.namedItem("brand").value,
+                model: el.namedItem("model").value,
+                dimension: el.namedItem("width").value + " x " + el.namedItem("depth").value + " x " + el.namedItem("height").value,
+                price: el.namedItem("price").value
+            }
+            addItem(data)
+        })
+    })
+    
+    let modalSelectItem = document.getElementById('modal-select-item')
     modalSelectItem.addEventListener('hidden.bs.modal', function (event) {
         showItemDetail(false)
         setItemDetail({})
         niceSelect.clear()
     })
+
+    
 </script>
 @endpush
