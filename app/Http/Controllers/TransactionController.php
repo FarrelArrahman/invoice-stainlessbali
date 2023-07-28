@@ -36,23 +36,7 @@ class TransactionController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
-        $data = [
-            'name' => $request->name,
-            'brand' => $request->brand ?? "*CUSTOM",
-            'model' => $request->model,
-            'width' => $request->width,
-            'depth' => $request->depth,
-            'height' => $request->height,
-            'price' => $request->price,
-            'status' => StatusEnum::Available,
-            'image' => $request->file('image')->store('public/transactions'),
-        ];
-
-        Transaction::create($data);
-
-        return to_route('transactions.index')
-            ->with('message', "Berhasil menambahkan item baru.")
-            ->with('status', 'success');
+        dd($request->all());
     }
 
     /**
