@@ -145,9 +145,75 @@ Transaksi
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <h1 class="h5 mt-2">Pembayaran</h1>
-                            <h1 id="total-price-text">Rp 0</h1>
-                            <button type="submit" class="btn btn-success">Simpan Invoice</button>
+                            <h1 class="h5 mt-2">Total Harga</h1>
+                            <h1 class="h4" id="total-price-text">Rp 0</h1>
+                            <div class="mb-3">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="discount-percentage" class="form-label mt-3">Diskon 1 (%)</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control discounts" id="discount-percentage" name="discount_percentage" value="0" min="0" max="100">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="discount-nominal" class="form-label mt-3">Diskon 2 (Rp)</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control discounts" id="discount-nominal" name="discount_percentage" value="0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="invoice-type-offer" class="form-label mt-3">Simpan invoice sebagai</label>
+                                    <br>
+                                    <div class="form-check form-check-inline">
+                                        <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-offer" value="Offer">
+                                        <label class="form-check-label" for="invoice-type-offer">Penawaran</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-deal" value="Deal">
+                                        <label class="form-check-label" for="invoice-type-deal">Deal</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3 d-none" id="payment-terms">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="invoice-type-offer" class="form-label mt-3">Termin</label>
+                                                <div class="input-group">
+                                                    <select name="payment_terms" id="term" class="form-select">
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="invoice-type-offer" class="form-label mt-3">DP</label>
+                                                <div class="input-group">
+                                                    <select name="payment_terms" id="term" class="form-select">
+                                                        <option value="10">10%</option>
+                                                        <option value="15">15%</option>
+                                                        <option value="20">20%</option>
+                                                        <option value="25">25%</option>
+                                                        <option value="30">30%</option>
+                                                        <option value="40">40%</option>
+                                                        <option value="50">50%</option>
+                                                        <option value="60">60%</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="invoice-type-offer" class="form-label mt-3">Pembayaran</label>
+                                        <p>DP: <span id="dp"></span></p>
+                                </div>
+                            <button type="submit" class="btn btn-success w-100">Simpan</button>
                         </div>
                     </div>
                 </div>
@@ -316,6 +382,8 @@ Transaksi
     let currentBreakdown = "breakdown1"
     let itemSelected = false
     let totalPrice = 0
+    let discountPercentage = 0
+    let discountNominal = 0
     
     const addBreakdown = document.getElementById('addBreakdown')
     const addNewImageInput = document.getElementById('add-new-image-input')
@@ -334,6 +402,9 @@ Transaksi
     const selectItemForm = document.getElementById('select-item-form')
     const selectExistingItemButton = document.getElementById('select-existing-item-button')
     const totalPriceText = document.getElementById('total-price-text')
+    const discountPercentageInput = document.getElementById('discount-percentage')
+    const discountNominalInput = document.getElementById('discount-nominal')
+    const paymentTerms = document.getElementById('payment-terms')
 
     const rupiahFormat = new Intl.NumberFormat('id-ID', {
         style: 'currency',
@@ -428,12 +499,25 @@ Transaksi
     }
 
     let calculateTotalPrice = () => {
-        let prices = breakdowns.querySelectorAll('.prices')
         totalPrice = 0
+        discountPercentage = 0
+        discountNominal = 0
+        
+        let prices = breakdowns.querySelectorAll('.prices')
+        let discounts = document.querySelectorAll('.discounts')
 
         prices.forEach(function(e) {
             totalPrice += parseInt(e.dataset.price)
         })
+
+        discountPercentage = document.querySelector('#discount-percentage').value * totalPrice / 100
+        discountNominal = document.querySelector('#discount-nominal').value
+
+        totalPrice = totalPrice - discountPercentage - discountNominal
+
+        if(totalPrice < 0) {
+            totalPrice = 0
+        }
 
         setTotalPrice(totalPrice)
     }
@@ -537,7 +621,7 @@ Transaksi
                 </div>
             </th>
             <th class="border-0 text-center">
-                <input type="number" name="breakdown[${breakdownCounter}][item][${itemCounter}][qty]" data-price="${data.price}" data-total-price="#item${itemCounter}-total-price" class="form-control item-qty trigger-price" min="1" value="1">
+                <input type="number" name="breakdown[${breakdownCounter}][item][${itemCounter}][qty]" data-price="${data.price}" data-total-price="#item${itemCounter}-total-price" class="form-control item-qty" min="1" value="1">
             </th>
             <th id="item${itemCounter}-total-price" class="border-0 rounded-end text-end prices" data-price="${data.price}">
                 ${rupiahFormat.format(data.price)}
@@ -615,6 +699,41 @@ Transaksi
         image.classList.add("visually-hidden")
         image.setAttribute('name', `breakdown[${breakdownCounter}][item][${itemCounter}][image]`)
         document.getElementById(`item${itemCounter}-image-preview`).appendChild(image)
+    }
+
+    // Discount
+    discountNominalInput.addEventListener('change', e => {
+        calculateTotalPrice()
+    })
+    
+    discountNominalInput.addEventListener('keyup', e => {
+        if(e.target.value == "" || e.target.value < 0) {
+            e.target.value = 0
+        }
+
+        calculateTotalPrice()
+    })
+
+    discountPercentageInput.addEventListener('change', e => {
+        calculateTotalPrice()
+    })
+    
+    discountPercentageInput.addEventListener('keyup', e => {
+        if(e.target.value == "" || e.target.value < 0) {
+            e.target.value = 0
+        } else if(e.target.value > 100) {
+            e.target.value = 100
+        }
+
+        calculateTotalPrice()
+    })
+
+    let invoiceType = (type) => {
+        if(type.value == "Deal") {
+            paymentTerms.classList.remove('d-none')
+        } else {
+            paymentTerms.classList.add('d-none')
+        }
     }
 </script>
 @endpush
