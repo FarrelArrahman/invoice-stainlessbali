@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
+use App\Models\Customer;
 use App\Models\Item;
 
 class TransactionController extends Controller
@@ -26,8 +27,11 @@ class TransactionController extends Controller
     public function create()
     {
         $items = Item::all();        
+        $customers = Customer::all();  
+
         return view('admin.transactions.create', [
-            'items' => $items
+            'items' => $items,
+            'customers' => $customers,
         ]);
     }
 

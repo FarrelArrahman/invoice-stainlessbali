@@ -41,7 +41,7 @@ Item
                         <th class="border-0">Brand</th>
                         <th class="border-0">Model</th>
                         <th class="border-0">Dimension (W x D x H) mm</th>
-                        <th class="border-0">Price (Rp.)</th>
+                        <th class="border-0">Price</th>
                         <th class="border-0">Status</th>
                         <th class="border-0 rounded-end">Action</th>
                     </tr>
@@ -59,7 +59,7 @@ Item
                         <td>{{ $item->brand }}</td>
                         <td>{{ $item->model }}</td>
                         <td>{{ $item->width }} x {{ $item->depth }} x {{ $item->height }}</td>
-                        <td>{{ $item->price }}</td>
+                        <td>{{ $item->formatted_price }}</td>
                         <td>{!! $item->status->badge() !!}</td>
                         <td>
                             <form action="{{ route('items.destroy', $item->id) }}" method="POST">

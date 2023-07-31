@@ -41,9 +41,12 @@ Transaksi
                                         <div class="accordion-body">
                                             <form action="{{ route('items.store') }}" method="POST" enctype="multipart/form-data">
                                                 @csrf
-                                                <div class="mb-3">
-                                                    <label for="name">Name</label>
-                                                    <input type="text" class="form-control" id="name" name="name">
+                                                <label for="name">Name</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                                    <span data-bs-toggle="modal" data-bs-target="#modal-select-customer" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
+                                                        <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+                                                    </span>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="name">Address</label>
@@ -245,6 +248,37 @@ Transaksi
 </form>
 
 <!-- Modal Select Item -->
+<div class="modal fade" id="modal-select-customer" tabindex="-1" role="dialog" aria-labelledby="modal-select-customer" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="h6 modal-title">Pilih customer</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="select-customer-form">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="a-select" class="form-label">Nama</label>
+                        <select name="customer_id" id="customer-nice-select" class="select-customer w-100" placeholder="Pilih item...">
+                            <option value="" disabled selected>--- Pilih item ---</option>
+                            @foreach($customers as $customer)
+                            <option value="{{ $customer->id }}" data-name="{{ $customer->name }}" data-address="{{ $item->address }}" data-phone-number="{{ $item->phone_number }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="select-existing-customer-button" class="btn btn-secondary add-customer-data disabled" data-bs-dismiss="modal">Tambah Data Customer</button>
+                <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Select Item -->
 <div class="modal fade" id="modal-select-item" tabindex="-1" role="dialog" aria-labelledby="modal-select-item" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -256,8 +290,8 @@ Transaksi
                 <form id="select-item-form">
                     @csrf
                     <div class="mb-3">
-                        <label for="a-select" class="form-label">Nama</label>
-                        <select name="name" id="a-select" class="select-item w-100" placeholder="Pilih item...">
+                        <label for="item-nice-select" class="form-label">Nama</label>
+                        <select name="name" id="item-nice-select" class="select-item w-100" placeholder="Pilih item...">
                             <option value="" disabled selected>--- Pilih item ---</option>
                             @foreach($items as $item)
                             <option value="{{ $item->id }}" data-image="{{ $item->image_real_path }}" data-brand="{{ $item->brand }}" data-model="{{ $item->model }}" data-width="{{ $item->width }}" data-depth="{{ $item->depth }}" data-height="{{ $item->height }}" data-price="{{ $item->price }}">{{ $item->name }}</option>
@@ -387,7 +421,11 @@ Transaksi
 
 @push('custom-scripts')
 <script type="text/javascript">
-    let niceSelect = NiceSelect.bind(document.getElementById("a-select"), {
+    let itemNiceSelect = NiceSelect.bind(document.getElementById("item-nice-select"), {
+        searchable: true
+    })
+    
+    let customerNiceSelect = NiceSelect.bind(document.getElementById("customer-nice-select"), {
         searchable: true
     })
 
@@ -409,7 +447,7 @@ Transaksi
     const inputTitle = document.querySelectorAll('.breakdown-input')
     const inputFile = document.getElementById('input-file')
     const imagePreview = document.getElementById('image-preview')
-    const itemSelect = document.getElementById('a-select')
+    const itemSelect = document.getElementById('item-nice-select')
     const itemDetail = document.getElementById('item-detail')
     const addNewForm = document.getElementById('add-new-form')
     const addNewItemButton = document.getElementById('add-new-item-button')
@@ -709,7 +747,7 @@ Transaksi
     modalSelectItem.addEventListener('hidden.bs.modal', function(event) {
         showItemDetail(false)
         setItemDetail({})
-        niceSelect.clear()
+        itemNiceSelect.clear()
     })
 
     addNewImageInput.onchange = e => {
