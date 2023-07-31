@@ -182,7 +182,7 @@ Transaksi
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="form-group">
-                                                <label for="invoice-type-offer" class="form-label mt-3">Termin</label>
+                                                <label for="term" class="form-label mt-3">Termin</label>
                                                 <div class="input-group">
                                                     <select name="payment_terms" id="term" class="form-select">
                                                         <option value="2">2</option>
@@ -193,9 +193,9 @@ Transaksi
                                         </div>
                                         <div class="col-6">
                                             <div class="form-group">
-                                                <label for="invoice-type-offer" class="form-label mt-3">DP</label>
+                                                <label for="dp" class="form-label mt-3">DP</label>
                                                 <div class="input-group">
-                                                    <select name="payment_terms" id="term" class="form-select">
+                                                    <select name="payment_terms" id="dp" class="form-select">
                                                         <option value="10">10%</option>
                                                         <option value="15">15%</option>
                                                         <option value="20">20%</option>
@@ -210,16 +210,38 @@ Transaksi
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="invoice-type-offer" class="form-label mt-3">Pembayaran</label>
-                                        <p>DP: <span id="dp"></span></p>
+                                        <label for="payment-term-breakdown" class="form-label mt-3">Pembayaran</label>
+                                        <table id="payment-term-breakdown" class="table table-centered table-bordered mb-0 rounded">
+                                            <tr>
+                                                <td width="20%">DP</td>
+                                                <td width="80%" id="dp-amount">Rp 0</td>
+                                                <input type="hidden" id="dp-input" name="dp">
+                                            </tr>
+                                            <tr id="term1">
+                                                <td width="20%">Termin 1</td>
+                                                <td width="80%" id="term1-amount">Rp 0</td>
+                                                <input type="hidden" id="term1-input" name="term1">
+                                            </tr>
+                                            <tr id="term2">
+                                                <td width="20%">Termin 2</td>
+                                                <td width="80%" id="term2-amount">Rp 0</td>
+                                                <input type="hidden" id="term2-input" name="term2">
+                                            </tr>
+                                            <tr id="term3" class="d-none">
+                                                <td width="20%">Termin 3</td>
+                                                <td width="80%" id="term3-amount">Rp 0</td>
+                                                <input type="hidden" id="term3-input" name="term3">
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <button type="submit" class="btn btn-success w-100">Simpan</button>
                                 </div>
-                            <button type="submit" class="btn btn-success w-100">Simpan</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 </form>
 
 <!-- Modal Select Item -->
@@ -238,15 +260,7 @@ Transaksi
                         <select name="name" id="a-select" class="select-item w-100" placeholder="Pilih item...">
                             <option value="" disabled selected>--- Pilih item ---</option>
                             @foreach($items as $item)
-                            <option 
-                                value="{{ $item->id }}"
-                                data-image="{{ $item->image_real_path }}"
-                                data-brand="{{ $item->brand }}"
-                                data-model="{{ $item->model }}"
-                                data-width="{{ $item->width }}"
-                                data-depth="{{ $item->depth }}"
-                                data-height="{{ $item->height }}"
-                                data-price="{{ $item->price }}">{{ $item->name }}</option>
+                            <option value="{{ $item->id }}" data-image="{{ $item->image_real_path }}" data-brand="{{ $item->brand }}" data-model="{{ $item->model }}" data-width="{{ $item->width }}" data-depth="{{ $item->depth }}" data-height="{{ $item->height }}" data-price="{{ $item->price }}">{{ $item->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -384,7 +398,7 @@ Transaksi
     let totalPrice = 0
     let discountPercentage = 0
     let discountNominal = 0
-    
+
     const addBreakdown = document.getElementById('addBreakdown')
     const addNewImageInput = document.getElementById('add-new-image-input')
     const addNewImagePreview = document.getElementById('add-new-image-preview')
@@ -405,6 +419,18 @@ Transaksi
     const discountPercentageInput = document.getElementById('discount-percentage')
     const discountNominalInput = document.getElementById('discount-nominal')
     const paymentTerms = document.getElementById('payment-terms')
+    const term = document.getElementById('term')
+    const dp = document.getElementById('dp')
+    const dpAmount = document.getElementById('dp-amount')
+    const term1 = document.getElementById('term1')
+    const term1Amount = document.getElementById('term1-amount')
+    const term1Input = document.getElementById('term1-input')
+    const term2 = document.getElementById('term2')
+    const term2Amount = document.getElementById('term2-amount')
+    const term2Input = document.getElementById('term2-input')
+    const term3 = document.getElementById('term3')
+    const term3Amount = document.getElementById('term3-amount')
+    const term3Input = document.getElementById('term3-input')
 
     const rupiahFormat = new Intl.NumberFormat('id-ID', {
         style: 'currency',
@@ -420,17 +446,17 @@ Transaksi
 
         const clonedBreakdownIndex = clonedBreakdown.querySelector('.breakdown-index')
         clonedBreakdownIndex.value = breakdownCounter
-        
+
         const clonedBreakdownTitle = clonedBreakdown.querySelector('.breakdown-title')
         clonedBreakdownTitle.setAttribute('id', 'breakdown' + breakdownCounter + '-title')
         clonedBreakdownTitle.innerHTML = 'Breakdown #' + breakdownCounter
-        
+
         const clonedBreakdownInput = clonedBreakdown.querySelector('.breakdown-input')
         clonedBreakdownInput.value = ""
         clonedBreakdownInput.setAttribute('data-breakdown-title', 'breakdown' + breakdownCounter + '-title')
         clonedBreakdownInput.setAttribute('data-breakdown-title-default', 'Breakdown #' + breakdownCounter)
         clonedBreakdownInput.setAttribute('name', `breakdown[${breakdownCounter}][name]`)
-        
+
         clonedBreakdown.querySelector('.add-manual-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
         clonedBreakdown.querySelector('.select-item-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
 
@@ -445,7 +471,7 @@ Transaksi
         const clonedBreakdownTable = clonedBreakdown.querySelector('.breakdown-table')
         clonedBreakdownTable.replaceChildren()
         clonedBreakdownTable.setAttribute('id', 'breakdown' + breakdownCounter + '-table')
-        
+
         const deleteBreakdownButton = document.createElement("button")
         deleteBreakdownButton.setAttribute("class", "btn btn-danger deleteBreakdownButton")
         deleteBreakdownButton.setAttribute("data-remove", `#accordionBreakdown${breakdownCounter}`)
@@ -456,34 +482,34 @@ Transaksi
 
         clonedBreakdown.querySelector('.breakdown-input').addEventListener('keyup', e => {
             const title = document.getElementById(e.target.getAttribute('data-breakdown-title'))
-            title.innerHTML = ! clonedBreakdownInput.value || ! clonedBreakdownInput.value.trim().length 
-                ? e.target.getAttribute('data-breakdown-title-default')
-                : clonedBreakdownInput.value
+            title.innerHTML = !clonedBreakdownInput.value || !clonedBreakdownInput.value.trim().length ?
+                e.target.getAttribute('data-breakdown-title-default') :
+                clonedBreakdownInput.value
         })
     })
 
     // Change breakdown title dynamically
     inputTitle[0].addEventListener('keyup', e => {
         const title = document.getElementById(e.target.getAttribute('data-breakdown-title'))
-        title.innerHTML = ! inputTitle[0].value || ! inputTitle[0].value.trim().length 
-            ? e.target.getAttribute('data-breakdown-title-default')
-            : inputTitle[0].value
+        title.innerHTML = !inputTitle[0].value || !inputTitle[0].value.trim().length ?
+            e.target.getAttribute('data-breakdown-title-default') :
+            inputTitle[0].value
     })
 
     breakdowns.addEventListener('click', function(e) {
-        if(e.target.classList.contains('deleteBreakdownButton')) {
+        if (e.target.classList.contains('deleteBreakdownButton')) {
             deleteElement(e.target.getAttribute('data-remove'))
             calculateTotalPrice()
-        } else if(e.target.classList.contains('add-manual-button') || e.target.classList.contains('select-item-button')) {
+        } else if (e.target.classList.contains('add-manual-button') || e.target.classList.contains('select-item-button')) {
             currentBreakdown = e.target.getAttribute('data-breakdown')
-        } else if(e.target.classList.contains('item-qty')) {
+        } else if (e.target.classList.contains('item-qty')) {
             calculateItemPrice(e.target.value, e.target.getAttribute('data-price'), e.target.getAttribute('data-total-price'))
         }
     })
 
     breakdowns.addEventListener('keyup', function(e) {
-        if(e.target.classList.contains('item-qty')) {
-            if(e.target.value == "" || e.target.value < 1) {
+        if (e.target.classList.contains('item-qty')) {
+            if (e.target.value == "" || e.target.value < 1) {
                 e.target.value = 1
             }
             calculateItemPrice(e.target.value, e.target.getAttribute('data-price'), e.target.getAttribute('data-total-price'))
@@ -502,7 +528,7 @@ Transaksi
         totalPrice = 0
         discountPercentage = 0
         discountNominal = 0
-        
+
         let prices = breakdowns.querySelectorAll('.prices')
         let discounts = document.querySelectorAll('.discounts')
 
@@ -515,20 +541,44 @@ Transaksi
 
         totalPrice = totalPrice - discountPercentage - discountNominal
 
-        if(totalPrice < 0) {
+        if (totalPrice < 0) {
             totalPrice = 0
         }
 
         setTotalPrice(totalPrice)
+        let dpAmount = setDP(totalPrice, dp.value)
+        setTerm(totalPrice, dpAmount, term.value)
     }
 
     let setTotalPrice = (totalPrice) => {
         totalPriceText.innerHTML = rupiahFormat.format(totalPrice)
     }
 
+    let setDP = (totalPrice, dpPercentage) => {
+        let dp = dpPercentage * totalPrice / 100
+        dpAmount.innerHTML = rupiahFormat.format(dp)
+        return dp
+    }
+
+    let setTerm = (totalPrice, dpAmount, terms) => {
+        let termAmount = totalPrice - dpAmount
+        let amountPerTerm = 0
+
+        amountPerTerm = termAmount / terms
+
+        term1Amount.innerHTML = rupiahFormat.format(amountPerTerm)
+        term1Input.value = amountPerTerm
+        
+        term2Amount.innerHTML = rupiahFormat.format(amountPerTerm)
+        term2Input.value = amountPerTerm
+        
+        term3Amount.innerHTML = terms == 3 ? rupiahFormat.format(amountPerTerm) : 0
+        term3Input.value = terms == 3 ? amountPerTerm : 0
+    }
+
     // Show item detail upon selection changing
     itemSelect.onchange = function(e) {
-        if(! itemSelect.value || ! itemSelect.value.trim().length) {
+        if (!itemSelect.value || !itemSelect.value.trim().length) {
             selectExistingItemButton.classList.add('disabled')
             showItemDetail(false)
         } else {
@@ -544,8 +594,8 @@ Transaksi
 
     let setItemDetail = (data) => {
         setImagePreview(data.image)
-        
-        if(Object.keys(data).length === 0 && data.constructor === Object) {
+
+        if (Object.keys(data).length === 0 && data.constructor === Object) {
             itemSelected = false
             selectItemForm.reset()
         } else {
@@ -562,14 +612,14 @@ Transaksi
     }
 
     let setImagePreview = (image) => {
-        if(! image || ! image.trim().length) {
+        if (!image || !image.trim().length) {
             inputFile.classList.remove('d-none')
 
             imagePreview.setAttribute('src', "")
             imagePreview.classList.add('d-none')
         } else {
             inputFile.classList.add('d-none')
-    
+
             imagePreview.setAttribute('src', image)
             imagePreview.classList.remove('d-none')
         }
@@ -583,9 +633,9 @@ Transaksi
     let addItem = (data) => {
         let item = document.createElement("tr")
         item.id = `${currentBreakdown}-item${++itemCounter}`
-        
-        item.innerHTML = 
-        `
+
+        item.innerHTML =
+            `
             <th class="border-0 rounded-start">
                 <div class="row">
                     <div class="col-2">
@@ -631,15 +681,15 @@ Transaksi
         let table = breakdowns.querySelector('#' + currentBreakdown + '-table')
         table.appendChild(item)
 
-        breakdowns.querySelector(`#item${itemCounter}-remove-button`).addEventListener('click', function (e) {
+        breakdowns.querySelector(`#item${itemCounter}-remove-button`).addEventListener('click', function(e) {
             breakdowns.querySelector(this.getAttribute('data-remove-item')).remove()
             calculateTotalPrice()
         })
 
         calculateTotalPrice()
     }
-    
-    selectExistingItemButton.addEventListener('click', function (e) {
+
+    selectExistingItemButton.addEventListener('click', function(e) {
         const el = selectItemForm.elements
         const data = {
             name: itemSelect.options[el.namedItem("name").value].text,
@@ -654,9 +704,9 @@ Transaksi
         }
         addItem(data)
     })
-    
+
     let modalSelectItem = document.getElementById('modal-select-item')
-    modalSelectItem.addEventListener('hidden.bs.modal', function (event) {
+    modalSelectItem.addEventListener('hidden.bs.modal', function(event) {
         showItemDetail(false)
         setItemDetail({})
         niceSelect.clear()
@@ -664,7 +714,7 @@ Transaksi
 
     addNewImageInput.onchange = e => {
         const file = e.target.files[0]
-        if(file) {
+        if (file) {
             addNewImagePreview.classList.remove('d-none')
             addNewImagePreview.src = URL.createObjectURL(file)
             addNewForm.elements.namedItem("image_path").value = URL.createObjectURL(file)
@@ -705,9 +755,9 @@ Transaksi
     discountNominalInput.addEventListener('change', e => {
         calculateTotalPrice()
     })
-    
+
     discountNominalInput.addEventListener('keyup', e => {
-        if(e.target.value == "" || e.target.value < 0) {
+        if (e.target.value == "" || e.target.value < 0) {
             e.target.value = 0
         }
 
@@ -717,11 +767,11 @@ Transaksi
     discountPercentageInput.addEventListener('change', e => {
         calculateTotalPrice()
     })
-    
+
     discountPercentageInput.addEventListener('keyup', e => {
-        if(e.target.value == "" || e.target.value < 0) {
+        if (e.target.value == "" || e.target.value < 0) {
             e.target.value = 0
-        } else if(e.target.value > 100) {
+        } else if (e.target.value > 100) {
             e.target.value = 100
         }
 
@@ -729,11 +779,25 @@ Transaksi
     })
 
     let invoiceType = (type) => {
-        if(type.value == "Deal") {
+        if (type.value == "Deal") {
             paymentTerms.classList.remove('d-none')
         } else {
             paymentTerms.classList.add('d-none')
         }
+    }
+
+    term.onchange = (e) => {
+        if(e.target.value == 3) {
+            term3.classList.remove('d-none')
+        } else {
+            term3.classList.add('d-none')
+        }
+
+        calculateTotalPrice()
+    }
+    
+    dp.onchange = (e) => {
+        calculateTotalPrice()
     }
 </script>
 @endpush

@@ -23,6 +23,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->datetime('date')->nullable();
             $table->double('total_price')->default(0);
+            $table->double('dp')->default(0);
             $table->double('discount_nominal')->default(0);
             $table->double('discount_percentage')->default(0);
             $table->integer('payment_terms')->default(2);

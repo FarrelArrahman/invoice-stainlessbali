@@ -57,17 +57,17 @@ Item
                                     <div class="col-lg-4 col-sm-12 mb-lg-0 mb-sm-3">
                                         <label for="width">Width (mm)</label>
                                         <input type="number"
-                                            class="form-control" id="width" name="width">
+                                            class="form-control" id="width" name="width" min="1">
                                     </div>
                                     <div class="col-lg-4 col-sm-12 mb-lg-0 mb-sm-3">
                                         <label for="depth">Depth (mm)</label>
                                         <input type="number"
-                                            class="form-control" id="depth" name="depth">
+                                            class="form-control" id="depth" name="depth" min="1">
                                     </div>
                                     <div class="col-lg-4 col-sm-12 mb-lg-0 mb-sm-3">
                                         <label for="height">Height (mm)</label>
                                         <input type="number"
-                                            class="form-control" id="height" name="height">
+                                            class="form-control" id="height" name="height" min="1">
                                     </div>
                                 </div>
                             </div>
