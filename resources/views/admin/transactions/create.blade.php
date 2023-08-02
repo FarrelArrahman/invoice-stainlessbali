@@ -23,6 +23,8 @@ Transaksi
     </div>
 </div>
 <form action="{{ route('transactions.store') }}" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="total_price" id="total-price-input">
+    <input type="hidden" name="total_price_before_discount" id="total-price-before-discount-input">
     @csrf
     <div class="row">
         <div class="col-12 mb-4">
@@ -39,24 +41,23 @@ Transaksi
                                     </h2>
                                     <div id="customerCollapse" class="accordion-collapse collapse" aria-labelledby="customerData" data-bs-parent="#accordionCustomer">
                                         <div class="accordion-body">
-                                            <form action="{{ route('items.store') }}" method="POST" enctype="multipart/form-data">
-                                                @csrf
+                                            <div id="customer-detail">
                                                 <label for="name">Name</label>
                                                 <div class="input-group mb-3">
-                                                    <input type="text" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                                    <input id="customer-name" type="text" class="form-control" name="name">
                                                     <span data-bs-toggle="modal" data-bs-target="#modal-select-customer" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
                                                         <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
                                                     </span>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="name">Address</label>
-                                                    <input type="text" class="form-control" id="address" name="address">
+                                                    <input id="customer-address" type="text" class="form-control" id="address" name="address">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="name">Phone Number</label>
-                                                    <input type="text" class="form-control" id="phone_number" name="phone_number">
+                                                    <input id="customer-phone-number" type="text" class="form-control" id="phone_number" name="phone_number">
                                                 </div>
-                                            </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -87,10 +88,10 @@ Transaksi
                                     <div id="breakdownCollapse" class="accordion-collapse collapse show" aria-labelledby="breakdown" data-bs-parent="#accordionBreakdown">
                                         <div class="accordion-body">
                                             <label for="">Nama Breakdown</label>
-                                            <input type="hidden" class="breakdown-index" name="breakdown[]" value="1">
+                                            <input type="hidden" class="breakdown-index" name="breakdown[]">
                                             <input type="text" class="form-control w-100 my-2 breakdown-input" data-breakdown-title="breakdown1-title" data-breakdown-title-default="Breakdown #1" name="breakdown[1][name]" placeholder="Masukkan nama breakdown..." autocomplete="off">
-                                            <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown1"><i class="fa fa-plus me-1"></i> Tambah Manual</button>
-                                            <button class="select-item-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal-select-item" data-breakdown="breakdown1"><i class="fa fa-list me-1"></i> Pilih Item</button>
+                                            <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown1" data-breakdown-counter="1"><i class="fa fa-plus me-1"></i> Tambah Manual</button>
+                                            <button class="select-item-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal-select-item" data-breakdown="breakdown1" data-breakdown-counter="1"><i class="fa fa-list me-1"></i> Pilih Item</button>
                                             <span class="deleteBreakdownPlaceholder"></span>
                                             <div class="table-responsive">
                                                 <table class="table table-centered mb-0 rounded">
@@ -102,34 +103,6 @@ Transaksi
                                                         </tr>
                                                     </thead>
                                                     <tbody class="breakdown-table" id="breakdown1-table">
-                                                        <!-- @foreach($items as $item)
-                                                        <tr id="breakdown1-item{{ $loop->iteration }}">
-                                                            <th class="border-0 rounded-start">
-                                                                <div class="row">
-                                                                    <div class="col-2">
-                                                                        <button class="btn btn-sm btn-link text-danger remove-item" data-remove-item="#breakdown1-item{{ $loop->iteration }}">
-                                                                            <i class="fa fa-times"></i>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="col-2">
-                                                                        <img src="{{ Storage::url($item->image) }}">
-                                                                    </div>
-                                                                    <div class="col-8">
-                                                                        <h6 class="item-name mt-2">{{ $item->name }}</h6>
-                                                                        <span class="item-brand">Brand: {{ $item->brand }}</span> <br>
-                                                                        <span class="item-model">Model: {{ $item->model }}</span> <br>
-                                                                        <span class="item-dimension">Dimension: {{ $item->dimension }}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </th>
-                                                            <th class="border-0 text-center">
-                                                                <input type="number" name="item-qty" id="item-qty" class="form-control" min="1" value="1">
-                                                            </th>
-                                                            <th class="border-0 rounded-end text-end">
-                                                                {{ $item->formatted_price }}
-                                                            </th>
-                                                        </tr>
-                                                        @endforeach -->
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -150,6 +123,7 @@ Transaksi
                         <div class="col-12">
                             <h1 class="h5 mt-2">Total Harga</h1>
                             <h1 class="h4" id="total-price-text">Rp 0</h1>
+                            <h1 class="h6 text-danger text-decoration-line-through d-none" id="total-price-before-discount-text">Rp 0</h1>
                             <div class="mb-3">
                                 <div class="row">
                                     <div class="col-6">
@@ -164,7 +138,7 @@ Transaksi
                                         <div class="form-group">
                                             <label for="discount-nominal" class="form-label mt-3">Diskon 2 (Rp)</label>
                                             <div class="input-group">
-                                                <input type="number" class="form-control discounts" id="discount-nominal" name="discount_percentage" value="0">
+                                                <input type="number" class="form-control discounts" id="discount-nominal" name="discount_nominal" value="0">
                                             </div>
                                         </div>
                                     </div>
@@ -198,7 +172,7 @@ Transaksi
                                             <div class="form-group">
                                                 <label for="dp" class="form-label mt-3">DP</label>
                                                 <div class="input-group">
-                                                    <select name="payment_terms" id="dp" class="form-select">
+                                                    <select name="dp" id="dp" class="form-select">
                                                         <option value="10">10%</option>
                                                         <option value="15">15%</option>
                                                         <option value="20">20%</option>
@@ -237,8 +211,8 @@ Transaksi
                                             </tr>
                                         </table>
                                     </div>
-                                    <button type="submit" class="btn btn-success w-100">Simpan</button>
                                 </div>
+                                <button type="submit" class="btn btn-success w-100">Simpan</button>
                             </div>
                         </div>
                     </div>
@@ -256,18 +230,15 @@ Transaksi
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="select-customer-form">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="a-select" class="form-label">Nama</label>
-                        <select name="customer_id" id="customer-nice-select" class="select-customer w-100" placeholder="Pilih item...">
-                            <option value="" disabled selected>--- Pilih item ---</option>
-                            @foreach($customers as $customer)
-                            <option value="{{ $customer->id }}" data-name="{{ $customer->name }}" data-address="{{ $item->address }}" data-phone-number="{{ $item->phone_number }}">{{ $item->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </form>
+                <div class="mb-3">
+                    <label for="a-select" class="form-label">Nama</label>
+                    <select name="customer_id" id="customer-nice-select" class="select-customer w-100" placeholder="Pilih customer...">
+                        <option value="" disabled selected>--- Pilih customer ---</option>
+                        @foreach($customers as $customer)
+                        <option value="{{ $customer->id }}" data-name="{{ $customer->name }}" data-address="{{ $customer->address }}" data-phone-number="{{ $customer->phone_number }}">{{ $customer->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" id="select-existing-customer-button" class="btn btn-secondary add-customer-data disabled" data-bs-dismiss="modal">Tambah Data Customer</button>
@@ -432,6 +403,7 @@ Transaksi
     let breakdownCounter = 1
     let itemCounter = 0
     let currentBreakdown = "breakdown1"
+    let currentBreakdownCounter = 1
     let itemSelected = false
     let totalPrice = 0
     let discountPercentage = 0
@@ -449,17 +421,24 @@ Transaksi
     const imagePreview = document.getElementById('image-preview')
     const itemSelect = document.getElementById('item-nice-select')
     const itemDetail = document.getElementById('item-detail')
+    const customerSelect = document.getElementById('customer-nice-select')
+    const customerDetail = document.getElementById('customer-detail')
     const addNewForm = document.getElementById('add-new-form')
     const addNewItemButton = document.getElementById('add-new-item-button')
     const selectItemForm = document.getElementById('select-item-form')
     const selectExistingItemButton = document.getElementById('select-existing-item-button')
+    const selectExistingCustomerButton = document.getElementById('select-existing-customer-button')
     const totalPriceText = document.getElementById('total-price-text')
+    const totalPriceInput = document.getElementById('total-price-input')
+    const totalPriceBeforeDiscountText = document.getElementById('total-price-before-discount-text')
+    const totalPriceBeforeDiscountInput = document.getElementById('total-price-before-discount-input')
     const discountPercentageInput = document.getElementById('discount-percentage')
     const discountNominalInput = document.getElementById('discount-nominal')
     const paymentTerms = document.getElementById('payment-terms')
     const term = document.getElementById('term')
     const dp = document.getElementById('dp')
     const dpAmount = document.getElementById('dp-amount')
+    const dpInput = document.getElementById('dp-input')
     const term1 = document.getElementById('term1')
     const term1Amount = document.getElementById('term1-amount')
     const term1Input = document.getElementById('term1-input')
@@ -479,11 +458,13 @@ Transaksi
 
     // Add new breakdown upon clicking
     addBreakdown.addEventListener('click', function() {
+        breakdownCounter = breakdownCounter + 1
         const clonedBreakdown = breakdown.cloneNode(true)
-        clonedBreakdown.id = 'accordionBreakdown' + ++breakdownCounter
+        clonedBreakdown.id = 'accordionBreakdown' + breakdownCounter
 
         const clonedBreakdownIndex = clonedBreakdown.querySelector('.breakdown-index')
         clonedBreakdownIndex.value = breakdownCounter
+        console.log("Breakdown Counter: " + clonedBreakdownIndex.value)
 
         const clonedBreakdownTitle = clonedBreakdown.querySelector('.breakdown-title')
         clonedBreakdownTitle.setAttribute('id', 'breakdown' + breakdownCounter + '-title')
@@ -496,7 +477,9 @@ Transaksi
         clonedBreakdownInput.setAttribute('name', `breakdown[${breakdownCounter}][name]`)
 
         clonedBreakdown.querySelector('.add-manual-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
+        clonedBreakdown.querySelector('.add-manual-button').setAttribute('data-breakdown-counter', 'breakdown' + breakdownCounter)
         clonedBreakdown.querySelector('.select-item-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
+        clonedBreakdown.querySelector('.select-item-button').setAttribute('data-breakdown-counter', 'breakdown' + breakdownCounter)
 
         const clonedBreakdownAccordionButton = clonedBreakdown.querySelector('.accordion-button')
         clonedBreakdownAccordionButton.setAttribute('data-bs-target', '#breakdownCollapse' + breakdownCounter)
@@ -540,6 +523,7 @@ Transaksi
             calculateTotalPrice()
         } else if (e.target.classList.contains('add-manual-button') || e.target.classList.contains('select-item-button')) {
             currentBreakdown = e.target.getAttribute('data-breakdown')
+            currentBreakdownCounter = e.target.getAttribute('data-breakdown-counter')
         } else if (e.target.classList.contains('item-qty')) {
             calculateItemPrice(e.target.value, e.target.getAttribute('data-price'), e.target.getAttribute('data-total-price'))
         }
@@ -577,6 +561,10 @@ Transaksi
         discountPercentage = document.querySelector('#discount-percentage').value * totalPrice / 100
         discountNominal = document.querySelector('#discount-nominal').value
 
+        discountTotal = discountPercentage + discountNominal
+
+        setTotalPriceBeforeDiscount(totalPrice, discountTotal)
+
         totalPrice = totalPrice - discountPercentage - discountNominal
 
         if (totalPrice < 0) {
@@ -590,11 +578,25 @@ Transaksi
 
     let setTotalPrice = (totalPrice) => {
         totalPriceText.innerHTML = rupiahFormat.format(totalPrice)
+        totalPriceInput.value = totalPrice
+    }
+
+    let setTotalPriceBeforeDiscount = (totalPriceBeforeDiscount, discountTotal) => {
+        if (discountTotal > 0) {
+            totalPriceBeforeDiscountText.innerHTML = rupiahFormat.format(totalPriceBeforeDiscount)
+            totalPriceBeforeDiscountText.classList.remove('d-none')
+        } else {
+            totalPriceBeforeDiscountText.classList.add('d-none')
+        }
+
+        totalPriceBeforeDiscountInput.value = totalPriceBeforeDiscount
     }
 
     let setDP = (totalPrice, dpPercentage) => {
         let dp = dpPercentage * totalPrice / 100
         dpAmount.innerHTML = rupiahFormat.format(dp)
+        dpInput.value = dp
+
         return dp
     }
 
@@ -626,6 +628,15 @@ Transaksi
         }
     }
 
+    // Show customer detail upon selection changing
+    customerSelect.onchange = function(e) {
+        if (!customerSelect.value || !customerSelect.value.trim().length) {
+            selectExistingCustomerButton.classList.add('disabled')
+        } else {
+            selectExistingCustomerButton.classList.remove('disabled')
+        }
+    }
+
     let showItemDetail = (toggle) => {
         toggle ? itemDetail.classList.remove('d-none') : itemDetail.classList.add('d-none')
     }
@@ -647,6 +658,12 @@ Transaksi
             inputs.namedItem("height").value = data.height
             inputs.namedItem("price").value = data.price
         }
+    }
+
+    let setCustomerDetail = (data) => {
+        customerDetail.querySelector("#customer-name").value = data.name
+        customerDetail.querySelector("#customer-address").value = data.address
+        customerDetail.querySelector("#customer-phone-number").value = data.phoneNumber
     }
 
     let setImagePreview = (image) => {
@@ -671,7 +688,7 @@ Transaksi
     let addItem = (data) => {
         let item = document.createElement("tr")
         item.id = `${currentBreakdown}-item${++itemCounter}`
-
+        console.log("Add item to Current Breakdown: " + currentBreakdown)
         item.innerHTML =
             `
             <th class="border-0 rounded-start">
@@ -741,6 +758,10 @@ Transaksi
             price: el.namedItem("price").value
         }
         addItem(data)
+    })
+    
+    selectExistingCustomerButton.addEventListener('click', function(e) {
+        setCustomerDetail(customerSelect.options[customerSelect.selectedIndex].dataset)
     })
 
     let modalSelectItem = document.getElementById('modal-select-item')

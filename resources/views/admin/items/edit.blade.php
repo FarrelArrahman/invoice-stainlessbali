@@ -30,7 +30,8 @@ Item
             <div class="card-body">
                 <div class="row mb-4">
                     <div class="col-12">
-                        <form action="{{ route('items.store') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('items.update', $item->id) }}" method="POST" enctype="multipart/form-data">
+                            @method('PUT')
                             @csrf
                             <div class="mb-3">
                                 <label for="name">Nama</label>

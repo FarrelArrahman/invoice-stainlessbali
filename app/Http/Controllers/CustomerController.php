@@ -13,7 +13,10 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
+        $customers = Customer::all();
+        return view('admin.customers.index', [
+            'customers' => $customers
+        ]);
     }
 
     /**
@@ -21,7 +24,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.customers.create');
     }
 
     /**
@@ -29,7 +32,17 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request)
     {
-        //
+        $data = [
+            'name' => $request->name,
+            'address' => $request->address,
+            'phone_number' => $request->phone_number,
+        ];
+
+        Customer::create($data);
+
+        return to_route('customers.index')
+            ->with('message', "Berhasil menambahkan customer baru.")
+            ->with('status', 'success');
     }
 
     /**
@@ -45,7 +58,9 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        //
+        return view('admin.customers.edit', [
+            'customer' => $customer
+        ]);
     }
 
     /**
@@ -53,7 +68,17 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        //
+        $data = [
+            'name' => $request->name,
+            'address' => $request->address,
+            'phone_number' => $request->phone_number,
+        ];
+
+        $customer->update($data);
+
+        return to_route('customers.index')
+            ->with('message', "Berhasil memperbarui data customer.")
+            ->with('status', 'success');
     }
 
     /**
@@ -61,6 +86,9 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        $customer->delete();
+        return to_route('customers.index')
+            ->with('message', "Berhasil menghapus data customer.")
+            ->with('status', 'success');
     }
 }
