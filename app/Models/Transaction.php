@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TransactionEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,7 +17,7 @@ class Transaction extends Model
      */
     protected $fillable = [
         'code',
-        'user_id',
+        'customer_id',
         'handled_by',
         'date',
         'total_price',
@@ -42,17 +43,23 @@ class Transaction extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        // 
+        'status' => TransactionEnum::class
     ];
 
     protected $dates = [
         'date'
     ];
 
+    // Attribute
+    public function getFormattedTotalPriceAttribute()
+    {
+        return "Rp. " . number_format($this->total_price, 0, '', '.');
+    }
+
     // Relationship
     public function customer()
     {
-        return $this->belongsTo(Customer::class, 'user_id', 'id');
+        return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
     public function handledBy()

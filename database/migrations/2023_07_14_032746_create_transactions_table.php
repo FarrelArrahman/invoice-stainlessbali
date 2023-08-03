@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('code');
             $table->foreignId('customer_id')->constrained('customers');
-            $table->unsignedBigInteger('handled_by');
+            $table->unsignedBigInteger('handled_by')->nullable();
             $table->foreign('handled_by', 'transaction_admin_foreign')
                 ->references('id')
                 ->on('users')

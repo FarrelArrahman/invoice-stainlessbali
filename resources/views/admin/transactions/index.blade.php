@@ -49,13 +49,13 @@ Transaksi
                         <td>{{ $transaction->code }}</td>
                         <td>{{ $transaction->customer->name }}</td>
                         <td>{{ $transaction->date }}</td>
-                        <td>{{ $transaction->price }}</td>
-                        <td>{!! $item->status->badge() !!}</td>
+                        <td>{{ $transaction->formatted_total_price }}</td>
+                        <td>{!! $transaction->status->badge() !!}</td>
                         <td>
-                            <form action="{{ route('transactions.destroy', $item->id) }}" method="POST">
+                            <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <a href="{{ route('transactions.edit', $item->id) }}" class="btn btn-warning btn-sm">
+                                <a href="{{ route('transactions.edit', $transaction->id) }}" class="btn btn-warning btn-sm">
                                     <i class="fa fa-pencil"></i>
                                 </a>
                                 <button onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')" type="submit" class="btn btn-danger btn-sm">
