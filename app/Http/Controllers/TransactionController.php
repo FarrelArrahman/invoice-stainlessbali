@@ -45,7 +45,7 @@ class TransactionController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
-        // dd($request->all());
+        dd($request->all());
 
         $transactionData = [
             'code' => date('ymdhis') . Str::upper(Str::random(6)),

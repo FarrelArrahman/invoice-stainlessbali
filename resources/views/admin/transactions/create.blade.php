@@ -541,6 +541,14 @@ Transaksi
                 e.target.value = 1
             }
             calculateItemPrice(e.target.value, e.target.getAttribute('data-price'), e.target.getAttribute('data-total-price'))
+        } else if (e.target.classList.contains('item-price')) {
+            let price = breakdowns.querySelector(e.target.getAttribute('data-total-price'))
+            price.setAttribute('data-price', e.target.value)
+            
+            let qty = breakdowns.querySelector(e.target.getAttribute('data-qty'))
+            qty.setAttribute('data-price', e.target.value)
+
+            calculateItemPrice(qty.value, qty.getAttribute('data-price'), qty.getAttribute('data-total-price'))
         }
     })
 
@@ -706,37 +714,34 @@ Transaksi
                         <input type="hidden" value="${data.id ?? ''}" name="breakdown[${breakdownCounter}][item][${itemCounter}][id]">
                     </div>
                     <div class="col-2">
-                        <img src="${data.image}" width="128">
-                        <input type="hidden" value="${data.image}" name="breakdown[${breakdownCounter}][item][${itemCounter}][image]">
+                        <img alt="Klik untuk mengubah gambar..." style="cursor: pointer;" onclick="triggerFile('breakdown[${breakdownCounter}][item][${itemCounter}][image]')" src="${data.image}" width="128">
+                        <input type="hidden" value="${data.image}">
                     </div>
                     <div class="col-8" id="item${itemCounter}-image-preview">
                         <h6 class="item-name mt-2">
-                            ${data.name}
-                            <input type="hidden" value="${data.name}" name="breakdown[${breakdownCounter}][item][${itemCounter}][name]">
+                            <input class="border-bottom-input" type="text" value="${data.name}" name="breakdown[${breakdownCounter}][item][${itemCounter}][name]">
                         </h6>
-                        <span class="item-brand">
-                            Brand: ${data.brand}
-                            <input type="hidden" value="${data.brand}" name="breakdown[${breakdownCounter}][item][${itemCounter}][brand]">
+                        <span class="item-brand mt-2">
+                            Brand: <input class="border-bottom-input" type="text" value="${data.brand}" name="breakdown[${breakdownCounter}][item][${itemCounter}][brand]">
                         </span> <br>
-                        <span class="item-model">
-                            Model: ${data.model}
-                            <input type="hidden" value="${data.model}" name="breakdown[${breakdownCounter}][item][${itemCounter}][model]">
+                        <span class="item-model mt-2">
+                            Model: <input class="border-bottom-input" type="text" value="${data.model}" name="breakdown[${breakdownCounter}][item][${itemCounter}][model]">
                         </span> <br>
-                        <span class="item-dimension">
-                            Dimension: ${data.dimension}
-                            <input type="hidden" value="${data.width}" name="breakdown[${breakdownCounter}][item][${itemCounter}][width]">
-                            <input type="hidden" value="${data.depth}" name="breakdown[${breakdownCounter}][item][${itemCounter}][depth]">
-                            <input type="hidden" value="${data.height}" name="breakdown[${breakdownCounter}][item][${itemCounter}][height]">
+                        <span class="item-dimension mt-2">
+                            Dimension (W x D x H): <br>
+                            <input size="4" class="border-bottom-input" type="text" value="${data.width}" name="breakdown[${breakdownCounter}][item][${itemCounter}][width]"> x 
+                            <input size="4" class="border-bottom-input" type="text" value="${data.depth}" name="breakdown[${breakdownCounter}][item][${itemCounter}][depth]"> x 
+                            <input size="4" class="border-bottom-input" type="text" value="${data.height}" name="breakdown[${breakdownCounter}][item][${itemCounter}][height]">
                         </span> <br>
-                        <span class="item-dimension">
-                            Price: ${rupiahFormat.format(data.price)}
-                            <input type="hidden" value="${data.price}" name="breakdown[${breakdownCounter}][item][${itemCounter}][price]">
+                        <span class="item-dimension mt-2">
+                            Price: 
+                            <input data-qty="#item${itemCounter}-qty" data-total-price="#item${itemCounter}-total-price" class="border-bottom-input item-price" type="text" value="${data.price}" name="breakdown[${breakdownCounter}][item][${itemCounter}][price]">
                         </span> <br>
                     </div>
                 </div>
             </th>
             <th class="border-0 text-center">
-                <input type="number" name="breakdown[${breakdownCounter}][item][${itemCounter}][qty]" data-price="${data.price}" data-total-price="#item${itemCounter}-total-price" class="form-control item-qty" min="1" value="1">
+                <input id="item${itemCounter}-qty" type="number" name="breakdown[${breakdownCounter}][item][${itemCounter}][qty]" data-price="${data.price}" data-total-price="#item${itemCounter}-total-price" class="form-control item-qty" min="1" value="1">
             </th>
             <th id="item${itemCounter}-total-price" class="border-0 rounded-end text-end prices" data-price="${data.price}">
                 ${rupiahFormat.format(data.price)}
@@ -818,6 +823,7 @@ Transaksi
         const image = addNewForm.elements.namedItem("image").cloneNode(true)
         image.classList.add("visually-hidden")
         image.setAttribute('name', `breakdown[${breakdownCounter}][item][${itemCounter}][image]`)
+        image.setAttribute('id', `breakdown[${breakdownCounter}][item][${itemCounter}][image]`)
         document.getElementById(`item${itemCounter}-image-preview`).appendChild(image)
     }
 
@@ -868,6 +874,41 @@ Transaksi
     
     dp.onchange = (e) => {
         calculateTotalPrice()
+    }
+
+    let triggerFile = (id) => {
+        let inputFile = document.getElementById(id)
+        let preview = event.target
+
+        if(confirm("Apakah Anda ingin mengubah gambar item ini?")) {
+            inputFile.click()
+
+            inputFile.onchange = e => {
+                const file = e.target.files[0]
+                if (file) {
+                    preview.src = URL.createObjectURL(file)
+                } else {
+                    preview.src = ""
+                }
+            }
+        }
+    }
+
+    let triggerChange = (id) => {
+
+    }
+
+    addNewImageInput.onchange = e => {
+        const file = e.target.files[0]
+        if (file) {
+            addNewImagePreview.classList.remove('d-none')
+            addNewImagePreview.src = URL.createObjectURL(file)
+            addNewForm.elements.namedItem("image_path").value = URL.createObjectURL(file)
+        } else {
+            addNewImagePreview.classList.add('d-none')
+            addNewImagePreview.src = ""
+            addNewForm.elements.namedItem("image_path").value = ""
+        }
     }
 </script>
 @endpush

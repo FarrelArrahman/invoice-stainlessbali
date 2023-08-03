@@ -63,5 +63,10 @@
             position: absolute;
             width: 1px;
         }
+
+        .border-bottom-input {
+            border: none; 
+            outline: none;
+        }
     </style>
 </head>
