@@ -42,6 +42,9 @@
     <!-- Nice Select2 -->
     <script src="{{ asset('js/nice-select2.js') }}"></script>
 
+    <!-- Vanilla Masker -->
+    <script src="{{ asset('js/vanilla-masker.min.js') }}"></script>
+
     <!-- Volt JS -->
-    <script src="{{ asset('assets/js/volt.js') }}"></script>
+    <script src="{{ asset('assets/js/volt.js') }}"></script>    
     @stack('custom-scripts')

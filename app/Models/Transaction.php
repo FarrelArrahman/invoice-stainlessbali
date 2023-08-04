@@ -43,11 +43,8 @@ class Transaction extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'status' => TransactionEnum::class
-    ];
-
-    protected $dates = [
-        'date'
+        'status' => TransactionEnum::class,
+        'date' => 'datetime'
     ];
 
     // Attribute
@@ -71,5 +68,4 @@ class Transaction extends Model
     {
         return $this->hasMany(TransactionBreakdown::class, 'transaction_id');
     }
-
 }

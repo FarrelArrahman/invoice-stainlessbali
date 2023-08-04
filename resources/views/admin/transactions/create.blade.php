@@ -310,7 +310,7 @@ Transaksi
                                 <span class="input-group-text" id="basic-addon1">
                                     Rp.
                                 </span>
-                                <input type="text" class="form-control" id="price" name="price">
+                                <input type="text" class="form-control" id="existing-price" name="price">
                             </div>
                         </div>
                     </div>
@@ -377,7 +377,7 @@ Transaksi
                             <span class="input-group-text" id="basic-addon1">
                                 Rp.
                             </span>
-                            <input type="text" class="form-control" id="price" name="price">
+                            <input type="text" class="form-control" id="new-price" name="price">
                         </div>
                     </div>
                 </form>
@@ -400,6 +400,14 @@ Transaksi
     
     let customerNiceSelect = NiceSelect.bind(document.getElementById("customer-nice-select"), {
         searchable: true
+    })
+
+    VMasker(document.querySelector(`#new-price`)).maskMoney({
+        precision: 0
+    })
+    
+    VMasker(document.querySelector(`#discount-nominal`)).maskMoney({
+        precision: 0
     })
 
     let breakdownCounter = 1
@@ -543,10 +551,10 @@ Transaksi
             calculateItemPrice(e.target.value, e.target.getAttribute('data-price'), e.target.getAttribute('data-total-price'))
         } else if (e.target.classList.contains('item-price')) {
             let price = breakdowns.querySelector(e.target.getAttribute('data-total-price'))
-            price.setAttribute('data-price', e.target.value)
+            price.setAttribute('data-price', e.target.value.replaceAll('.', ''))
             
             let qty = breakdowns.querySelector(e.target.getAttribute('data-qty'))
-            qty.setAttribute('data-price', e.target.value)
+            qty.setAttribute('data-price', e.target.value.replaceAll('.', ''))
 
             calculateItemPrice(qty.value, qty.getAttribute('data-price'), qty.getAttribute('data-total-price'))
         }
@@ -573,7 +581,7 @@ Transaksi
         })
 
         discountPercentage = document.querySelector('#discount-percentage').value * totalPrice / 100
-        discountNominal = document.querySelector('#discount-nominal').value
+        discountNominal = document.querySelector('#discount-nominal').value.replaceAll('.', '')
 
         discountTotal = discountPercentage + discountNominal
 
@@ -672,6 +680,10 @@ Transaksi
             inputs.namedItem("height").value = data.height
             inputs.namedItem("price").value = data.price
         }
+
+        VMasker(document.querySelector(`#existing-price`)).maskMoney({
+            precision: 0
+        })
     }
 
     let setCustomerDetail = (data) => {
@@ -715,7 +727,7 @@ Transaksi
                     </div>
                     <div class="col-2">
                         <img alt="Klik untuk mengubah gambar..." style="cursor: pointer;" onclick="triggerFile('breakdown[${breakdownCounter}][item][${itemCounter}][image]')" src="${data.image}" width="128">
-                        <input type="hidden" value="${data.image}">
+                        ${data.image != "" ? `<input type="hidden" name="breakdown[${breakdownCounter}][item][${itemCounter}][image]" value="${data.image}">` : ``}
                     </div>
                     <div class="col-8" id="item${itemCounter}-image-preview">
                         <h6 class="item-name mt-2">
@@ -734,17 +746,17 @@ Transaksi
                             <input size="4" class="border-bottom-input" type="text" value="${data.height}" name="breakdown[${breakdownCounter}][item][${itemCounter}][height]">
                         </span> <br>
                         <span class="item-dimension mt-2">
-                            Price: 
-                            <input data-qty="#item${itemCounter}-qty" data-total-price="#item${itemCounter}-total-price" class="border-bottom-input item-price" type="text" value="${data.price}" name="breakdown[${breakdownCounter}][item][${itemCounter}][price]">
+                            Rp.  
+                            <input id="item${itemCounter}-price" data-qty="#item${itemCounter}-qty" data-total-price="#item${itemCounter}-total-price" class="border-bottom-input item-price" type="text" value="${data.price}" name="breakdown[${breakdownCounter}][item][${itemCounter}][price]">
                         </span> <br>
                     </div>
                 </div>
             </th>
             <th class="border-0 text-center">
-                <input id="item${itemCounter}-qty" type="number" name="breakdown[${breakdownCounter}][item][${itemCounter}][qty]" data-price="${data.price}" data-total-price="#item${itemCounter}-total-price" class="form-control item-qty" min="1" value="1">
+                <input id="item${itemCounter}-qty" type="number" name="breakdown[${breakdownCounter}][item][${itemCounter}][qty]" data-price="${data.price.replaceAll('.', '')}" data-total-price="#item${itemCounter}-total-price" class="form-control item-qty" min="1" value="1">
             </th>
-            <th id="item${itemCounter}-total-price" class="border-0 rounded-end text-end prices" data-price="${data.price}">
-                ${rupiahFormat.format(data.price)}
+            <th id="item${itemCounter}-total-price" class="border-0 rounded-end text-end prices" data-price="${data.price.replaceAll('.', '')}">
+                ${rupiahFormat.format(data.price.replaceAll('.', ''))}
             </th>
         `
 
@@ -757,6 +769,10 @@ Transaksi
         })
 
         calculateTotalPrice()
+
+        VMasker(document.querySelector(`#item${itemCounter}-price`)).maskMoney({
+            precision: 0
+        })
     }
 
     selectExistingItemButton.addEventListener('click', function(e) {
@@ -892,10 +908,6 @@ Transaksi
                 }
             }
         }
-    }
-
-    let triggerChange = (id) => {
-
     }
 
     addNewImageInput.onchange = e => {

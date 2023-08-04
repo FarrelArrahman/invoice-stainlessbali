@@ -46,7 +46,9 @@ Transaksi
                 <tbody>
                     @foreach($transactions as $transaction)
                     <tr>
-                        <td>{{ $transaction->code }}</td>
+                        <td>
+                            <a href="{{ route('transactions.show', $transaction->code) }}">{{ $transaction->code }}</a>
+                        </td>
                         <td>{{ $transaction->customer->name }}</td>
                         <td>{{ $transaction->date }}</td>
                         <td>{{ $transaction->formatted_total_price }}</td>
@@ -55,6 +57,9 @@ Transaksi
                             <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
+                                <a href="{{ route('transactions.show', $transaction->code) }}" class="btn btn-info btn-sm">
+                                    <i class="fa fa-print"></i>
+                                </a>
                                 <a href="{{ route('transactions.edit', $transaction->id) }}" class="btn btn-warning btn-sm">
                                     <i class="fa fa-pencil"></i>
                                 </a>

@@ -57,4 +57,19 @@ class TransactionItem extends Model
     {
         return $this->belongsTo(Item::class, 'item_id', 'id');
     }
+
+    public function getFormattedPriceAttribute()
+    {
+        return "Rp. " . number_format($this->price, 0, '', '.');
+    }
+
+    public function getTotalPriceAttribute()
+    {
+        return $this->price * $this->qty;
+    }
+
+    public function getFormattedTotalPriceAttribute()
+    {
+        return "Rp. " . number_format($this->total_price, 0, '', '.');
+    }
 }

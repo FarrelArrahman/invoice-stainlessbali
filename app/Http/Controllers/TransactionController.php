@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\StatusEnum;
 use App\Enums\TransactionEnum;
 use App\Models\Transaction;
 use App\Http\Requests\StoreTransactionRequest;
@@ -11,7 +10,7 @@ use App\Models\Customer;
 use App\Models\Item;
 use App\Models\TransactionBreakdown;
 use App\Models\TransactionItem;
-use Illuminate\Support\Str;
+use PDF;
 
 class TransactionController extends Controller
 {
@@ -45,10 +44,11 @@ class TransactionController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
-        dd($request->all());
+        // dd($request->all());
+        // dd(is_file($request->breakdown[1]['item'][2]['image']));
 
         $transactionData = [
-            'code' => date('ymdhis') . Str::upper(Str::random(6)),
+            'code' => 'stainlessbali-invoice-' . date('ymdhis'),
             'handled_by' => NULL,
             'date' => now(),
             'total_price' => $request->total_price_before_discount,
@@ -92,14 +92,16 @@ class TransactionController extends Controller
                     $breakdownItemData = [
                         'transaction_breakdown_id' => $transactionBreakdown->id,
                         'item_id' => $item['id'] ?? NULL,
-                        'image' => $item['id'] == null ? ($item['image'])->store('public/items') : $item['image'],
+                        'image' => is_file($item['image']) 
+                            ? ($item['image'])->store('public/items') 
+                            : $item['image'],
                         'description' => $item['name'],
                         'brand' => $item['brand'],
                         'model' => $item['model'],
                         'width' => $item['width'],
                         'depth' => $item['depth'],
                         'height' => $item['height'],
-                        'price' => $item['price'],
+                        'price' => str_replace('.', '', $item['price']),
                         'qty' => $item['qty'],
                         'status' => "",
                     ];
@@ -117,9 +119,13 @@ class TransactionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Transaction $transaction)
+    public function show($transaction)
     {
-        //
+        $transaction = Transaction::whereCode($transaction)->first();
+        // return view('admin.transactions.pdf', ['transaction' => $transaction]);
+        $pdf = PDF::loadView('admin.transactions.pdf', ['transaction' => $transaction]);
+
+        return $pdf->download('invoice-' . $transaction->code . '.pdf');
     }
 
     /**
