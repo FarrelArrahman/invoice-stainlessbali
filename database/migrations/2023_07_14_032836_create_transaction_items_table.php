@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('transaction_breakdown_id')->constrained('transaction_breakdowns');
             $table->foreignId('item_id')->nullable()->constrained('items');
-            $table->text('description')->nullable();
+            $table->text('name')->nullable();
             $table->string('image')->nullable();
             $table->string('brand')->nullable();
             $table->string('model')->nullable();

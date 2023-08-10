@@ -17,7 +17,7 @@ class TransactionItem extends Model
     protected $fillable = [
         'transaction_breakdown_id',
         'item_id',
-        'description',
+        'name',
         'image',
         'brand',
         'model',
