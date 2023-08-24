@@ -95,9 +95,9 @@
             @foreach($breakdown->items as $item)
             <tr>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $loop->iteration }}</td>
-                <td style="padding: 0px 7px; line-height: 20px; vertical-align: middle;">{{ $item->description }}</td>
+                <td style="padding: 0px 7px; line-height: 20px; vertical-align: middle;">{{ $item->name }}</td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">
-                    <img src="{{ asset($item->image) }}" width="64px">
+                    <img style="padding: 5px;" src="{{ $item->item_id == NULL ? Storage::url($item->image) : asset($item->image) }}" width="48px">
                 </td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->brand }}</td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->model }}</td>
@@ -123,10 +123,39 @@
                 </table>
                 <table cellpadding="10" width="40%" align="right" style="font-family: sans-serif; font-size: 14px;">
                     <tr>
-                        <td style="border: 1px #000 solid; line-height: 20px;"><strong>Total</strong></td>
-                        <td style="border: 1px #000 solid; line-height: 20px;">{{ $transaction->formatted_total_price }}</td>
+                        <td style="border: 1px #000 solid; line-height: 20px; width: 30%"><strong>Total</strong></td>
+                        <td style="border: 1px #000 solid; line-height: 20px; width: 70%">{{ $transaction->formatted_total_price }}</td>
                     </tr>
                 </table>
+                <br>
+                @if($transaction->invoice_type == "Deal")
+                <table cellpadding="10" width="40%" align="right" style="font-family: sans-serif; font-size: 14px;">
+                    <tr>
+                        <td style="border: 1px #000 solid; line-height: 20px; width: 30%"><strong>DP</strong></td>
+                        <td style="border: 1px #000 solid; line-height: 20px; width: 70%">{{ $transaction->dp }}</td>
+                    </tr>
+                </table>
+                <table cellpadding="10" width="40%" align="right" style="font-family: sans-serif; font-size: 14px;">
+                    <tr>
+                        <td style="border: 1px #000 solid; line-height: 20px; width: 30%"><strong>Termin 1</strong></td>
+                        <td style="border: 1px #000 solid; line-height: 20px; width: 70%">{{ $transaction->amount_per_termin }}</td>
+                    </tr>
+                </table>
+                <table cellpadding="10" width="40%" align="right" style="font-family: sans-serif; font-size: 14px;">
+                    <tr>
+                        <td style="border: 1px #000 solid; line-height: 20px; width: 30%"><strong>Termin 2</strong></td>
+                        <td style="border: 1px #000 solid; line-height: 20px; width: 70%">{{ $transaction->amount_per_termin }}</td>
+                    </tr>
+                </table>
+                @if($transaction->payment_terms > 2)
+                <table cellpadding="10" width="40%" align="right" style="font-family: sans-serif; font-size: 14px;">
+                    <tr>
+                        <td style="border: 1px #000 solid; line-height: 20px; width: 30%"><strong>Termin 3</strong></td>
+                        <td style="border: 1px #000 solid; line-height: 20px; width: 70%">{{ $transaction->amount_per_termin }}</td>
+                    </tr>
+                </table>
+                @endif
+                @endif
             </td>
         </tr>
     </table>
@@ -139,17 +168,11 @@
                 <table width="75%" align="left" style="font-family: sans-serif; font-size: 13px; text-align: left;">
                     <tr>
                         <td style="padding: 0px; line-height: 20px;">
+                        @if($transaction->invoice_type == "Deal")
                         Note <br>
-                        <strong>
-                        #Prices can change at any time, so please confirm before ordering# <br>
-                        #processing 20-25 working days according to the queue <br>
-                        </strong> <br>
-                        *As a sign of completion, please pay a down payment of at least 50% <br>
-                        directly to our location: Jl. Tukad Badung No.104 Renon <br>
-                        Or By Transfer : <br>
-                        BCA : 7725344511 <br>
-                        An : Muhammad Ferrizal Zulkarnain <br>
+                        {!! $transaction->note !!}
                         </td>
+                        @endif
                     </tr>
                 </table>
                 <table width="25%" align="right" style="font-family: sans-serif; font-size: 14px;">

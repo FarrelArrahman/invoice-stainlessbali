@@ -50,6 +50,9 @@
     <!-- Nice Select2 -->
     <link type="text/css" href="{{ asset('css/nice-select2.css') }}" rel="stylesheet">
 
+    <!-- Froala -->
+    <link href="https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+
     <!-- NOTICE: You can use the _analytics.html partial to include production code specific code & trackers -->
 
     <style>

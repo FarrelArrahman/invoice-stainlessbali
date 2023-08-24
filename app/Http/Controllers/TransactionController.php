@@ -8,6 +8,7 @@ use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
 use App\Models\Customer;
 use App\Models\Item;
+use App\Models\Setting;
 use App\Models\TransactionBreakdown;
 use App\Models\TransactionItem;
 use PDF;
@@ -47,8 +48,11 @@ class TransactionController extends Controller
         // dd($request->all());
         // dd(is_file($request->breakdown[1]['item'][2]['image']));
 
+        $code = date('ymdhis');
+        $note = Setting::first()->value;
+
         $transactionData = [
-            'code' => 'stainlessbali-invoice-' . date('ymdhis'),
+            'code' => $code,
             'handled_by' => NULL,
             'date' => now(),
             'total_price' => $request->total_price_before_discount,
@@ -57,7 +61,8 @@ class TransactionController extends Controller
             'discount_percentage' => $request->discount_percentage,
             'payment_terms' => $request->payment_terms,
             'status' => TransactionEnum::Unpaid,
-            'note' => ''
+            'invoice_type' => $request->invoice_type,
+            'note' => str_replace('${down_payment}', number_format($request->dp, 0, '', '.'), $note)
         ];
 
         if(empty($request->customer_id)) {
@@ -95,7 +100,7 @@ class TransactionController extends Controller
                         'image' => is_file($item['image']) 
                             ? ($item['image'])->store('public/items') 
                             : $item['image'],
-                        'description' => $item['name'],
+                        'name' => $item['name'],
                         'brand' => $item['brand'],
                         'model' => $item['model'],
                         'width' => $item['width'],

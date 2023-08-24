@@ -22,7 +22,7 @@ Transaksi
         </div>
     </div>
 </div>
-<form action="{{ route('transactions.store') }}" method="POST" enctype="multipart/form-data">
+<form onsubmit="checkForm()" action="{{ route('transactions.store') }}" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="total_price" id="total-price-input">
     <input type="hidden" name="total_price_before_discount" id="total-price-before-discount-input">
     @csrf
@@ -35,7 +35,7 @@ Transaksi
                             <div class="accordion" id="accordionCustomer">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="customerData">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#customerCollapse" aria-expanded="false" aria-controls="customerCollapse">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#customerCollapse" aria-expanded="false" aria-controls="customerCollapse">
                                             Masukkan data pelanggan...
                                         </button>
                                     </h2>
@@ -394,6 +394,43 @@ Transaksi
 
 @push('custom-scripts')
 <script type="text/javascript">
+    let showNotyf = (background, message) => {
+        const notyf = new Notyf({
+            position: {
+                x: 'right',
+                y: 'top',
+            },
+            types: [
+                {
+                    type: "info",
+                    background: background,
+                    icon: {
+                        className: 'fa fa-exclamation-circle',
+                        tagName: 'span',
+                        color: '#fff'
+                    },
+                    dismissible: false
+                }
+            ]
+        })
+        
+        notyf.open({
+            type: "info",
+            message: message
+        })
+    }
+
+    let checkForm = () => {
+        if(
+            customerDetail.querySelector("#customer-name").value == "" ||
+            customerDetail.querySelector("#customer-address").value == "" || 
+            customerDetail.querySelector("#customer-phone-number").value == ""
+        ) {
+            showNotyf("red", "Data pelanggan belum diisi")
+            event.preventDefault()
+        }
+    }
+
     let itemNiceSelect = NiceSelect.bind(document.getElementById("item-nice-select"), {
         searchable: true
     })
@@ -465,7 +502,6 @@ Transaksi
         currency: 'IDR',
         maximumFractionDigits: 0
     });
-
 
     // Add new breakdown upon clicking
     addBreakdown.addEventListener('click', function() {

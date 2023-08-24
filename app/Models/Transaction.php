@@ -21,10 +21,12 @@ class Transaction extends Model
         'handled_by',
         'date',
         'total_price',
+        'dp',
         'discount_nominal',
         'discount_percentage',
         'payment_terms',
         'status',
+        'invoice_type',
         'note',
     ];
 
@@ -51,6 +53,16 @@ class Transaction extends Model
     public function getFormattedTotalPriceAttribute()
     {
         return "Rp. " . number_format($this->total_price, 0, '', '.');
+    }
+    
+    public function getFormattedDpAttribute()
+    {
+        return "Rp. " . number_format($this->dp, 0, '', '.');
+    }
+
+    public function getAmountPerTerminAttribute()
+    {
+        return "Rp. " . number_format(round(($this->total_price - $this->dp) / $this->payment_terms), 0, '', '.');
     }
 
     // Relationship
