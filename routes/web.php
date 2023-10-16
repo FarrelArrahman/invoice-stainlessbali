@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ExpenditureController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SettingController;
@@ -28,6 +29,7 @@ Route::get('/dashboard', function () {
 Route::resource('items', ItemController::class);
 Route::resource('customers', CustomerController::class);
 Route::resource('transactions', TransactionController::class);
+Route::resource('expenditures', ExpenditureController::class);
 Route::resource('settings', SettingController::class);
 
 // API
