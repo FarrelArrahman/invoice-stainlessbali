@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('technician_expenditure_details', function (Blueprint $table) {
+        Schema::create('employee_expenditures', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('technician_expenditure_id')->constrained('technician_expenditures');
-            $table->string('item_name');
-            $table->double('price')->default(0);
-            $table->integer('qty')->default(0);
+            $table->foreignId('employee_id')->constrained('employees');
+            $table->integer('working_day')->default(0);
+            $table->integer('salary_per_day')->default(0);
             $table->string('status');
             $table->timestamps();
         });
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('technician_expenditure_details');
+        Schema::dropIfExists('employee_expenditures');
     }
 };

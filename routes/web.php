@@ -5,6 +5,8 @@ use App\Http\Controllers\ExpenditureController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\TechnicianExpenditureController;
+use App\Models\TechnicianExpenditure;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +32,10 @@ Route::resource('items', ItemController::class);
 Route::resource('customers', CustomerController::class);
 Route::resource('transactions', TransactionController::class);
 Route::resource('settings', SettingController::class);
+Route::resource('technician_expenditures', TechnicianExpenditureController::class);
+Route::resource('employee_expenditures', EmployeeExpenditureController::class);
+Route::resource('operational_expenditures', OperationalExpenditureController::class);
+Route::resource('material_expenditures', MaterialExpenditureController::class);
 
 // API
 Route::prefix('/api/v1')->group(function() {

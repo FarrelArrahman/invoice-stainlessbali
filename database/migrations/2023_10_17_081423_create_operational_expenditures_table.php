@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('technician_expenditures', function (Blueprint $table) {
+        Schema::create('operational_expenditures', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('technician_id')->constrained('technicians');
-            $table->date('date');
-            $table->text('note')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('technician_expenditures');
+        Schema::dropIfExists('operational_expenditures');
     }
 };
