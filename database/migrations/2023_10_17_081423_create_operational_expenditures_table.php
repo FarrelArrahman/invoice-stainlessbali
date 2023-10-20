@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('operational_expenditures', function (Blueprint $table) {
             $table->id();
+            $table->string('shop_name');
+            $table->text('note')->nullable();
+            $table->string('status');
             $table->timestamps();
         });
     }
