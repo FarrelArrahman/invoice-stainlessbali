@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\StatusEnum;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,10 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        //
+        $employees = Employee::all();
+        return view('admin.employees.index', [
+            'employees' => $employees
+        ]);
     }
 
     /**
@@ -20,7 +24,7 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.employees.create');
     }
 
     /**
@@ -28,7 +32,19 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = [
+            'name' => $request->name,
+            'address' => $request->address,
+            'phone_number' => $request->phone_number,
+            'role' => $request->role,
+            'status' => StatusEnum::Active,
+        ];
+
+        Employee::create($data);
+
+        return to_route('employees.index')
+            ->with('message', "Berhasil menambahkan data perusahaan baru.")
+            ->with('status', 'success');
     }
 
     /**
@@ -44,7 +60,9 @@ class EmployeeController extends Controller
      */
     public function edit(Employee $employee)
     {
-        //
+        return view('admin.employees.edit', [
+            'employee' => $employee
+        ]);
     }
 
     /**
@@ -52,7 +70,19 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, Employee $employee)
     {
-        //
+        $data = [
+            'name' => $request->name,
+            'address' => $request->address,
+            'phone_number' => $request->phone_number,
+            'role' => $request->role,
+            'status' => StatusEnum::tryFrom($request->status),
+        ];
+
+        $employee->update($data);
+
+        return to_route('employees.index')
+            ->with('message', "Berhasil mengubah data perusahaan.")
+            ->with('status', 'success');
     }
 
     /**
@@ -60,6 +90,9 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        //
+        $employee->delete();
+        return to_route('employees.index')
+            ->with('message', "Berhasil menghapus data perusahaan.")
+            ->with('status', 'success');
     }
 }

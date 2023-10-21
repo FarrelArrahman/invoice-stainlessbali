@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\StatusEnum;
 use App\Models\Technician;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,10 @@ class TechnicianController extends Controller
      */
     public function index()
     {
-        //
+        $technicians = Technician::all();
+        return view('admin.technicians.index', [
+            'technicians' => $technicians
+        ]);
     }
 
     /**
@@ -20,7 +24,7 @@ class TechnicianController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.technicians.create');
     }
 
     /**
@@ -28,7 +32,18 @@ class TechnicianController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = [
+            'name' => $request->name,
+            'address' => $request->address,
+            'phone_number' => $request->phone_number,
+            'status' => StatusEnum::Active,
+        ];
+
+        Technician::create($data);
+
+        return to_route('technicians.index')
+            ->with('message', "Berhasil menambahkan data perusahaan baru.")
+            ->with('status', 'success');
     }
 
     /**
@@ -44,7 +59,9 @@ class TechnicianController extends Controller
      */
     public function edit(Technician $technician)
     {
-        //
+        return view('admin.technicians.edit', [
+            'technician' => $technician
+        ]);
     }
 
     /**
@@ -52,7 +69,18 @@ class TechnicianController extends Controller
      */
     public function update(Request $request, Technician $technician)
     {
-        //
+        $data = [
+            'name' => $request->name,
+            'address' => $request->address,
+            'phone_number' => $request->phone_number,
+            'status' => StatusEnum::tryFrom($request->status),
+        ];
+
+        $technician->update($data);
+
+        return to_route('technicians.index')
+            ->with('message', "Berhasil mengubah data perusahaan.")
+            ->with('status', 'success');
     }
 
     /**
@@ -60,6 +88,9 @@ class TechnicianController extends Controller
      */
     public function destroy(Technician $technician)
     {
-        //
+        $technician->delete();
+        return to_route('technicians.index')
+            ->with('message', "Berhasil menghapus data perusahaan.")
+            ->with('status', 'success');
     }
 }

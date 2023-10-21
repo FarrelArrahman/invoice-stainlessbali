@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\StatusEnum;
 use App\Models\Company;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,10 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
+        $companies = Company::all();
+        return view('admin.companies.index', [
+            'companies' => $companies
+        ]);
     }
 
     /**
@@ -20,7 +24,7 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.companies.create');
     }
 
     /**
@@ -28,7 +32,18 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = [
+            'name' => $request->name,
+            'address' => $request->address,
+            'telephone_number' => $request->telephone_number,
+            'status' => StatusEnum::Active,
+        ];
+
+        Company::create($data);
+
+        return to_route('companies.index')
+            ->with('message', "Berhasil menambahkan data perusahaan baru.")
+            ->with('status', 'success');
     }
 
     /**
@@ -44,7 +59,9 @@ class CompanyController extends Controller
      */
     public function edit(Company $company)
     {
-        //
+        return view('admin.companies.edit', [
+            'company' => $company
+        ]);
     }
 
     /**
@@ -52,7 +69,18 @@ class CompanyController extends Controller
      */
     public function update(Request $request, Company $company)
     {
-        //
+        $data = [
+            'name' => $request->name,
+            'address' => $request->address,
+            'telephone_number' => $request->telephone_number,
+            'status' => StatusEnum::tryFrom($request->status),
+        ];
+
+        $company->update($data);
+
+        return to_route('companies.index')
+            ->with('message', "Berhasil mengubah data perusahaan.")
+            ->with('status', 'success');
     }
 
     /**
@@ -60,6 +88,9 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
-        //
+        $company->delete();
+        return to_route('companies.index')
+            ->with('message', "Berhasil menghapus data perusahaan.")
+            ->with('status', 'success');
     }
 }

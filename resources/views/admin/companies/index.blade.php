@@ -1,7 +1,7 @@
 @extends('layout.template')
 
 @section('title')
-Transaksi
+Perusahaan
 @endsection
 
 @section('content')
@@ -13,17 +13,17 @@ Transaksi
                     <svg class="icon icon-xxs" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                 </a>
             </li>
-            <li class="breadcrumb-item"><a href="{{ route('transactions.index') }}">Transaksi</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Daftar Transaksi</li>
+            <li class="breadcrumb-item"><a href="{{ route('companies.index') }}">Perusahaan</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Daftar Perusahaan</li>
         </ol>
     </nav>
     <div class="d-flex justify-content-between w-100 flex-wrap">
         <div class="mb-3 mb-lg-0">
-            <h1 class="h4">Daftar Transaksi</h1>
+            <h1 class="h4">Daftar Perusahaan</h1>
         </div>
         <div>
-            <a href="{{ route('transactions.create') }}" class="btn btn-info d-inline-flex align-items-center">
-                <i class="fa fa-plus me-2"></i> Tambah Transaksi
+            <a href="{{ route('companies.create') }}" class="btn btn-info d-inline-flex align-items-center">
+                <i class="fa fa-plus me-2"></i> Tambah Perusahaan
             </a>
         </div>
     </div>
@@ -35,32 +35,27 @@ Transaksi
             <table id="example" class="table table-centered mb-0 rounded">
                 <thead class="thead-light">
                     <tr>
-                        <th class="border-0 rounded-start">Code</th>
-                        <th class="border-0">Customer</th>
-                        <th class="border-0">Date</th>
-                        <th class="border-0">Total Price</th>
+                        <th class="border-0 rounded-start">#</th>
+                        <th class="border-0">Nama Toko/Perusahaan</th>
+                        <th class="border-0">Alamat</th>
+                        <th class="border-0">Nomor Telepon</th>
                         <th class="border-0">Status</th>
                         <th class="border-0 rounded-end">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($transactions as $transaction)
+                    @foreach($companies as $company)
                     <tr>
+                        <td>{{ $company->id }}</td>
+                        <td>{{ $company->name }}</td>
+                        <td>{{ $company->address }}</td>
+                        <td>{{ $company->telephone_number }}</td>
+                        <td>{!! $company->status->badge() !!}</td>
                         <td>
-                            <a href="{{ route('transactions.show', $transaction->code) }}">{{ $transaction->code }}</a>
-                        </td>
-                        <td>{{ $transaction->customer->name }}</td>
-                        <td>{{ $transaction->date }}</td>
-                        <td>{{ $transaction->formatted_total_price }}</td>
-                        <td>{!! $transaction->status->badge() !!}</td>
-                        <td>
-                            <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST">
+                            <form action="{{ route('companies.destroy', $company->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <a href="{{ route('transactions.show', $transaction->code) }}" class="btn btn-info btn-sm">
-                                    <i class="fa fa-print"></i>
-                                </a>
-                                <a href="{{ route('transactions.edit', $transaction->id) }}" class="btn btn-warning btn-sm">
+                                <a href="{{ route('companies.edit', $company->id) }}" class="btn btn-warning btn-sm">
                                     <i class="fa fa-pencil"></i>
                                 </a>
                                 <button onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')" type="submit" class="btn btn-danger btn-sm">

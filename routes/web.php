@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ExpenditureController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\TechnicianController;
 use App\Http\Controllers\TechnicianExpenditureController;
 use App\Models\TechnicianExpenditure;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +39,11 @@ Route::resource('technician_expenditures', TechnicianExpenditureController::clas
 Route::resource('employee_expenditures', EmployeeExpenditureController::class);
 Route::resource('operational_expenditures', OperationalExpenditureController::class);
 Route::resource('material_expenditures', MaterialExpenditureController::class);
+
+// Master Data
+Route::resource('companies', CompanyController::class);
+Route::resource('technicians', TechnicianController::class);
+Route::resource('employees', EmployeeController::class);
 
 // API
 Route::prefix('/api/v1')->group(function() {

@@ -141,17 +141,17 @@
                     <div class="multi-level collapse " role="list" id="master-data" aria-expanded="false">
                         <ul class="flex-column nav">
                             <li class="nav-item">
-                                <a class="nav-link" href="../../pages/examples/sign-in.html">
+                                <a class="nav-link" href="{{ route('technicians.index') }}">
                                     <span class="sidebar-text">Teknisi</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="../../pages/examples/sign-up.html">
+                                <a class="nav-link" href="{{ route('companies.index') }}">
                                     <span class="sidebar-text">Perusahaan</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="../../pages/examples/sign-up.html">
+                                <a class="nav-link" href="{{ route('employees.index') }}">
                                     <span class="sidebar-text">Karyawan</span>
                                 </a>
                             </li>
