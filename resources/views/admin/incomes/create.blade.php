@@ -53,6 +53,10 @@ Pemasukan
                                                     <label for="name">Nomor Kantor</label>
                                                     <input id="company-telephone-number" type="text" class="form-control" id="company_telephone_number" name="company_telephone_number">
                                                 </div>
+                                                <div class="mb-3">
+                                                    <label for="name">Alamat Kantor</label>
+                                                    <input id="company-address" type="text" class="form-control" id="address" name="address">
+                                                </div>
                                                 <label for="name">Nama Customer</label>
                                                 <div class="input-group mb-3">
                                                     <input id="customer-name" type="text" class="form-control" name="customer_name">
@@ -63,10 +67,6 @@ Pemasukan
                                                 <div class="mb-3">
                                                     <label for="name">Nomor Telepon</label>
                                                     <input id="customer-phone-number" type="text" class="form-control" id="customer_phone_number" name="customer_phone_number">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="name">Alamat</label>
-                                                    <input id="customer-address" type="text" class="form-control" id="address" name="address">
                                                 </div>
                                             </div>
                                         </div>
@@ -424,7 +424,7 @@ Pemasukan
     let checkForm = () => {
         if(
             customerDetail.querySelector("#customer-name").value == "" ||
-            customerDetail.querySelector("#customer-address").value == "" || 
+            customerDetail.querySelector("#companyaddress").value == "" || 
             customerDetail.querySelector("#customer-phone-number").value == ""
         ) {
             showNotyf("red", "Data pelanggan belum diisi")
@@ -725,12 +725,12 @@ Pemasukan
 
     let setCompanyDetail = (data) => {
         customerDetail.querySelector("#company-name").value = data.name
+        customerDetail.querySelector("#company-address").value = data.address
         customerDetail.querySelector("#company-telephone-number").value = data.telephoneNumber
     }
 
     let setCustomerDetail = (data) => {
         customerDetail.querySelector("#customer-name").value = data.name
-        customerDetail.querySelector("#customer-address").value = data.address
         customerDetail.querySelector("#customer-phone-number").value = data.phoneNumber
     }
 

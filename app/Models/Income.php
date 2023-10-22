@@ -51,4 +51,9 @@ class Income extends Model
     {
         return "Rp. " . number_format($this->total_price, 0, '', '.');
     }
+
+    public function items()
+    {
+        return $this->hasMany(IncomeDetail::class, 'income_id', 'id');
+    }
 }

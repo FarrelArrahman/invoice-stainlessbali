@@ -22,7 +22,7 @@ Pemasukan
         </div>
     </div>
 </div>
-<form onsubmit="checkForm()" action="{{ route('transactions.store') }}" method="POST" enctype="multipart/form-data">
+<form onsubmit="checkForm()" action="{{ route('incomes.store') }}" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="total_price" id="total-price-input">
     <input type="hidden" name="total_price_before_discount" id="total-price-before-discount-input">
     @csrf
@@ -45,9 +45,17 @@ Pemasukan
                                                 <label for="company-name">Nama Perusahaan</label>
                                                 <div class="input-group mb-3">
                                                     <input id="company-name" type="text" class="form-control" name="company_name">
-                                                    <span data-bs-toggle="modal" data-bs-target="#modal-select-customer" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
+                                                    <span data-bs-toggle="modal" data-bs-target="#modal-select-company" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
                                                         <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
                                                     </span>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="name">Nomor Kantor</label>
+                                                    <input id="company-telephone-number" type="text" class="form-control" id="company_telephone_number" name="company_telephone_number">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="name">Alamat Kantor</label>
+                                                    <input id="company-address" type="text" class="form-control" id="address" name="address">
                                                 </div>
                                                 <label for="name">Nama Customer</label>
                                                 <div class="input-group mb-3">
@@ -57,16 +65,8 @@ Pemasukan
                                                     </span>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="name">Nomor Kantor</label>
-                                                    <input id="company-telephone-number" type="text" class="form-control" id="company_telephone_number" name="company_telephone_number">
-                                                </div>
-                                                <div class="mb-3">
                                                     <label for="name">Nomor Telepon</label>
                                                     <input id="customer-phone-number" type="text" class="form-control" id="customer_phone_number" name="customer_phone_number">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="name">Alamat</label>
-                                                    <input id="customer-address" type="text" class="form-control" id="address" name="address">
                                                 </div>
                                             </div>
                                         </div>
@@ -100,7 +100,7 @@ Pemasukan
                                         <div class="accordion-body">
                                             <label for="">Tanggal</label>
                                             <input type="date" class="form-control w-100 my-2" name="date" value="{{ today()->format('Y-m-d') }}">
-                                            <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown1" data-breakdown-counter="1"><i class="fa fa-plus me-1"></i> Tambah Manual</button>
+                                            <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown1" data-breakdown-counter="1"><i class="fa fa-plus me-1"></i> Tambah Item</button>
                                             <!-- <button class="select-item-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal-select-item" data-breakdown="breakdown1" data-breakdown-counter="1"><i class="fa fa-list me-1"></i> Pilih Item</button> -->
                                             <span class="deleteBreakdownPlaceholder"></span>
                                             <div class="table-responsive">
@@ -231,7 +231,34 @@ Pemasukan
         </div>
 </form>
 
-<!-- Modal Select Item -->
+<!-- Modal Select Company -->
+<div class="modal fade" id="modal-select-company" tabindex="-1" role="dialog" aria-labelledby="modal-select-company" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="h6 modal-title">Pilih perusahaan</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="a-select" class="form-label">Nama</label>
+                    <select name="company_id" id="company-nice-select" class="select-company w-100" placeholder="Pilih perusahaan...">
+                        <option value="" disabled selected>--- Pilih perusahaan ---</option>
+                        @foreach($companies as $company)
+                        <option value="{{ $company->id }}" data-name="{{ $company->name }}" data-address="{{ $company->address }}" data-telephone-number="{{ $company->telephone_number }}">{{ $company->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="select-existing-company-button" class="btn btn-secondary add-company-data" data-bs-dismiss="modal">Pilih Perusahaan</button>
+                <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Select Customer -->
 <div class="modal fade" id="modal-select-customer" tabindex="-1" role="dialog" aria-labelledby="modal-select-customer" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -244,9 +271,6 @@ Pemasukan
                     <label for="a-select" class="form-label">Nama</label>
                     <select name="customer_id" id="customer-nice-select" class="select-customer w-100" placeholder="Pilih customer...">
                         <option value="" disabled selected>--- Pilih customer ---</option>
-                        @foreach($customers as $customer)
-                        <option value="{{ $customer->id }}" data-name="{{ $customer->name }}" data-address="{{ $customer->address }}" data-phone-number="{{ $customer->phone_number }}">{{ $customer->name }}</option>
-                        @endforeach
                     </select>
                 </div>
             </div>
@@ -257,7 +281,6 @@ Pemasukan
         </div>
     </div>
 </div>
-
 
 <!-- Modal Select Item -->
 <div class="modal fade" id="modal-select-item" tabindex="-1" role="dialog" aria-labelledby="modal-select-item" aria-hidden="true">
@@ -327,7 +350,7 @@ Pemasukan
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="select-existing-item-button" class="btn btn-secondary add-to-breakdown disabled" data-bs-dismiss="modal">Tambah ke Breakdown</button>
+                <button type="button" id="select-existing-item-button" class="btn btn-secondary add-to-breakdown disabled" data-bs-dismiss="modal">Tambah ke Daftar Barang</button>
                 <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -401,7 +424,7 @@ Pemasukan
     let checkForm = () => {
         if(
             customerDetail.querySelector("#customer-name").value == "" ||
-            customerDetail.querySelector("#customer-address").value == "" || 
+            customerDetail.querySelector("#companyaddress").value == "" || 
             customerDetail.querySelector("#customer-phone-number").value == ""
         ) {
             showNotyf("red", "Data pelanggan belum diisi")
@@ -409,7 +432,7 @@ Pemasukan
         }
     }
 
-    let itemNiceSelect = NiceSelect.bind(document.getElementById("item-nice-select"), {
+    let companyNiceSelect = NiceSelect.bind(document.getElementById("company-nice-select"), {
         searchable: true
     })
     
@@ -445,14 +468,14 @@ Pemasukan
     const inputFileWrapper = document.getElementById('input-file-wrapper')
     const inputFile = document.getElementById('input-file')
     const imagePreview = document.getElementById('image-preview')
-    const itemSelect = document.getElementById('item-nice-select')
+    const companySelect = document.getElementById('company-nice-select')
     const itemDetail = document.getElementById('item-detail')
     const customerSelect = document.getElementById('customer-nice-select')
     const customerDetail = document.getElementById('customer-detail')
     const addNewForm = document.getElementById('add-new-form')
     const addNewItemButton = document.getElementById('add-new-item-button')
     const selectItemForm = document.getElementById('select-item-form')
-    const selectExistingItemButton = document.getElementById('select-existing-item-button')
+    const selectExistingCompanyButton = document.getElementById('select-existing-company-button')
     const selectExistingCustomerButton = document.getElementById('select-existing-customer-button')
     const totalPriceText = document.getElementById('total-price-text')
     const totalPriceInput = document.getElementById('total-price-input')
@@ -608,8 +631,8 @@ Pemasukan
         }
 
         setTotalPrice(totalPrice)
-        let dpAmount = setDP(totalPrice, dp.value)
-        setTerm(totalPrice, dpAmount, term.value)
+        // let dpAmount = setDP(totalPrice, dp.value)
+        // setTerm(totalPrice, dpAmount, term.value)
     }
 
     let setTotalPrice = (totalPrice) => {
@@ -652,13 +675,13 @@ Pemasukan
         term3Input.value = terms == 3 ? amountPerTerm : 0
     }
 
-    // Show item detail upon selection changing
-    itemSelect.onchange = function(e) {
-        if (!itemSelect.value || !itemSelect.value.trim().length) {
-            selectExistingItemButton.classList.add('disabled')
+    // Show company detail upon selection changing
+    companySelect.onchange = function(e) {
+        if (!companySelect.value || !companySelect.value.trim().length) {
+            selectExistingCompanyButton.classList.add('disabled')
             showItemDetail(false)
         } else {
-            selectExistingItemButton.classList.remove('disabled')
+            selectExistingCompanyButton.classList.remove('disabled')
             showItemDetail(true)
             setItemDetail(e.target.options[e.target.selectedIndex].dataset)
         }
@@ -700,9 +723,14 @@ Pemasukan
         })
     }
 
+    let setCompanyDetail = (data) => {
+        customerDetail.querySelector("#company-name").value = data.name
+        customerDetail.querySelector("#company-address").value = data.address
+        customerDetail.querySelector("#company-telephone-number").value = data.telephoneNumber
+    }
+
     let setCustomerDetail = (data) => {
         customerDetail.querySelector("#customer-name").value = data.name
-        customerDetail.querySelector("#customer-address").value = data.address
         customerDetail.querySelector("#customer-phone-number").value = data.phoneNumber
     }
 
@@ -728,7 +756,7 @@ Pemasukan
     let addItem = (data) => {
         let item = document.createElement("tr")
         item.id = `${currentBreakdown}-item${++itemCounter}`
-        console.log("Add item to Current Breakdown: " + currentBreakdown)
+        // console.log("Add item to Current Breakdown: " + currentBreakdown)
         item.innerHTML =
             `
             <th class="border-0 rounded-start">
@@ -773,21 +801,9 @@ Pemasukan
         })
     }
 
-    selectExistingItemButton.addEventListener('click', function(e) {
-        const el = selectItemForm.elements
-        const data = {
-            id: el.namedItem("name").value,
-            name: itemSelect.options[el.namedItem("name").value].text,
-            image: el.namedItem("image_path").value,
-            brand: el.namedItem("brand").value,
-            model: el.namedItem("model").value,
-            width: el.namedItem("width").value,
-            depth: el.namedItem("depth").value,
-            height: el.namedItem("height").value,
-            dimension: el.namedItem("width").value + " x " + el.namedItem("depth").value + " x " + el.namedItem("height").value,
-            price: el.namedItem("price").value
-        }
-        addItem(data)
+    selectExistingCompanyButton.addEventListener('click', function(e) {
+        setCompanyDetail(companySelect.options[companySelect.selectedIndex].dataset)
+        getCompanyCustomers(companySelect.options[companySelect.selectedIndex].value)
     })
     
     selectExistingCustomerButton.addEventListener('click', function(e) {
@@ -911,5 +927,26 @@ Pemasukan
     //         addNewForm.elements.namedItem("image_path").value = ""
     //     }
     // }
+
+    async function getCompanyCustomers(companyId = 0) {
+        const url = "{{ route('api.getCompanyCustomers', 'x') }}".replace('x', companyId)
+        const response = await fetch(url)
+        let data = await response.json()
+        setCustomers(data.data)
+    }
+
+    let setCustomers = (data) => {
+        let el = `<option value="">--- Pilih Customer ---</option>`
+        data.forEach((customer) => {
+            el += `<option value="${customer.id}" data-name="${customer.name}" data-phone-number="${customer.phone_number}" data-address="${customer.address}">${customer.name}</option>`
+        })
+
+        customerSelect.replaceChildren()
+        customerSelect.innerHTML = el
+
+        customerNiceSelect.update()
+    }
+
+    getCompanyCustomers()
 </script>
 @endpush

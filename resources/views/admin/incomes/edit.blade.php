@@ -1,7 +1,7 @@
 @extends('layout.template')
 
 @section('title')
-Transaksi
+Pemasukan
 @endsection
 
 @section('content')
@@ -12,19 +12,20 @@ Transaksi
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                         </path>
                     </svg></a></li>
-            <li class="breadcrumb-item"><a href="#">Transaksi</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Edit Transaksi</li>
+            <li class="breadcrumb-item"><a href="#">Pemasukan</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Pemasukan</li>
         </ol>
     </nav>
     <div class="d-flex justify-content-between w-100 flex-wrap">
         <div class="mb-3 mb-lg-0">
-            <h1 class="h4">Edit Transaksi</h1>
+            <h1 class="h4">Edit Pemasukan</h1>
         </div>
     </div>
 </div>
-<form action="{{ route('transactions.store') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('incomes.update', $income->id) }}" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="total_price" id="total-price-input">
     <input type="hidden" name="total_price_before_discount" id="total-price-before-discount-input">
+    @method('PUT')
     @csrf
     <div class="row">
         <div class="col-12 mb-4">
@@ -42,20 +43,32 @@ Transaksi
                                     <div id="customerCollapse" class="accordion-collapse collapse" aria-labelledby="customerData" data-bs-parent="#accordionCustomer">
                                         <div class="accordion-body">
                                             <div id="customer-detail">
-                                                <label for="name">Name</label>
+                                                <label for="company-name">Nama Perusahaan</label>
                                                 <div class="input-group mb-3">
-                                                    <input id="customer-name" type="text" class="form-control" name="name">
+                                                    <input id="company-name" type="text" class="form-control" name="company_name" value="{{ $income->company_name }}">
+                                                    <span data-bs-toggle="modal" data-bs-target="#modal-select-company" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
+                                                        <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+                                                    </span>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="name">Nomor Kantor</label>
+                                                    <input id="company-telephone-number" type="text" class="form-control" id="company_telephone_number" name="company_telephone_number" value="{{ $income->company_telephone_number }}">
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label for="name">Alamat Kantor</label>
+                                                    <input id="customer-address" type="text" class="form-control" id="address" name="address" value="{{ $income->address }}">
+                                                </div>
+                                                <label for="name">Nama Customer</label>
+                                                <div class="input-group mb-3">
+                                                    <input id="customer-name" type="text" class="form-control" name="customer_name" value="{{ $income->customer_name }}">
                                                     <span data-bs-toggle="modal" data-bs-target="#modal-select-customer" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
                                                         <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
                                                     </span>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="name">Address</label>
-                                                    <input id="customer-address" type="text" class="form-control" id="address" name="address">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="name">Phone Number</label>
-                                                    <input id="customer-phone-number" type="text" class="form-control" id="phone_number" name="phone_number">
+                                                    <label for="name">Nomor Telepon</label>
+                                                    <input id="customer-phone-number" type="text" class="form-control" id="customer_phone_number" name="customer_phone_number" value="{{ $income->customer_phone_number }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -73,26 +86,23 @@ Transaksi
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <h1 class="h5 mt-2">Transaksi</h1>
-                            <button id="addBreakdown" class="btn btn-primary pull-right" type="button"><i class="fa fa-plus me-1"></i> Tambah Breakdown Baru</button>
+                            <h1 class="h5 mt-2">Pemasukan</h1>
+                            <!-- <button id="addBreakdown" class="btn btn-primary pull-right" type="button"><i class="fa fa-plus me-1"></i> Tambah Breakdown Baru</button> -->
                         </div>
 
                         <div class="col-12" id="breakdowns">
-                            @foreach($transaction->breakdowns as $breakdown)
-                            <div class="accordion mb-2" id="accordionBreakdown{{ $breakdown->id }}">
+                            <div class="accordion mb-2" id="accordionBreakdown">
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header" id="breakdown{{ $breakdown->id }}">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#breakdownCollapse{{ $breakdown->id }}" aria-expanded="false" aria-controls="breakdownCollapse{{ $breakdown->id }}">
-                                            <span class="breakdown-title" id="breakdown{{ $breakdown->id }}-title">{{ $breakdown->breakdown_name }}</span>
+                                    <h2 class="accordion-header" id="breakdown">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#breakdownCollapse" aria-expanded="false" aria-controls="breakdownCollapse">
+                                            <span class="breakdown-title" id="breakdown-title">Daftar pemasukan</span>
                                         </button>
                                     </h2>
                                     <div id="breakdownCollapse" class="accordion-collapse collapse show" aria-labelledby="breakdown" data-bs-parent="#accordionBreakdown">
                                         <div class="accordion-body">
-                                            <label for="">Nama Breakdown</label>
-                                            <input type="hidden" class="breakdown-index" name="breakdown[]" value="{{ $breakdown->id }}">
-                                            <input type="text" class="form-control w-100 my-2 breakdown-input" data-breakdown-title="breakdown{{ $breakdown->id }}-title" data-breakdown-title-default="{{ $breakdown->breakdown_name }}" name="breakdown[{{ $breakdown->id }}][name]" placeholder="Masukkan nama breakdown..." autocomplete="off" value="{{ $breakdown->breakdown_name }}">
-                                            <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown{{ $breakdown->id }}" data-breakdown-counter="{{ $breakdown->id }}"><i class="fa fa-plus me-1"></i> Tambah Manual</button>
-                                            <button class="select-item-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal-select-item" data-breakdown="breakdown{{ $breakdown->id }}" data-breakdown-counter="{{ $breakdown->id }}"><i class="fa fa-list me-1"></i> Pilih Item</button>
+                                            <label for="">Tanggal</label>
+                                            <input type="date" class="form-control w-100 my-2" name="date" value="{{ $income->date->format('Y-m-d') }}">
+                                            <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown" data-breakdown-counter=""><i class="fa fa-plus me-1"></i> Tambah Item</button>
                                             <span class="deleteBreakdownPlaceholder"></span>
                                             <div class="table-responsive">
                                                 <table class="table table-centered mb-0 rounded">
@@ -103,51 +113,33 @@ Transaksi
                                                             <th width="25%" class="border-0 rounded-end text-end">Total</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody class="breakdown-table" id="breakdown{{ $breakdown->id }}-table">
-                                                        @foreach($breakdown->items as $item)
-                                                        <tr id="breakdown{{ $breakdown->id }}-item{{ $item->id }}">
+                                                    <tbody class="breakdown-table" id="breakdown-table">
+                                                        @foreach($income->items as $item)
+                                                        <tr id="breakdown-item{{ $item->id }}">
                                                             <th class="border-0 rounded-start">
                                                                 <div class="row">
                                                                     <div class="col-2">
-                                                                        <button type="button" id="item{{ $item->id }}-remove-button" class="btn btn-sm btn-link text-danger remove-item" onclick='removeItem("#breakdown{{ $breakdown->id }}-item{{ $item->id }}")'>
+                                                                        <button type="button" id="item{{ $item->id }}-remove-button" class="btn btn-sm btn-link text-danger remove-item" onclick='removeItem("#breakdown-item{{ $item->id }}")'>
                                                                             <i class="fa fa-times"></i>
                                                                         </button>
-                                                                        <input type="hidden" value="{{ $item->id }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][id]">
-                                                                    </div>
-                                                                    <div class="col-2">
-                                                                        <img src="{{ $item->image }}" width="128">
-                                                                        <input type="hidden" value="{{ $item->image }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][image]">
+                                                                        <input type="hidden" value="{{ $item->id }}" name="income[{{ $item->id }}][id]">
                                                                     </div>
                                                                     <div class="col-8" id="item{{ $item->id }}-image-preview">
                                                                         <h6 class="item-name mt-2">
-                                                                            <input class="border-bottom-input" type="text" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][name]" value="{{ $item->name }}">
+                                                                            <input class="border-bottom-input" type="text" name="income[{{ $item->id }}][name]" value="{{ $item->name }}" placeholder="Masukkan nama barang...">
                                                                         </h6>
-                                                                        <span class="item-brand">
-                                                                            Brand:
-                                                                            <input class="border-bottom-input" type="text" value="{{ $item->brand }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][brand]">
-                                                                        </span> <br>
-                                                                        <span class="item-model">
-                                                                            Model:
-                                                                            <input class="border-bottom-input" type="text" value="{{ $item->model }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][model]">
-                                                                        </span> <br>
                                                                         <span class="item-dimension">
-                                                                            Dimension:
-                                                                            <input size="4" class="border-bottom-input" type="text" value="{{ $item->width }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][width]"> x
-                                                                            <input size="4" class="border-bottom-input" type="text" value="{{ $item->depth }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][depth]"> x
-                                                                            <input size="4" class="border-bottom-input" type="text" value="{{ $item->height }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][height]">
-                                                                        </span> <br>
-                                                                        <span class="item-dimension">
-                                                                            Price: {{ $item->formatted_price }}
-                                                                            <input class="border-bottom-input" type="text" value="{{ $item->price }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][price]">
+                                                                            Rp.
+                                                                            <input class="border-bottom-input item-price" type="text" value="{{ $item->price }}" data-total-price="#item{{ $item->id }}-total-price" data-qty="#item{{ $item->id }}-qty" name="income[{{ $item->id }}][price]">
                                                                         </span> <br>
                                                                     </div>
                                                                 </div>
                                                             </th>
                                                             <th class="border-0 text-center">
-                                                                <input type="number" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][qty]" data-price="{{ $item->price }}" data-total-price="#item{{ $item->id }}-total-price" class="form-control item-qty" min="1" value="1">
+                                                                <input id="item{{ $item->id }}-qty" type="number" name="income[{{ $item->id }}][qty]" data-price="{{ $item->price }}" data-total-price="#item{{ $item->id }}-total-price" class="form-control item-qty" min="1" value="{{ $item->qty }}">
                                                             </th>
-                                                            <th id="item{{ $item->id }}-total-price" class="border-0 rounded-end text-end prices" data-price="{{ $item->price }}">
-                                                                {{ $item->formatted_price }}
+                                                            <th id="item{{ $item->id }}-total-price" class="border-0 rounded-end text-end prices" data-price="{{ $item->total_price }}">
+                                                                {{ $item->formatted_total_price }}
                                                             </th>
                                                         </tr>
                                                         @endforeach
@@ -158,7 +150,6 @@ Transaksi
                                     </div>
                                 </div>
                             </div>
-                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -171,9 +162,9 @@ Transaksi
                     <div class="row">
                         <div class="col-12">
                             <h1 class="h5 mt-2">Total Harga</h1>
-                            <h1 class="h4" id="total-price-text">Rp 0</h1>
+                            <h1 class="h4" id="total-price-text">{{ $income->formatted_total_price }}</h1>
                             <h1 class="h6 text-danger text-decoration-line-through d-none" id="total-price-before-discount-text">Rp 0</h1>
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
@@ -260,9 +251,9 @@ Transaksi
                                             </tr>
                                         </table>
                                     </div>
-                                </div>
+                                </div> -->
                                 <button type="submit" class="btn btn-success w-100">Simpan</button>
-                            </div>
+                            <!-- </div> -->
                         </div>
                     </div>
                 </div>
@@ -283,9 +274,6 @@ Transaksi
                     <label for="a-select" class="form-label">Nama</label>
                     <select name="customer_id" id="customer-nice-select" class="select-customer w-100" placeholder="Pilih customer...">
                         <option value="" disabled selected>--- Pilih customer ---</option>
-                        @foreach($customers as $customer)
-                        <option value="{{ $customer->id }}" data-name="{{ $customer->name }}" data-address="{{ $customer->address }}" data-phone-number="{{ $customer->phone_number }}">{{ $customer->name }}</option>
-                        @endforeach
                     </select>
                 </div>
             </div>
@@ -389,38 +377,6 @@ Transaksi
                         <input type="text" class="form-control" id="name" name="name">
                     </div>
                     <div class="mb-3">
-                        <label for="formFile" class="form-label">Foto</label>
-                        <br>
-                        <img width="128" id="add-new-image-preview" class="d-none">
-                        <input class="form-control" type="file" id="add-new-image-input" name="image">
-                        <input type="hidden" name="image_path">
-                    </div>
-                    <div class="mb-3">
-                        <label for="brand" aria-describedby="brandHelp">Brand</label>
-                        <input type="text" class="form-control" id="brand" name="brand">
-                        <small id="brandHelp" class="form-text text-muted">Kosongkan field ini jika tanpa brand / custom.</small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="model">Model</label>
-                        <input type="text" class="form-control" id="model" name="model">
-                    </div>
-                    <div class="mb-3">
-                        <div class="row mb-3">
-                            <div class="col-lg-4 col-sm-12 mb-lg-0 mb-sm-3">
-                                <label for="width">Width (mm)</label>
-                                <input type="number" class="form-control" id="width" name="width">
-                            </div>
-                            <div class="col-lg-4 col-sm-12 mb-lg-0 mb-sm-3">
-                                <label for="depth">Depth (mm)</label>
-                                <input type="number" class="form-control" id="depth" name="depth">
-                            </div>
-                            <div class="col-lg-4 col-sm-12 mb-lg-0 mb-sm-3">
-                                <label for="height">Height (mm)</label>
-                                <input type="number" class="form-control" id="height" name="height">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
                         <label for="price">Price</label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1">
@@ -455,9 +411,13 @@ Transaksi
         precision: 0
     })
     
-    VMasker(document.querySelector(`#discount-nominal`)).maskMoney({
+    VMasker(document.querySelectorAll('.item-price')).maskMoney({
         precision: 0
     })
+    
+    // VMasker(document.querySelector(`#discount-nominal`)).maskMoney({
+    //     precision: 0
+    // })
 
     let breakdownCounter = 1
     let itemCounter = 0
@@ -517,69 +477,62 @@ Transaksi
 
 
     // Add new breakdown upon clicking
-    addBreakdown.addEventListener('click', function() {
-        breakdownCounter = breakdownCounter + 1
-        const clonedBreakdown = breakdown.cloneNode(true)
-        clonedBreakdown.id = 'accordionBreakdown' + breakdownCounter
+    // addBreakdown.addEventListener('click', function() {
+    //     breakdownCounter = breakdownCounter + 1
+    //     const clonedBreakdown = breakdown.cloneNode(true)
+    //     clonedBreakdown.id = 'accordionBreakdown' + breakdownCounter
 
-        const clonedBreakdownIndex = clonedBreakdown.querySelector('.breakdown-index')
-        clonedBreakdownIndex.value = breakdownCounter
-        console.log("Breakdown Counter: " + clonedBreakdownIndex.value)
+    //     const clonedBreakdownIndex = clonedBreakdown.querySelector('.breakdown-index')
+    //     clonedBreakdownIndex.value = breakdownCounter
+    //     console.log("Breakdown Counter: " + clonedBreakdownIndex.value)
 
-        const clonedBreakdownTitle = clonedBreakdown.querySelector('.breakdown-title')
-        clonedBreakdownTitle.setAttribute('id', 'breakdown' + breakdownCounter + '-title')
-        clonedBreakdownTitle.innerHTML = 'Breakdown #' + breakdownCounter
+    //     const clonedBreakdownTitle = clonedBreakdown.querySelector('.breakdown-title')
+    //     clonedBreakdownTitle.setAttribute('id', 'breakdown' + breakdownCounter + '-title')
+    //     clonedBreakdownTitle.innerHTML = 'Breakdown #' + breakdownCounter
 
-        const clonedBreakdownInput = clonedBreakdown.querySelector('.breakdown-input')
-        clonedBreakdownInput.value = ""
-        clonedBreakdownInput.setAttribute('data-breakdown-title', 'breakdown' + breakdownCounter + '-title')
-        clonedBreakdownInput.setAttribute('data-breakdown-title-default', 'Breakdown #' + breakdownCounter)
-        clonedBreakdownInput.setAttribute('name', `breakdown[${breakdownCounter}][name]`)
+    //     const clonedBreakdownInput = clonedBreakdown.querySelector('.breakdown-input')
+    //     clonedBreakdownInput.value = ""
+    //     clonedBreakdownInput.setAttribute('data-breakdown-title', 'breakdown' + breakdownCounter + '-title')
+    //     clonedBreakdownInput.setAttribute('data-breakdown-title-default', 'Breakdown #' + breakdownCounter)
+    //     clonedBreakdownInput.setAttribute('name', `breakdown[${breakdownCounter}][name]`)
         
-        // const clonedFileInput = clonedBreakdown.querySelector('.testfileinput')
-        // clonedFileInput.setAttribute('name', `breakdown[${breakdownCounter}][name]`)
+    //     // const clonedFileInput = clonedBreakdown.querySelector('.testfileinput')
+    //     // clonedFileInput.setAttribute('name', `breakdown[${breakdownCounter}][name]`)
 
-        clonedBreakdown.querySelector('.add-manual-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
-        clonedBreakdown.querySelector('.add-manual-button').setAttribute('data-breakdown-counter', 'breakdown' + breakdownCounter)
-        clonedBreakdown.querySelector('.select-item-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
-        clonedBreakdown.querySelector('.select-item-button').setAttribute('data-breakdown-counter', 'breakdown' + breakdownCounter)
+    //     clonedBreakdown.querySelector('.add-manual-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
+    //     clonedBreakdown.querySelector('.add-manual-button').setAttribute('data-breakdown-counter', 'breakdown' + breakdownCounter)
+    //     clonedBreakdown.querySelector('.select-item-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
+    //     clonedBreakdown.querySelector('.select-item-button').setAttribute('data-breakdown-counter', 'breakdown' + breakdownCounter)
 
-        const clonedBreakdownAccordionButton = clonedBreakdown.querySelector('.accordion-button')
-        clonedBreakdownAccordionButton.setAttribute('data-bs-target', '#breakdownCollapse' + breakdownCounter)
-        clonedBreakdownAccordionButton.setAttribute('aria-controls', '#breakdownCollapse' + breakdownCounter)
+    //     const clonedBreakdownAccordionButton = clonedBreakdown.querySelector('.accordion-button')
+    //     clonedBreakdownAccordionButton.setAttribute('data-bs-target', '#breakdownCollapse' + breakdownCounter)
+    //     clonedBreakdownAccordionButton.setAttribute('aria-controls', '#breakdownCollapse' + breakdownCounter)
 
-        const clonedBreakdownAccordionCollapse = clonedBreakdown.querySelector('.accordion-collapse')
-        clonedBreakdownAccordionCollapse.setAttribute('id', 'breakdownCollapse' + breakdownCounter)
-        clonedBreakdownAccordionCollapse.setAttribute('data-bs-parent', '#accordionBreakdown' + breakdownCounter)
+    //     const clonedBreakdownAccordionCollapse = clonedBreakdown.querySelector('.accordion-collapse')
+    //     clonedBreakdownAccordionCollapse.setAttribute('id', 'breakdownCollapse' + breakdownCounter)
+    //     clonedBreakdownAccordionCollapse.setAttribute('data-bs-parent', '#accordionBreakdown' + breakdownCounter)
 
-        const clonedBreakdownTable = clonedBreakdown.querySelector('.breakdown-table')
-        clonedBreakdownTable.replaceChildren()
-        clonedBreakdownTable.setAttribute('id', 'breakdown' + breakdownCounter + '-table')
+    //     const clonedBreakdownTable = clonedBreakdown.querySelector('.breakdown-table')
+    //     clonedBreakdownTable.replaceChildren()
+    //     clonedBreakdownTable.setAttribute('id', 'breakdown' + breakdownCounter + '-table')
 
-        const deleteBreakdownButton = document.createElement("button")
-        deleteBreakdownButton.setAttribute("class", "btn btn-danger deleteBreakdownButton")
-        deleteBreakdownButton.setAttribute("data-remove", `#accordionBreakdown${breakdownCounter}`)
-        deleteBreakdownButton.innerHTML = "Hapus Breakdown"
+    //     const deleteBreakdownButton = document.createElement("button")
+    //     deleteBreakdownButton.setAttribute("class", "btn btn-danger deleteBreakdownButton")
+    //     deleteBreakdownButton.setAttribute("data-remove", `#accordionBreakdown${breakdownCounter}`)
+    //     deleteBreakdownButton.innerHTML = "Hapus Breakdown"
 
-        clonedBreakdown.querySelector('.deleteBreakdownPlaceholder').appendChild(deleteBreakdownButton)
-        breakdowns.appendChild(clonedBreakdown)
+    //     clonedBreakdown.querySelector('.deleteBreakdownPlaceholder').appendChild(deleteBreakdownButton)
+    //     breakdowns.appendChild(clonedBreakdown)
 
-        clonedBreakdown.querySelector('.breakdown-input').addEventListener('keyup', e => {
-            const title = document.getElementById(e.target.getAttribute('data-breakdown-title'))
-            title.innerHTML = !clonedBreakdownInput.value || !clonedBreakdownInput.value.trim().length ?
-                e.target.getAttribute('data-breakdown-title-default') :
-                clonedBreakdownInput.value
-        })
-    })
+    //     clonedBreakdown.querySelector('.breakdown-input').addEventListener('keyup', e => {
+    //         const title = document.getElementById(e.target.getAttribute('data-breakdown-title'))
+    //         title.innerHTML = !clonedBreakdownInput.value || !clonedBreakdownInput.value.trim().length ?
+    //             e.target.getAttribute('data-breakdown-title-default') :
+    //             clonedBreakdownInput.value
+    //     })
+    // })
 
     // Change breakdown title dynamically
-    inputTitle[0].addEventListener('keyup', e => {
-        const title = document.getElementById(e.target.getAttribute('data-breakdown-title'))
-        title.innerHTML = !inputTitle[0].value || !inputTitle[0].value.trim().length ?
-            e.target.getAttribute('data-breakdown-title-default') :
-            inputTitle[0].value
-    })
-
     breakdowns.addEventListener('click', function(e) {
         if (e.target.classList.contains('deleteBreakdownButton')) {
             deleteElement(e.target.getAttribute('data-remove'))
@@ -599,6 +552,7 @@ Transaksi
             }
             calculateItemPrice(e.target.value, e.target.getAttribute('data-price'), e.target.getAttribute('data-total-price'))
         } else if (e.target.classList.contains('item-price')) {
+            console.log(e.target.getAttribute('data-total-price'))
             let price = breakdowns.querySelector(e.target.getAttribute('data-total-price'))
             price.setAttribute('data-price', e.target.value.replaceAll('.', ''))
             
@@ -629,22 +583,22 @@ Transaksi
             totalPrice += parseInt(e.dataset.price)
         })
 
-        discountPercentage = document.querySelector('#discount-percentage').value * totalPrice / 100
-        discountNominal = document.querySelector('#discount-nominal').value.replaceAll('.', '')
+        // discountPercentage = document.querySelector('#discount-percentage').value * totalPrice / 100
+        // discountNominal = document.querySelector('#discount-nominal').value.replaceAll('.', '')
 
-        discountTotal = discountPercentage + discountNominal
+        // discountTotal = discountPercentage + discountNominal
 
-        setTotalPriceBeforeDiscount(totalPrice, discountTotal)
+        // setTotalPriceBeforeDiscount(totalPrice, discountTotal)
 
-        totalPrice = totalPrice - discountPercentage - discountNominal
+        // totalPrice = totalPrice - discountPercentage - discountNominal
 
-        if (totalPrice < 0) {
-            totalPrice = 0
-        }
+        // if (totalPrice < 0) {
+        //     totalPrice = 0
+        // }
 
         setTotalPrice(totalPrice)
-        let dpAmount = setDP(totalPrice, dp.value)
-        setTerm(totalPrice, dpAmount, term.value)
+        // let dpAmount = setDP(totalPrice, dp.value)
+        // setTerm(totalPrice, dpAmount, term.value)
     }
 
     let setTotalPrice = (totalPrice) => {
@@ -762,49 +716,33 @@ Transaksi
 
     let addItem = (data) => {
         let item = document.createElement("tr")
-        item.id = `${currentBreakdown}-item${++itemCounter}`
-        console.log("Add item to Current Breakdown: " + currentBreakdown)
+        item.id = `new-${currentBreakdown}-item${++itemCounter}`
+        // console.log("Add item to Current Breakdown: " + currentBreakdown)
         item.innerHTML =
             `
             <th class="border-0 rounded-start">
                 <div class="row">
                     <div class="col-2">
-                        <button type="button" id="item${itemCounter}-remove-button" class="btn btn-sm btn-link text-danger remove-item" data-remove-item="#${currentBreakdown}-item${itemCounter}">
+                        <button type="button" id="new-item${itemCounter}-remove-button" class="btn btn-sm btn-link text-danger remove-item" data-remove-item="#new-${currentBreakdown}-item${itemCounter}">
                             <i class="fa fa-times"></i>
                         </button>
-                        <input type="hidden" value="${data.id ?? ''}" name="breakdown[${breakdownCounter}][item][${itemCounter}][id]">
-                    </div>
-                    <div class="col-2">
-                        <img alt="Klik untuk mengubah gambar..." style="cursor: pointer;" onclick="triggerFile('breakdown[${breakdownCounter}][item][${itemCounter}][image]')" src="${data.image}" width="128">
-                        ${data.image != "" ? `<input type="hidden" name="breakdown[${breakdownCounter}][item][${itemCounter}][image]" value="${data.image}">` : ``}
+                        <input type="hidden" value="${data.id ?? ''}" name="new_item[${itemCounter}][id]">
                     </div>
                     <div class="col-8" id="item${itemCounter}-image-preview">
                         <h6 class="item-name mt-2">
-                            <input class="border-bottom-input" type="text" value="${data.name}" name="breakdown[${breakdownCounter}][item][${itemCounter}][name]">
+                            <input class="border-bottom-input" type="text" value="${data.name}" name="new_item[${itemCounter}][name]">
                         </h6>
-                        <span class="item-brand mt-2">
-                            Brand: <input class="border-bottom-input" type="text" value="${data.brand}" name="breakdown[${breakdownCounter}][item][${itemCounter}][brand]">
-                        </span> <br>
-                        <span class="item-model mt-2">
-                            Model: <input class="border-bottom-input" type="text" value="${data.model}" name="breakdown[${breakdownCounter}][item][${itemCounter}][model]">
-                        </span> <br>
-                        <span class="item-dimension mt-2">
-                            Dimension (W x D x H): <br>
-                            <input size="4" class="border-bottom-input" type="text" value="${data.width}" name="breakdown[${breakdownCounter}][item][${itemCounter}][width]"> x 
-                            <input size="4" class="border-bottom-input" type="text" value="${data.depth}" name="breakdown[${breakdownCounter}][item][${itemCounter}][depth]"> x 
-                            <input size="4" class="border-bottom-input" type="text" value="${data.height}" name="breakdown[${breakdownCounter}][item][${itemCounter}][height]">
-                        </span> <br>
                         <span class="item-dimension mt-2">
                             Rp.  
-                            <input id="item${itemCounter}-price" data-qty="#item${itemCounter}-qty" data-total-price="#item${itemCounter}-total-price" class="border-bottom-input item-price" type="text" value="${data.price}" name="breakdown[${breakdownCounter}][item][${itemCounter}][price]">
+                            <input id="new-item${itemCounter}-price" data-qty="#new-item${itemCounter}-qty" data-total-price="#new-item${itemCounter}-total-price" class="border-bottom-input item-price" type="text" value="${data.price}" name="new_item[${itemCounter}][price]">
                         </span> <br>
                     </div>
                 </div>
             </th>
             <th class="border-0 text-center">
-                <input id="item${itemCounter}-qty" type="number" name="breakdown[${breakdownCounter}][item][${itemCounter}][qty]" data-price="${data.price.replaceAll('.', '')}" data-total-price="#item${itemCounter}-total-price" class="form-control item-qty" min="1" value="1">
+                <input id="new-item${itemCounter}-qty" type="number" name="new_item[${itemCounter}][qty]" data-price="${data.price.replaceAll('.', '')}" data-total-price="#new-item${itemCounter}-total-price" class="form-control item-qty" min="1" value="1">
             </th>
-            <th id="item${itemCounter}-total-price" class="border-0 rounded-end text-end prices" data-price="${data.price.replaceAll('.', '')}">
+            <th id="new-item${itemCounter}-total-price" class="border-0 rounded-end text-end prices" data-price="${data.price.replaceAll('.', '')}">
                 ${rupiahFormat.format(data.price.replaceAll('.', ''))}
             </th>
         `
@@ -812,14 +750,14 @@ Transaksi
         let table = breakdowns.querySelector('#' + currentBreakdown + '-table')
         table.appendChild(item)
 
-        breakdowns.querySelector(`#item${itemCounter}-remove-button`).addEventListener('click', function(e) {
+        breakdowns.querySelector(`#new-item${itemCounter}-remove-button`).addEventListener('click', function(e) {
             breakdowns.querySelector(this.getAttribute('data-remove-item')).remove()
             calculateTotalPrice()
         })
 
         calculateTotalPrice()
 
-        VMasker(document.querySelector(`#item${itemCounter}-price`)).maskMoney({
+        VMasker(document.querySelector(`#new-item${itemCounter}-price`)).maskMoney({
             precision: 0
         })
     }
@@ -857,124 +795,102 @@ Transaksi
         itemNiceSelect.clear()
     })
 
-    addNewImageInput.onchange = e => {
-        const file = e.target.files[0]
-        if (file) {
-            addNewImagePreview.classList.remove('d-none')
-            addNewImagePreview.src = URL.createObjectURL(file)
-            addNewForm.elements.namedItem("image_path").value = URL.createObjectURL(file)
-        } else {
-            addNewImagePreview.classList.add('d-none')
-            addNewImagePreview.src = ""
-            addNewForm.elements.namedItem("image_path").value = ""
-        }
-    }
-
     addNewItemButton.onclick = e => {
         const el = addNewForm.elements
         const data = {
             name: el.namedItem("name").value,
-            image: el.namedItem("image_path").value,
-            brand: el.namedItem("brand").value ?? "*CUSTOM",
-            model: el.namedItem("model").value,
-            width: el.namedItem("width").value,
-            depth: el.namedItem("depth").value,
-            height: el.namedItem("height").value,
-            dimension: el.namedItem("width").value + " x " + el.namedItem("depth").value + " x " + el.namedItem("height").value,
             price: el.namedItem("price").value
         }
         addItem(data)
-        copyImageToBreakdown()
         addNewForm.reset()
-        addNewImagePreview.classList.add('d-none')
     }
 
     let copyImageToBreakdown = () => {
         const image = addNewForm.elements.namedItem("image").cloneNode(true)
         image.classList.add("visually-hidden")
-        image.setAttribute('name', `breakdown[${breakdownCounter}][item][${itemCounter}][image]`)
-        image.setAttribute('id', `breakdown[${breakdownCounter}][item][${itemCounter}][image]`)
+        image.setAttribute('name', `new_item[${itemCounter}][image]`)
+        image.setAttribute('id', `new_item[${itemCounter}][image]`)
         document.getElementById(`item${itemCounter}-image-preview`).appendChild(image)
     }
 
     // Discount
-    discountNominalInput.addEventListener('change', e => {
-        calculateTotalPrice()
-    })
+    // discountNominalInput.addEventListener('change', e => {
+    //     calculateTotalPrice()
+    // })
 
-    discountNominalInput.addEventListener('keyup', e => {
-        if (e.target.value == "" || e.target.value < 0) {
-            e.target.value = 0
-        }
+    // discountNominalInput.addEventListener('keyup', e => {
+    //     if (e.target.value == "" || e.target.value < 0) {
+    //         e.target.value = 0
+    //     }
 
-        calculateTotalPrice()
-    })
+    //     calculateTotalPrice()
+    // })
 
-    discountPercentageInput.addEventListener('change', e => {
-        calculateTotalPrice()
-    })
+    // discountPercentageInput.addEventListener('change', e => {
+    //     calculateTotalPrice()
+    // })
 
-    discountPercentageInput.addEventListener('keyup', e => {
-        if (e.target.value == "" || e.target.value < 0) {
-            e.target.value = 0
-        } else if (e.target.value > 100) {
-            e.target.value = 100
-        }
+    // discountPercentageInput.addEventListener('keyup', e => {
+    //     if (e.target.value == "" || e.target.value < 0) {
+    //         e.target.value = 0
+    //     } else if (e.target.value > 100) {
+    //         e.target.value = 100
+    //     }
 
-        calculateTotalPrice()
-    })
+    //     calculateTotalPrice()
+    // })
 
-    let invoiceType = (type) => {
-        if (type.value == "Deal") {
-            paymentTerms.classList.remove('d-none')
-        } else {
-            paymentTerms.classList.add('d-none')
-        }
-    }
+    // let invoiceType = (type) => {
+    //     if (type.value == "Deal") {
+    //         paymentTerms.classList.remove('d-none')
+    //     } else {
+    //         paymentTerms.classList.add('d-none')
+    //     }
+    // }
 
-    term.onchange = (e) => {
-        if(e.target.value == 3) {
-            term3.classList.remove('d-none')
-        } else {
-            term3.classList.add('d-none')
-        }
+    // term.onchange = (e) => {
+    //     if(e.target.value == 3) {
+    //         term3.classList.remove('d-none')
+    //     } else {
+    //         term3.classList.add('d-none')
+    //     }
 
-        calculateTotalPrice()
-    }
+    //     calculateTotalPrice()
+    // }
     
-    dp.onchange = (e) => {
-        calculateTotalPrice()
-    }
+    // dp.onchange = (e) => {
+    //     calculateTotalPrice()
+    // }
 
-    let triggerFile = (id) => {
-        let inputFile = document.getElementById(id)
-        let preview = event.target
+    // let triggerFile = (id) => {
+    //     let inputFile = document.getElementById(id)
+    //     let preview = event.target
 
-        if(confirm("Apakah Anda ingin mengubah gambar item ini?")) {
-            inputFile.click()
+    //     if(confirm("Apakah Anda ingin mengubah gambar item ini?")) {
+    //         inputFile.click()
 
-            inputFile.onchange = e => {
-                const file = e.target.files[0]
-                if (file) {
-                    preview.src = URL.createObjectURL(file)
-                } else {
-                    preview.src = ""
-                }
-            }
-        }
-    }
+    //         inputFile.onchange = e => {
+    //             const file = e.target.files[0]
+    //             if (file) {
+    //                 preview.src = URL.createObjectURL(file)
+    //             } else {
+    //                 preview.src = ""
+    //             }
+    //         }
+    //     }
+    // }
 
-    addNewImageInput.onchange = e => {
-        const file = e.target.files[0]
-        if (file) {
-            addNewImagePreview.classList.remove('d-none')
-            addNewImagePreview.src = URL.createObjectURL(file)
-            addNewForm.elements.namedItem("image_path").value = URL.createObjectURL(file)
-        } else {
-            addNewImagePreview.classList.add('d-none')
-            addNewImagePreview.src = ""
-            addNewForm.elements.namedItem("image_path").value = ""
-        }
-    }
+    // addNewImageInput.onchange = e => {
+    //     const file = e.target.files[0]
+    //     if (file) {
+    //         addNewImagePreview.classList.remove('d-none')
+    //         addNewImagePreview.src = URL.createObjectURL(file)
+    //         addNewForm.elements.namedItem("image_path").value = URL.createObjectURL(file)
+    //     } else {
+    //         addNewImagePreview.classList.add('d-none')
+    //         addNewImagePreview.src = ""
+    //         addNewForm.elements.namedItem("image_path").value = ""
+    //     }
+    // }
 </script>
 @endpush
