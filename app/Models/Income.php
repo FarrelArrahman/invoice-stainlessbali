@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TransactionEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,7 +22,9 @@ class Income extends Model
         'customer_phone_number',
         'address',
         'status',
+        'total_price',
         'handled_by',
+        'date',
     ];
 
     /**
@@ -39,6 +42,13 @@ class Income extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        // 
+        'status' => TransactionEnum::class,
+        'date' => 'datetime'
     ];
+
+    // Attribute
+    public function getFormattedTotalPriceAttribute()
+    {
+        return "Rp. " . number_format($this->total_price, 0, '', '.');
+    }
 }

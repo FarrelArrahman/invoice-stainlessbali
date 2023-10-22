@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Models\Company;
 
 class CustomerController extends Controller
 {
@@ -20,11 +21,27 @@ class CustomerController extends Controller
     }
 
     /**
+     * Display a listing of the resource as JSON.
+     */
+    public function getCustomers()
+    {
+        $customers = Customer::all();
+        return response()->json([
+            'success' => true,
+            'message' => "Daftar pelanggan",
+            'data' => $customers
+        ], 200);
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('admin.customers.create');
+        $companies = Company::all();
+        return view('admin.customers.create', [
+            'companies' => $companies
+        ]);
     }
 
     /**
@@ -36,6 +53,7 @@ class CustomerController extends Controller
             'name' => $request->name,
             'address' => $request->address,
             'phone_number' => $request->phone_number,
+            'company_id' => $request->company_id,
         ];
 
         Customer::create($data);
@@ -58,7 +76,9 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
+        $companies = Company::all();
         return view('admin.customers.edit', [
+            'companies' => $companies,
             'customer' => $customer
         ]);
     }
@@ -72,6 +92,7 @@ class CustomerController extends Controller
             'name' => $request->name,
             'address' => $request->address,
             'phone_number' => $request->phone_number,
+            'company_id' => $request->company_id,
         ];
 
         $customer->update($data);

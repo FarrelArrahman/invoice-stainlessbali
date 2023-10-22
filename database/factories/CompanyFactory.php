@@ -3,13 +3,12 @@
 namespace Database\Factories;
 
 use App\Enums\StatusEnum;
-use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Customer>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Company>
  */
-class CustomerFactory extends Factory
+class CompanyFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,9 +18,9 @@ class CustomerFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'name' => fake()->company(),
             'address' => fake()->address(),
-            'phone_number' => fake()->phoneNumber(),
+            'telephone_number' => fake()->phoneNumber(),
             'status' => fake()->randomElement(StatusEnum::activeCases())
         ];
     }

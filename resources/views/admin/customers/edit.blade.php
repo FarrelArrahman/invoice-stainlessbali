@@ -47,6 +47,15 @@ Customer
                                 <input type="text"
                                     class="form-control" id="phone-number" name="phone_number" value="{{ $customer->phone_number }}">
                             </div>
+                            <div class="mb-3">
+                                <label for="company">Company</label>
+                                <select name="company_id" id="company-id" class="form-select">
+                                    <option value="" selected>[ NO COMPANY ]</option>
+                                    @foreach($companies as $company)
+                                    <option @selected($company->id == $customer->company_id) value="{{ $company->id }}">{{ $company->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-block btn-primary">Submit</button>
                             </div>

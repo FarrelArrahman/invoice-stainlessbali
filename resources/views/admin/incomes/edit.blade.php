@@ -13,16 +13,16 @@ Transaksi
                         </path>
                     </svg></a></li>
             <li class="breadcrumb-item"><a href="#">Transaksi</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Tambah Transaksi</li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Transaksi</li>
         </ol>
     </nav>
     <div class="d-flex justify-content-between w-100 flex-wrap">
         <div class="mb-3 mb-lg-0">
-            <h1 class="h4">Tambah Transaksi</h1>
+            <h1 class="h4">Edit Transaksi</h1>
         </div>
     </div>
 </div>
-<form onsubmit="checkForm()" action="{{ route('transactions.store') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('transactions.store') }}" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="total_price" id="total-price-input">
     <input type="hidden" name="total_price_before_discount" id="total-price-before-discount-input">
     @csrf
@@ -35,7 +35,7 @@ Transaksi
                             <div class="accordion" id="accordionCustomer">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="customerData">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#customerCollapse" aria-expanded="false" aria-controls="customerCollapse">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#customerCollapse" aria-expanded="false" aria-controls="customerCollapse">
                                             Masukkan data pelanggan...
                                         </button>
                                     </h2>
@@ -78,20 +78,21 @@ Transaksi
                         </div>
 
                         <div class="col-12" id="breakdowns">
-                            <div class="accordion mb-2" id="accordionBreakdown">
+                            @foreach($transaction->breakdowns as $breakdown)
+                            <div class="accordion mb-2" id="accordionBreakdown{{ $breakdown->id }}">
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header" id="breakdown">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#breakdownCollapse" aria-expanded="false" aria-controls="breakdownCollapse">
-                                            <span class="breakdown-title" id="breakdown1-title">Breakdown #1</span>
+                                    <h2 class="accordion-header" id="breakdown{{ $breakdown->id }}">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#breakdownCollapse{{ $breakdown->id }}" aria-expanded="false" aria-controls="breakdownCollapse{{ $breakdown->id }}">
+                                            <span class="breakdown-title" id="breakdown{{ $breakdown->id }}-title">{{ $breakdown->breakdown_name }}</span>
                                         </button>
                                     </h2>
                                     <div id="breakdownCollapse" class="accordion-collapse collapse show" aria-labelledby="breakdown" data-bs-parent="#accordionBreakdown">
                                         <div class="accordion-body">
                                             <label for="">Nama Breakdown</label>
-                                            <input type="hidden" class="breakdown-index" name="breakdown[]">
-                                            <input type="text" class="form-control w-100 my-2 breakdown-input" data-breakdown-title="breakdown1-title" data-breakdown-title-default="Breakdown #1" name="breakdown[1][name]" placeholder="Masukkan nama breakdown..." autocomplete="off">
-                                            <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown1" data-breakdown-counter="1"><i class="fa fa-plus me-1"></i> Tambah Manual</button>
-                                            <button class="select-item-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal-select-item" data-breakdown="breakdown1" data-breakdown-counter="1"><i class="fa fa-list me-1"></i> Pilih Item</button>
+                                            <input type="hidden" class="breakdown-index" name="breakdown[]" value="{{ $breakdown->id }}">
+                                            <input type="text" class="form-control w-100 my-2 breakdown-input" data-breakdown-title="breakdown{{ $breakdown->id }}-title" data-breakdown-title-default="{{ $breakdown->breakdown_name }}" name="breakdown[{{ $breakdown->id }}][name]" placeholder="Masukkan nama breakdown..." autocomplete="off" value="{{ $breakdown->breakdown_name }}">
+                                            <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown{{ $breakdown->id }}" data-breakdown-counter="{{ $breakdown->id }}"><i class="fa fa-plus me-1"></i> Tambah Manual</button>
+                                            <button class="select-item-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal-select-item" data-breakdown="breakdown{{ $breakdown->id }}" data-breakdown-counter="{{ $breakdown->id }}"><i class="fa fa-list me-1"></i> Pilih Item</button>
                                             <span class="deleteBreakdownPlaceholder"></span>
                                             <div class="table-responsive">
                                                 <table class="table table-centered mb-0 rounded">
@@ -102,7 +103,54 @@ Transaksi
                                                             <th width="25%" class="border-0 rounded-end text-end">Total</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody class="breakdown-table" id="breakdown1-table">
+                                                    <tbody class="breakdown-table" id="breakdown{{ $breakdown->id }}-table">
+                                                        @foreach($breakdown->items as $item)
+                                                        <tr id="breakdown{{ $breakdown->id }}-item{{ $item->id }}">
+                                                            <th class="border-0 rounded-start">
+                                                                <div class="row">
+                                                                    <div class="col-2">
+                                                                        <button type="button" id="item{{ $item->id }}-remove-button" class="btn btn-sm btn-link text-danger remove-item" onclick='removeItem("#breakdown{{ $breakdown->id }}-item{{ $item->id }}")'>
+                                                                            <i class="fa fa-times"></i>
+                                                                        </button>
+                                                                        <input type="hidden" value="{{ $item->id }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][id]">
+                                                                    </div>
+                                                                    <div class="col-2">
+                                                                        <img src="{{ $item->image }}" width="128">
+                                                                        <input type="hidden" value="{{ $item->image }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][image]">
+                                                                    </div>
+                                                                    <div class="col-8" id="item{{ $item->id }}-image-preview">
+                                                                        <h6 class="item-name mt-2">
+                                                                            <input class="border-bottom-input" type="text" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][name]" value="{{ $item->name }}">
+                                                                        </h6>
+                                                                        <span class="item-brand">
+                                                                            Brand:
+                                                                            <input class="border-bottom-input" type="text" value="{{ $item->brand }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][brand]">
+                                                                        </span> <br>
+                                                                        <span class="item-model">
+                                                                            Model:
+                                                                            <input class="border-bottom-input" type="text" value="{{ $item->model }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][model]">
+                                                                        </span> <br>
+                                                                        <span class="item-dimension">
+                                                                            Dimension:
+                                                                            <input size="4" class="border-bottom-input" type="text" value="{{ $item->width }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][width]"> x
+                                                                            <input size="4" class="border-bottom-input" type="text" value="{{ $item->depth }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][depth]"> x
+                                                                            <input size="4" class="border-bottom-input" type="text" value="{{ $item->height }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][height]">
+                                                                        </span> <br>
+                                                                        <span class="item-dimension">
+                                                                            Price: {{ $item->formatted_price }}
+                                                                            <input class="border-bottom-input" type="text" value="{{ $item->price }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][price]">
+                                                                        </span> <br>
+                                                                    </div>
+                                                                </div>
+                                                            </th>
+                                                            <th class="border-0 text-center">
+                                                                <input type="number" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][qty]" data-price="{{ $item->price }}" data-total-price="#item{{ $item->id }}-total-price" class="form-control item-qty" min="1" value="1">
+                                                            </th>
+                                                            <th id="item{{ $item->id }}-total-price" class="border-0 rounded-end text-end prices" data-price="{{ $item->price }}">
+                                                                {{ $item->formatted_price }}
+                                                            </th>
+                                                        </tr>
+                                                        @endforeach
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -110,6 +158,7 @@ Transaksi
                                     </div>
                                 </div>
                             </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -147,7 +196,7 @@ Transaksi
                                     <label for="invoice-type-offer" class="form-label mt-3">Simpan invoice sebagai</label>
                                     <br>
                                     <div class="form-check form-check-inline">
-                                        <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-offer" value="Offer" checked>
+                                        <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-offer" value="Offer">
                                         <label class="form-check-label" for="invoice-type-offer">Penawaran</label>
                                     </div>
                                     <div class="form-check form-check-inline">
@@ -394,43 +443,6 @@ Transaksi
 
 @push('custom-scripts')
 <script type="text/javascript">
-    let showNotyf = (background, message) => {
-        const notyf = new Notyf({
-            position: {
-                x: 'right',
-                y: 'top',
-            },
-            types: [
-                {
-                    type: "info",
-                    background: background,
-                    icon: {
-                        className: 'fa fa-exclamation-circle',
-                        tagName: 'span',
-                        color: '#fff'
-                    },
-                    dismissible: false
-                }
-            ]
-        })
-        
-        notyf.open({
-            type: "info",
-            message: message
-        })
-    }
-
-    let checkForm = () => {
-        if(
-            customerDetail.querySelector("#customer-name").value == "" ||
-            customerDetail.querySelector("#customer-address").value == "" || 
-            customerDetail.querySelector("#customer-phone-number").value == ""
-        ) {
-            showNotyf("red", "Data pelanggan belum diisi")
-            event.preventDefault()
-        }
-    }
-
     let itemNiceSelect = NiceSelect.bind(document.getElementById("item-nice-select"), {
         searchable: true
     })
@@ -502,6 +514,7 @@ Transaksi
         currency: 'IDR',
         maximumFractionDigits: 0
     });
+
 
     // Add new breakdown upon clicking
     addBreakdown.addEventListener('click', function() {
@@ -756,7 +769,7 @@ Transaksi
             <th class="border-0 rounded-start">
                 <div class="row">
                     <div class="col-2">
-                        <button id="item${itemCounter}-remove-button" class="btn btn-sm btn-link text-danger remove-item" data-remove-item="#${currentBreakdown}-item${itemCounter}">
+                        <button type="button" id="item${itemCounter}-remove-button" class="btn btn-sm btn-link text-danger remove-item" data-remove-item="#${currentBreakdown}-item${itemCounter}">
                             <i class="fa fa-times"></i>
                         </button>
                         <input type="hidden" value="${data.id ?? ''}" name="breakdown[${breakdownCounter}][item][${itemCounter}][id]">
@@ -809,6 +822,11 @@ Transaksi
         VMasker(document.querySelector(`#item${itemCounter}-price`)).maskMoney({
             precision: 0
         })
+    }
+
+    let removeItem = (id) => {
+        breakdowns.querySelector(id).remove()
+        calculateTotalPrice()
     }
 
     selectExistingItemButton.addEventListener('click', function(e) {

@@ -16,9 +16,10 @@ class Customer extends Model
      */
     protected $fillable = [
         'name',
-        'gender',
         'address',
         'phone_number',
+        'company_id',
+        'status'
     ];
 
     /**
@@ -42,5 +43,10 @@ class Customer extends Model
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'customer_id');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id', 'id');
     }
 }

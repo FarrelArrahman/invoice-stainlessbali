@@ -17,6 +17,7 @@ class TechnicianExpenditure extends Model
     protected $fillable = [
         'technician_id',
         'note',
+        'date',
         'status',
     ];
 

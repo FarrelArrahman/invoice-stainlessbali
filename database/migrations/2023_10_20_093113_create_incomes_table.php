@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('customer_phone_number');
             $table->text('address');
             $table->string('status');
+            $table->integer('total_price');
+            $table->datetime('date')->nullable();
             $table->unsignedBigInteger('handled_by')->nullable();
             $table->foreign('handled_by', 'income_admin_foreign')
                 ->references('id')

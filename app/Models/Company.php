@@ -39,4 +39,9 @@ class Company extends Model
     protected $casts = [
         'status' => StatusEnum::class
     ];
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class, 'company_id');
+    }
 }

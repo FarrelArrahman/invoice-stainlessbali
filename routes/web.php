@@ -4,6 +4,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ExpenditureController;
+use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SettingController;
@@ -39,6 +40,8 @@ Route::resource('technician_expenditures', TechnicianExpenditureController::clas
 Route::resource('employee_expenditures', EmployeeExpenditureController::class);
 Route::resource('operational_expenditures', OperationalExpenditureController::class);
 Route::resource('material_expenditures', MaterialExpenditureController::class);
+Route::resource('expenditures', ExpenditureController::class);
+Route::resource('incomes', IncomeController::class);
 
 // Master Data
 Route::resource('companies', CompanyController::class);
@@ -49,4 +52,11 @@ Route::resource('employees', EmployeeController::class);
 Route::prefix('/api/v1')->group(function() {
     Route::get('items', [ItemController::class, 'getItems'])->name('api.getItems');
     Route::get('item/{item}', [ItemController::class, 'getItem'])->name('api.getItem');
+
+    Route::get('companies', [CompanyController::class, 'getCompanies'])->name('api.getCompanies');
+    Route::get('company/{company}', [CompanyController::class, 'getCompany'])->name('api.getCompany');
+    Route::get('company/{company}/customers', [CompanyController::class, 'getCompanyCustomers'])->name('api.getCompanyCustomers');
+    
+    Route::get('customers', [CustomerController::class, 'getCustomers'])->name('api.getCustomers');
+    Route::get('customer/{customer}', [CustomerController::class, 'getCustomer'])->name('api.getCustomer');
 });

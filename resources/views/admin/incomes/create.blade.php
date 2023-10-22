@@ -1,7 +1,7 @@
 @extends('layout.template')
 
 @section('title')
-Transaksi
+Pemasukan
 @endsection
 
 @section('content')
@@ -12,17 +12,17 @@ Transaksi
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                         </path>
                     </svg></a></li>
-            <li class="breadcrumb-item"><a href="#">Transaksi</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Tambah Transaksi</li>
+            <li class="breadcrumb-item"><a href="#">Pemasukan</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tambah Pemasukan</li>
         </ol>
     </nav>
     <div class="d-flex justify-content-between w-100 flex-wrap">
         <div class="mb-3 mb-lg-0">
-            <h1 class="h4">Tambah Transaksi</h1>
+            <h1 class="h4">Tambah Pemasukan</h1>
         </div>
     </div>
 </div>
-<form onsubmit="checkForm()" action="{{ route('transactions.store') }}" method="POST" enctype="multipart/form-data">
+<form onsubmit="checkForm()" action="{{ route('incomes.store') }}" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="total_price" id="total-price-input">
     <input type="hidden" name="total_price_before_discount" id="total-price-before-discount-input">
     @csrf
@@ -42,20 +42,31 @@ Transaksi
                                     <div id="customerCollapse" class="accordion-collapse collapse" aria-labelledby="customerData" data-bs-parent="#accordionCustomer">
                                         <div class="accordion-body">
                                             <div id="customer-detail">
-                                                <label for="name">Name</label>
+                                                <label for="company-name">Nama Perusahaan</label>
                                                 <div class="input-group mb-3">
-                                                    <input id="customer-name" type="text" class="form-control" name="name">
+                                                    <input id="company-name" type="text" class="form-control" name="company_name">
+                                                    <span data-bs-toggle="modal" data-bs-target="#modal-select-company" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
+                                                        <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+                                                    </span>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="name">Nomor Kantor</label>
+                                                    <input id="company-telephone-number" type="text" class="form-control" id="company_telephone_number" name="company_telephone_number">
+                                                </div>
+                                                <label for="name">Nama Customer</label>
+                                                <div class="input-group mb-3">
+                                                    <input id="customer-name" type="text" class="form-control" name="customer_name">
                                                     <span data-bs-toggle="modal" data-bs-target="#modal-select-customer" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
                                                         <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
                                                     </span>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="name">Address</label>
-                                                    <input id="customer-address" type="text" class="form-control" id="address" name="address">
+                                                    <label for="name">Nomor Telepon</label>
+                                                    <input id="customer-phone-number" type="text" class="form-control" id="customer_phone_number" name="customer_phone_number">
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="name">Phone Number</label>
-                                                    <input id="customer-phone-number" type="text" class="form-control" id="phone_number" name="phone_number">
+                                                    <label for="name">Alamat</label>
+                                                    <input id="customer-address" type="text" class="form-control" id="address" name="address">
                                                 </div>
                                             </div>
                                         </div>
@@ -73,8 +84,8 @@ Transaksi
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <h1 class="h5 mt-2">Transaksi</h1>
-                            <button id="addBreakdown" class="btn btn-primary pull-right" type="button"><i class="fa fa-plus me-1"></i> Tambah Breakdown Baru</button>
+                            <h1 class="h5 mt-2">Pemasukan</h1>
+                            <!-- <button id="addBreakdown" class="btn btn-primary pull-right" type="button"><i class="fa fa-plus me-1"></i> Tambah Breakdown Baru</button> -->
                         </div>
 
                         <div class="col-12" id="breakdowns">
@@ -82,16 +93,15 @@ Transaksi
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="breakdown">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#breakdownCollapse" aria-expanded="false" aria-controls="breakdownCollapse">
-                                            <span class="breakdown-title" id="breakdown1-title">Breakdown #1</span>
+                                            <span class="breakdown-title" id="breakdown1-title">Daftar Pemasukan</span>
                                         </button>
                                     </h2>
                                     <div id="breakdownCollapse" class="accordion-collapse collapse show" aria-labelledby="breakdown" data-bs-parent="#accordionBreakdown">
                                         <div class="accordion-body">
-                                            <label for="">Nama Breakdown</label>
-                                            <input type="hidden" class="breakdown-index" name="breakdown[]">
-                                            <input type="text" class="form-control w-100 my-2 breakdown-input" data-breakdown-title="breakdown1-title" data-breakdown-title-default="Breakdown #1" name="breakdown[1][name]" placeholder="Masukkan nama breakdown..." autocomplete="off">
-                                            <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown1" data-breakdown-counter="1"><i class="fa fa-plus me-1"></i> Tambah Manual</button>
-                                            <button class="select-item-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal-select-item" data-breakdown="breakdown1" data-breakdown-counter="1"><i class="fa fa-list me-1"></i> Pilih Item</button>
+                                            <label for="">Tanggal</label>
+                                            <input type="date" class="form-control w-100 my-2" name="date" value="{{ today()->format('Y-m-d') }}">
+                                            <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown1" data-breakdown-counter="1"><i class="fa fa-plus me-1"></i> Tambah Item</button>
+                                            <!-- <button class="select-item-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal-select-item" data-breakdown="breakdown1" data-breakdown-counter="1"><i class="fa fa-list me-1"></i> Pilih Item</button> -->
                                             <span class="deleteBreakdownPlaceholder"></span>
                                             <div class="table-responsive">
                                                 <table class="table table-centered mb-0 rounded">
@@ -124,7 +134,7 @@ Transaksi
                             <h1 class="h5 mt-2">Total Harga</h1>
                             <h1 class="h4" id="total-price-text">Rp 0</h1>
                             <h1 class="h6 text-danger text-decoration-line-through d-none" id="total-price-before-discount-text">Rp 0</h1>
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
@@ -147,7 +157,7 @@ Transaksi
                                     <label for="invoice-type-offer" class="form-label mt-3">Simpan invoice sebagai</label>
                                     <br>
                                     <div class="form-check form-check-inline">
-                                        <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-offer" value="Offer" checked>
+                                        <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-offer" value="Offer">
                                         <label class="form-check-label" for="invoice-type-offer">Penawaran</label>
                                     </div>
                                     <div class="form-check form-check-inline">
@@ -211,9 +221,9 @@ Transaksi
                                             </tr>
                                         </table>
                                     </div>
-                                </div>
+                                </div> -->
                                 <button type="submit" class="btn btn-success w-100">Simpan</button>
-                            </div>
+                            <!-- </div> -->
                         </div>
                     </div>
                 </div>
@@ -221,7 +231,34 @@ Transaksi
         </div>
 </form>
 
-<!-- Modal Select Item -->
+<!-- Modal Select Company -->
+<div class="modal fade" id="modal-select-company" tabindex="-1" role="dialog" aria-labelledby="modal-select-company" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="h6 modal-title">Pilih perusahaan</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="a-select" class="form-label">Nama</label>
+                    <select name="company_id" id="company-nice-select" class="select-company w-100" placeholder="Pilih perusahaan...">
+                        <option value="" disabled selected>--- Pilih perusahaan ---</option>
+                        @foreach($companies as $company)
+                        <option value="{{ $company->id }}" data-name="{{ $company->name }}" data-address="{{ $company->address }}" data-telephone-number="{{ $company->telephone_number }}">{{ $company->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="select-existing-company-button" class="btn btn-secondary add-company-data" data-bs-dismiss="modal">Pilih Perusahaan</button>
+                <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Select Customer -->
 <div class="modal fade" id="modal-select-customer" tabindex="-1" role="dialog" aria-labelledby="modal-select-customer" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -234,9 +271,6 @@ Transaksi
                     <label for="a-select" class="form-label">Nama</label>
                     <select name="customer_id" id="customer-nice-select" class="select-customer w-100" placeholder="Pilih customer...">
                         <option value="" disabled selected>--- Pilih customer ---</option>
-                        @foreach($customers as $customer)
-                        <option value="{{ $customer->id }}" data-name="{{ $customer->name }}" data-address="{{ $customer->address }}" data-phone-number="{{ $customer->phone_number }}">{{ $customer->name }}</option>
-                        @endforeach
                     </select>
                 </div>
             </div>
@@ -247,7 +281,6 @@ Transaksi
         </div>
     </div>
 </div>
-
 
 <!-- Modal Select Item -->
 <div class="modal fade" id="modal-select-item" tabindex="-1" role="dialog" aria-labelledby="modal-select-item" aria-hidden="true">
@@ -317,7 +350,7 @@ Transaksi
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="select-existing-item-button" class="btn btn-secondary add-to-breakdown disabled" data-bs-dismiss="modal">Tambah ke Breakdown</button>
+                <button type="button" id="select-existing-item-button" class="btn btn-secondary add-to-breakdown disabled" data-bs-dismiss="modal">Tambah ke Daftar Barang</button>
                 <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -338,38 +371,6 @@ Transaksi
                     <div class="mb-3">
                         <label for="name">Nama</label>
                         <input type="text" class="form-control" id="name" name="name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="formFile" class="form-label">Foto</label>
-                        <br>
-                        <img width="128" id="add-new-image-preview" class="d-none">
-                        <input class="form-control" type="file" id="add-new-image-input" name="image">
-                        <input type="hidden" name="image_path">
-                    </div>
-                    <div class="mb-3">
-                        <label for="brand" aria-describedby="brandHelp">Brand</label>
-                        <input type="text" class="form-control" id="brand" name="brand">
-                        <small id="brandHelp" class="form-text text-muted">Kosongkan field ini jika tanpa brand / custom.</small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="model">Model</label>
-                        <input type="text" class="form-control" id="model" name="model">
-                    </div>
-                    <div class="mb-3">
-                        <div class="row mb-3">
-                            <div class="col-lg-4 col-sm-12 mb-lg-0 mb-sm-3">
-                                <label for="width">Width (mm)</label>
-                                <input type="number" class="form-control" id="width" name="width">
-                            </div>
-                            <div class="col-lg-4 col-sm-12 mb-lg-0 mb-sm-3">
-                                <label for="depth">Depth (mm)</label>
-                                <input type="number" class="form-control" id="depth" name="depth">
-                            </div>
-                            <div class="col-lg-4 col-sm-12 mb-lg-0 mb-sm-3">
-                                <label for="height">Height (mm)</label>
-                                <input type="number" class="form-control" id="height" name="height">
-                            </div>
-                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="price">Price</label>
@@ -431,7 +432,7 @@ Transaksi
         }
     }
 
-    let itemNiceSelect = NiceSelect.bind(document.getElementById("item-nice-select"), {
+    let companyNiceSelect = NiceSelect.bind(document.getElementById("company-nice-select"), {
         searchable: true
     })
     
@@ -443,9 +444,9 @@ Transaksi
         precision: 0
     })
     
-    VMasker(document.querySelector(`#discount-nominal`)).maskMoney({
-        precision: 0
-    })
+    // VMasker(document.querySelector(`#discount-nominal`)).maskMoney({
+    //     precision: 0
+    // })
 
     let breakdownCounter = 1
     let itemCounter = 0
@@ -467,14 +468,14 @@ Transaksi
     const inputFileWrapper = document.getElementById('input-file-wrapper')
     const inputFile = document.getElementById('input-file')
     const imagePreview = document.getElementById('image-preview')
-    const itemSelect = document.getElementById('item-nice-select')
+    const companySelect = document.getElementById('company-nice-select')
     const itemDetail = document.getElementById('item-detail')
     const customerSelect = document.getElementById('customer-nice-select')
     const customerDetail = document.getElementById('customer-detail')
     const addNewForm = document.getElementById('add-new-form')
     const addNewItemButton = document.getElementById('add-new-item-button')
     const selectItemForm = document.getElementById('select-item-form')
-    const selectExistingItemButton = document.getElementById('select-existing-item-button')
+    const selectExistingCompanyButton = document.getElementById('select-existing-company-button')
     const selectExistingCustomerButton = document.getElementById('select-existing-customer-button')
     const totalPriceText = document.getElementById('total-price-text')
     const totalPriceInput = document.getElementById('total-price-input')
@@ -504,68 +505,68 @@ Transaksi
     });
 
     // Add new breakdown upon clicking
-    addBreakdown.addEventListener('click', function() {
-        breakdownCounter = breakdownCounter + 1
-        const clonedBreakdown = breakdown.cloneNode(true)
-        clonedBreakdown.id = 'accordionBreakdown' + breakdownCounter
+    // addBreakdown.addEventListener('click', function() {
+    //     breakdownCounter = breakdownCounter + 1
+    //     const clonedBreakdown = breakdown.cloneNode(true)
+    //     clonedBreakdown.id = 'accordionBreakdown' + breakdownCounter
 
-        const clonedBreakdownIndex = clonedBreakdown.querySelector('.breakdown-index')
-        clonedBreakdownIndex.value = breakdownCounter
-        console.log("Breakdown Counter: " + clonedBreakdownIndex.value)
+    //     const clonedBreakdownIndex = clonedBreakdown.querySelector('.breakdown-index')
+    //     clonedBreakdownIndex.value = breakdownCounter
+    //     console.log("Breakdown Counter: " + clonedBreakdownIndex.value)
 
-        const clonedBreakdownTitle = clonedBreakdown.querySelector('.breakdown-title')
-        clonedBreakdownTitle.setAttribute('id', 'breakdown' + breakdownCounter + '-title')
-        clonedBreakdownTitle.innerHTML = 'Breakdown #' + breakdownCounter
+    //     const clonedBreakdownTitle = clonedBreakdown.querySelector('.breakdown-title')
+    //     clonedBreakdownTitle.setAttribute('id', 'breakdown' + breakdownCounter + '-title')
+    //     clonedBreakdownTitle.innerHTML = 'Breakdown #' + breakdownCounter
 
-        const clonedBreakdownInput = clonedBreakdown.querySelector('.breakdown-input')
-        clonedBreakdownInput.value = ""
-        clonedBreakdownInput.setAttribute('data-breakdown-title', 'breakdown' + breakdownCounter + '-title')
-        clonedBreakdownInput.setAttribute('data-breakdown-title-default', 'Breakdown #' + breakdownCounter)
-        clonedBreakdownInput.setAttribute('name', `breakdown[${breakdownCounter}][name]`)
+    //     const clonedBreakdownInput = clonedBreakdown.querySelector('.breakdown-input')
+    //     clonedBreakdownInput.value = ""
+    //     clonedBreakdownInput.setAttribute('data-breakdown-title', 'breakdown' + breakdownCounter + '-title')
+    //     clonedBreakdownInput.setAttribute('data-breakdown-title-default', 'Breakdown #' + breakdownCounter)
+    //     clonedBreakdownInput.setAttribute('name', `breakdown[${breakdownCounter}][name]`)
         
-        // const clonedFileInput = clonedBreakdown.querySelector('.testfileinput')
-        // clonedFileInput.setAttribute('name', `breakdown[${breakdownCounter}][name]`)
+    //     // const clonedFileInput = clonedBreakdown.querySelector('.testfileinput')
+    //     // clonedFileInput.setAttribute('name', `breakdown[${breakdownCounter}][name]`)
 
-        clonedBreakdown.querySelector('.add-manual-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
-        clonedBreakdown.querySelector('.add-manual-button').setAttribute('data-breakdown-counter', 'breakdown' + breakdownCounter)
-        clonedBreakdown.querySelector('.select-item-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
-        clonedBreakdown.querySelector('.select-item-button').setAttribute('data-breakdown-counter', 'breakdown' + breakdownCounter)
+    //     clonedBreakdown.querySelector('.add-manual-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
+    //     clonedBreakdown.querySelector('.add-manual-button').setAttribute('data-breakdown-counter', 'breakdown' + breakdownCounter)
+    //     clonedBreakdown.querySelector('.select-item-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
+    //     clonedBreakdown.querySelector('.select-item-button').setAttribute('data-breakdown-counter', 'breakdown' + breakdownCounter)
 
-        const clonedBreakdownAccordionButton = clonedBreakdown.querySelector('.accordion-button')
-        clonedBreakdownAccordionButton.setAttribute('data-bs-target', '#breakdownCollapse' + breakdownCounter)
-        clonedBreakdownAccordionButton.setAttribute('aria-controls', '#breakdownCollapse' + breakdownCounter)
+    //     const clonedBreakdownAccordionButton = clonedBreakdown.querySelector('.accordion-button')
+    //     clonedBreakdownAccordionButton.setAttribute('data-bs-target', '#breakdownCollapse' + breakdownCounter)
+    //     clonedBreakdownAccordionButton.setAttribute('aria-controls', '#breakdownCollapse' + breakdownCounter)
 
-        const clonedBreakdownAccordionCollapse = clonedBreakdown.querySelector('.accordion-collapse')
-        clonedBreakdownAccordionCollapse.setAttribute('id', 'breakdownCollapse' + breakdownCounter)
-        clonedBreakdownAccordionCollapse.setAttribute('data-bs-parent', '#accordionBreakdown' + breakdownCounter)
+    //     const clonedBreakdownAccordionCollapse = clonedBreakdown.querySelector('.accordion-collapse')
+    //     clonedBreakdownAccordionCollapse.setAttribute('id', 'breakdownCollapse' + breakdownCounter)
+    //     clonedBreakdownAccordionCollapse.setAttribute('data-bs-parent', '#accordionBreakdown' + breakdownCounter)
 
-        const clonedBreakdownTable = clonedBreakdown.querySelector('.breakdown-table')
-        clonedBreakdownTable.replaceChildren()
-        clonedBreakdownTable.setAttribute('id', 'breakdown' + breakdownCounter + '-table')
+    //     const clonedBreakdownTable = clonedBreakdown.querySelector('.breakdown-table')
+    //     clonedBreakdownTable.replaceChildren()
+    //     clonedBreakdownTable.setAttribute('id', 'breakdown' + breakdownCounter + '-table')
 
-        const deleteBreakdownButton = document.createElement("button")
-        deleteBreakdownButton.setAttribute("class", "btn btn-danger deleteBreakdownButton")
-        deleteBreakdownButton.setAttribute("data-remove", `#accordionBreakdown${breakdownCounter}`)
-        deleteBreakdownButton.innerHTML = "Hapus Breakdown"
+    //     const deleteBreakdownButton = document.createElement("button")
+    //     deleteBreakdownButton.setAttribute("class", "btn btn-danger deleteBreakdownButton")
+    //     deleteBreakdownButton.setAttribute("data-remove", `#accordionBreakdown${breakdownCounter}`)
+    //     deleteBreakdownButton.innerHTML = "Hapus Breakdown"
 
-        clonedBreakdown.querySelector('.deleteBreakdownPlaceholder').appendChild(deleteBreakdownButton)
-        breakdowns.appendChild(clonedBreakdown)
+    //     clonedBreakdown.querySelector('.deleteBreakdownPlaceholder').appendChild(deleteBreakdownButton)
+    //     breakdowns.appendChild(clonedBreakdown)
 
-        clonedBreakdown.querySelector('.breakdown-input').addEventListener('keyup', e => {
-            const title = document.getElementById(e.target.getAttribute('data-breakdown-title'))
-            title.innerHTML = !clonedBreakdownInput.value || !clonedBreakdownInput.value.trim().length ?
-                e.target.getAttribute('data-breakdown-title-default') :
-                clonedBreakdownInput.value
-        })
-    })
+    //     clonedBreakdown.querySelector('.breakdown-input').addEventListener('keyup', e => {
+    //         const title = document.getElementById(e.target.getAttribute('data-breakdown-title'))
+    //         title.innerHTML = !clonedBreakdownInput.value || !clonedBreakdownInput.value.trim().length ?
+    //             e.target.getAttribute('data-breakdown-title-default') :
+    //             clonedBreakdownInput.value
+    //     })
+    // })
 
     // Change breakdown title dynamically
-    inputTitle[0].addEventListener('keyup', e => {
-        const title = document.getElementById(e.target.getAttribute('data-breakdown-title'))
-        title.innerHTML = !inputTitle[0].value || !inputTitle[0].value.trim().length ?
-            e.target.getAttribute('data-breakdown-title-default') :
-            inputTitle[0].value
-    })
+    // inputTitle[0].addEventListener('keyup', e => {
+    //     const title = document.getElementById(e.target.getAttribute('data-breakdown-title'))
+    //     title.innerHTML = !inputTitle[0].value || !inputTitle[0].value.trim().length ?
+    //         e.target.getAttribute('data-breakdown-title-default') :
+    //         inputTitle[0].value
+    // })
 
     breakdowns.addEventListener('click', function(e) {
         if (e.target.classList.contains('deleteBreakdownButton')) {
@@ -616,8 +617,8 @@ Transaksi
             totalPrice += parseInt(e.dataset.price)
         })
 
-        discountPercentage = document.querySelector('#discount-percentage').value * totalPrice / 100
-        discountNominal = document.querySelector('#discount-nominal').value.replaceAll('.', '')
+        // discountPercentage = document.querySelector('#discount-percentage').value * totalPrice / 100
+        // discountNominal = document.querySelector('#discount-nominal').value.replaceAll('.', '')
 
         discountTotal = discountPercentage + discountNominal
 
@@ -630,8 +631,8 @@ Transaksi
         }
 
         setTotalPrice(totalPrice)
-        let dpAmount = setDP(totalPrice, dp.value)
-        setTerm(totalPrice, dpAmount, term.value)
+        // let dpAmount = setDP(totalPrice, dp.value)
+        // setTerm(totalPrice, dpAmount, term.value)
     }
 
     let setTotalPrice = (totalPrice) => {
@@ -674,13 +675,13 @@ Transaksi
         term3Input.value = terms == 3 ? amountPerTerm : 0
     }
 
-    // Show item detail upon selection changing
-    itemSelect.onchange = function(e) {
-        if (!itemSelect.value || !itemSelect.value.trim().length) {
-            selectExistingItemButton.classList.add('disabled')
+    // Show company detail upon selection changing
+    companySelect.onchange = function(e) {
+        if (!companySelect.value || !companySelect.value.trim().length) {
+            selectExistingCompanyButton.classList.add('disabled')
             showItemDetail(false)
         } else {
-            selectExistingItemButton.classList.remove('disabled')
+            selectExistingCompanyButton.classList.remove('disabled')
             showItemDetail(true)
             setItemDetail(e.target.options[e.target.selectedIndex].dataset)
         }
@@ -722,6 +723,11 @@ Transaksi
         })
     }
 
+    let setCompanyDetail = (data) => {
+        customerDetail.querySelector("#company-name").value = data.name
+        customerDetail.querySelector("#company-telephone-number").value = data.telephoneNumber
+    }
+
     let setCustomerDetail = (data) => {
         customerDetail.querySelector("#customer-name").value = data.name
         customerDetail.querySelector("#customer-address").value = data.address
@@ -750,7 +756,7 @@ Transaksi
     let addItem = (data) => {
         let item = document.createElement("tr")
         item.id = `${currentBreakdown}-item${++itemCounter}`
-        console.log("Add item to Current Breakdown: " + currentBreakdown)
+        // console.log("Add item to Current Breakdown: " + currentBreakdown)
         item.innerHTML =
             `
             <th class="border-0 rounded-start">
@@ -761,26 +767,10 @@ Transaksi
                         </button>
                         <input type="hidden" value="${data.id ?? ''}" name="breakdown[${breakdownCounter}][item][${itemCounter}][id]">
                     </div>
-                    <div class="col-2">
-                        <img alt="Klik untuk mengubah gambar..." style="cursor: pointer;" onclick="triggerFile('breakdown[${breakdownCounter}][item][${itemCounter}][image]')" src="${data.image}" width="128">
-                        ${data.image != "" ? `<input type="hidden" name="breakdown[${breakdownCounter}][item][${itemCounter}][image]" value="${data.image}">` : ``}
-                    </div>
                     <div class="col-8" id="item${itemCounter}-image-preview">
                         <h6 class="item-name mt-2">
                             <input class="border-bottom-input" type="text" value="${data.name}" name="breakdown[${breakdownCounter}][item][${itemCounter}][name]">
                         </h6>
-                        <span class="item-brand mt-2">
-                            Brand: <input class="border-bottom-input" type="text" value="${data.brand}" name="breakdown[${breakdownCounter}][item][${itemCounter}][brand]">
-                        </span> <br>
-                        <span class="item-model mt-2">
-                            Model: <input class="border-bottom-input" type="text" value="${data.model}" name="breakdown[${breakdownCounter}][item][${itemCounter}][model]">
-                        </span> <br>
-                        <span class="item-dimension mt-2">
-                            Dimension (W x D x H): <br>
-                            <input size="4" class="border-bottom-input" type="text" value="${data.width}" name="breakdown[${breakdownCounter}][item][${itemCounter}][width]"> x 
-                            <input size="4" class="border-bottom-input" type="text" value="${data.depth}" name="breakdown[${breakdownCounter}][item][${itemCounter}][depth]"> x 
-                            <input size="4" class="border-bottom-input" type="text" value="${data.height}" name="breakdown[${breakdownCounter}][item][${itemCounter}][height]">
-                        </span> <br>
                         <span class="item-dimension mt-2">
                             Rp.  
                             <input id="item${itemCounter}-price" data-qty="#item${itemCounter}-qty" data-total-price="#item${itemCounter}-total-price" class="border-bottom-input item-price" type="text" value="${data.price}" name="breakdown[${breakdownCounter}][item][${itemCounter}][price]">
@@ -811,21 +801,9 @@ Transaksi
         })
     }
 
-    selectExistingItemButton.addEventListener('click', function(e) {
-        const el = selectItemForm.elements
-        const data = {
-            id: el.namedItem("name").value,
-            name: itemSelect.options[el.namedItem("name").value].text,
-            image: el.namedItem("image_path").value,
-            brand: el.namedItem("brand").value,
-            model: el.namedItem("model").value,
-            width: el.namedItem("width").value,
-            depth: el.namedItem("depth").value,
-            height: el.namedItem("height").value,
-            dimension: el.namedItem("width").value + " x " + el.namedItem("depth").value + " x " + el.namedItem("height").value,
-            price: el.namedItem("price").value
-        }
-        addItem(data)
+    selectExistingCompanyButton.addEventListener('click', function(e) {
+        setCompanyDetail(companySelect.options[companySelect.selectedIndex].dataset)
+        getCompanyCustomers(companySelect.options[companySelect.selectedIndex].value)
     })
     
     selectExistingCustomerButton.addEventListener('click', function(e) {
@@ -839,36 +817,27 @@ Transaksi
         itemNiceSelect.clear()
     })
 
-    addNewImageInput.onchange = e => {
-        const file = e.target.files[0]
-        if (file) {
-            addNewImagePreview.classList.remove('d-none')
-            addNewImagePreview.src = URL.createObjectURL(file)
-            addNewForm.elements.namedItem("image_path").value = URL.createObjectURL(file)
-        } else {
-            addNewImagePreview.classList.add('d-none')
-            addNewImagePreview.src = ""
-            addNewForm.elements.namedItem("image_path").value = ""
-        }
-    }
+    // addNewImageInput.onchange = e => {
+    //     const file = e.target.files[0]
+    //     if (file) {
+    //         addNewImagePreview.classList.remove('d-none')
+    //         addNewImagePreview.src = URL.createObjectURL(file)
+    //         addNewForm.elements.namedItem("image_path").value = URL.createObjectURL(file)
+    //     } else {
+    //         addNewImagePreview.classList.add('d-none')
+    //         addNewImagePreview.src = ""
+    //         addNewForm.elements.namedItem("image_path").value = ""
+    //     }
+    // }
 
     addNewItemButton.onclick = e => {
         const el = addNewForm.elements
         const data = {
             name: el.namedItem("name").value,
-            image: el.namedItem("image_path").value,
-            brand: el.namedItem("brand").value ?? "*CUSTOM",
-            model: el.namedItem("model").value,
-            width: el.namedItem("width").value,
-            depth: el.namedItem("depth").value,
-            height: el.namedItem("height").value,
-            dimension: el.namedItem("width").value + " x " + el.namedItem("depth").value + " x " + el.namedItem("height").value,
             price: el.namedItem("price").value
         }
         addItem(data)
-        copyImageToBreakdown()
         addNewForm.reset()
-        addNewImagePreview.classList.add('d-none')
     }
 
     let copyImageToBreakdown = () => {
@@ -880,31 +849,31 @@ Transaksi
     }
 
     // Discount
-    discountNominalInput.addEventListener('change', e => {
-        calculateTotalPrice()
-    })
+    // discountNominalInput.addEventListener('change', e => {
+    //     calculateTotalPrice()
+    // })
 
-    discountNominalInput.addEventListener('keyup', e => {
-        if (e.target.value == "" || e.target.value < 0) {
-            e.target.value = 0
-        }
+    // discountNominalInput.addEventListener('keyup', e => {
+    //     if (e.target.value == "" || e.target.value < 0) {
+    //         e.target.value = 0
+    //     }
 
-        calculateTotalPrice()
-    })
+    //     calculateTotalPrice()
+    // })
 
-    discountPercentageInput.addEventListener('change', e => {
-        calculateTotalPrice()
-    })
+    // discountPercentageInput.addEventListener('change', e => {
+    //     calculateTotalPrice()
+    // })
 
-    discountPercentageInput.addEventListener('keyup', e => {
-        if (e.target.value == "" || e.target.value < 0) {
-            e.target.value = 0
-        } else if (e.target.value > 100) {
-            e.target.value = 100
-        }
+    // discountPercentageInput.addEventListener('keyup', e => {
+    //     if (e.target.value == "" || e.target.value < 0) {
+    //         e.target.value = 0
+    //     } else if (e.target.value > 100) {
+    //         e.target.value = 100
+    //     }
 
-        calculateTotalPrice()
-    })
+    //     calculateTotalPrice()
+    // })
 
     let invoiceType = (type) => {
         if (type.value == "Deal") {
@@ -914,19 +883,19 @@ Transaksi
         }
     }
 
-    term.onchange = (e) => {
-        if(e.target.value == 3) {
-            term3.classList.remove('d-none')
-        } else {
-            term3.classList.add('d-none')
-        }
+    // term.onchange = (e) => {
+    //     if(e.target.value == 3) {
+    //         term3.classList.remove('d-none')
+    //     } else {
+    //         term3.classList.add('d-none')
+    //     }
 
-        calculateTotalPrice()
-    }
+    //     calculateTotalPrice()
+    // }
     
-    dp.onchange = (e) => {
-        calculateTotalPrice()
-    }
+    // dp.onchange = (e) => {
+    //     calculateTotalPrice()
+    // }
 
     let triggerFile = (id) => {
         let inputFile = document.getElementById(id)
@@ -946,17 +915,38 @@ Transaksi
         }
     }
 
-    addNewImageInput.onchange = e => {
-        const file = e.target.files[0]
-        if (file) {
-            addNewImagePreview.classList.remove('d-none')
-            addNewImagePreview.src = URL.createObjectURL(file)
-            addNewForm.elements.namedItem("image_path").value = URL.createObjectURL(file)
-        } else {
-            addNewImagePreview.classList.add('d-none')
-            addNewImagePreview.src = ""
-            addNewForm.elements.namedItem("image_path").value = ""
-        }
+    // addNewImageInput.onchange = e => {
+    //     const file = e.target.files[0]
+    //     if (file) {
+    //         addNewImagePreview.classList.remove('d-none')
+    //         addNewImagePreview.src = URL.createObjectURL(file)
+    //         addNewForm.elements.namedItem("image_path").value = URL.createObjectURL(file)
+    //     } else {
+    //         addNewImagePreview.classList.add('d-none')
+    //         addNewImagePreview.src = ""
+    //         addNewForm.elements.namedItem("image_path").value = ""
+    //     }
+    // }
+
+    async function getCompanyCustomers(companyId = 0) {
+        const url = "{{ route('api.getCompanyCustomers', 'x') }}".replace('x', companyId)
+        const response = await fetch(url)
+        let data = await response.json()
+        setCustomers(data.data)
     }
+
+    let setCustomers = (data) => {
+        let el = `<option value="">--- Pilih Customer ---</option>`
+        data.forEach((customer) => {
+            el += `<option value="${customer.id}" data-name="${customer.name}" data-phone-number="${customer.phone_number}" data-address="${customer.address}">${customer.name}</option>`
+        })
+
+        customerSelect.replaceChildren()
+        customerSelect.innerHTML = el
+
+        customerNiceSelect.update()
+    }
+
+    getCompanyCustomers()
 </script>
 @endpush

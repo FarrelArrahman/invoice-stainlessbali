@@ -17,6 +17,7 @@ class OperationalExpenditure extends Model
     protected $fillable = [
         'shop_name',
         'note',
+        'date',
         'status',
     ];
 

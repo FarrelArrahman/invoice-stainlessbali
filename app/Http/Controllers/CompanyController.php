@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\StatusEnum;
 use App\Models\Company;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -17,6 +18,38 @@ class CompanyController extends Controller
         return view('admin.companies.index', [
             'companies' => $companies
         ]);
+    }
+
+    /**
+     * Display a listing of the resource as JSON.
+     */
+    public function getCompanies()
+    {
+        $companies = Company::all();
+        return response()->json([
+            'success' => true,
+            'message' => "Daftar perusahaan",
+            'data' => $companies
+        ], 200);
+    }
+
+    /**
+     * Display a listing of the resource as JSON.
+     */
+    public function getCompanyCustomers($company)
+    {
+        if($company == 0) {
+            $customers = Customer::where('status', StatusEnum::Active)->get();
+        } else {
+            $company = Company::find($company);
+            $customers = $company->customers;
+        }
+        
+        return response()->json([
+            'success' => true,
+            'message' => "Daftar customer perusahaan",
+            'data' => $customers
+        ], 200);
     }
 
     /**

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('shop_name');
             $table->text('note')->nullable();
+            $table->datetime('date')->nullable();
             $table->string('status');
             $table->timestamps();
         });

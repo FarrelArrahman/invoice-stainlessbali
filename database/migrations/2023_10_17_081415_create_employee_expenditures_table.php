@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('employee_id')->constrained('employees');
             $table->integer('working_day')->default(0);
             $table->integer('salary_per_day')->default(0);
+            $table->datetime('date')->nullable();
             $table->string('status');
             $table->timestamps();
         });

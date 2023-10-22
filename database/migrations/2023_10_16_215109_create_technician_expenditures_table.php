@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('technician_id')->constrained('technicians');
             $table->text('note')->nullable();
+            $table->datetime('date')->nullable();
             $table->string('status');
             $table->timestamps();
         });
