@@ -84,10 +84,10 @@ Pengeluaran
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <a href="#" class="btn w-100 mb-2 btn-success">Teknisi</a>
-                <a href="#" class="btn w-100 mb-2 btn-info">Karyawan</a>
-                <a href="#" class="btn w-100 mb-2 btn-warning">Operasional</a>
-                <a href="#" class="btn w-100 mb-2 btn-danger">Bahan</a>
+                <a href="{{ route('technician_expenditures.create') }}" class="btn w-100 mb-2 btn-success">Teknisi</a>
+                <a href="{{ route('employee_expenditures.create') }}" class="btn w-100 mb-2 btn-info">Karyawan</a>
+                <a href="{{ route('operational_expenditures.create') }}" class="btn w-100 mb-2 btn-warning">Operasional</a>
+                <a href="{{ route('material_expenditures.create') }}" class="btn w-100 mb-2 btn-danger">Bahan</a>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">Close</button>

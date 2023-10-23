@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use App\Enums\StatusEnum;
 use App\Enums\TransactionEnum;
 use App\Models\Company;
-use App\Models\Customer;
 use App\Models\Income;
 use App\Models\IncomeDetail;
 use App\Models\Item;
 use Illuminate\Http\Request;
-use PDF;
 
 class IncomeController extends Controller
 {

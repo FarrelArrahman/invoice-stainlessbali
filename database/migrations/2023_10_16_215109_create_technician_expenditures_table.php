@@ -17,6 +17,8 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->datetime('date')->nullable();
             $table->string('status');
+            $table->integer('service_fee');
+            $table->integer('total_price');
             $table->timestamps();
         });
     }

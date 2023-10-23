@@ -1,7 +1,7 @@
 @extends('layout.template')
 
 @section('title')
-Pemasukan
+Pengeluaran Teknisi
 @endsection
 
 @section('content')
@@ -12,13 +12,13 @@ Pemasukan
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                         </path>
                     </svg></a></li>
-            <li class="breadcrumb-item"><a href="#">Pemasukan</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Tambah Pemasukan</li>
+            <li class="breadcrumb-item"><a href="#">Pengeluaran Teknisi</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tambah Pengeluaran Teknisi</li>
         </ol>
     </nav>
     <div class="d-flex justify-content-between w-100 flex-wrap">
         <div class="mb-3 mb-lg-0">
-            <h1 class="h4">Tambah Pemasukan</h1>
+            <h1 class="h4">Tambah Pengeluaran Teknisi</h1>
         </div>
     </div>
 </div>
@@ -36,31 +36,16 @@ Pemasukan
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="customerData">
                                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#customerCollapse" aria-expanded="false" aria-controls="customerCollapse">
-                                            Masukkan data pelanggan...
+                                            Masukkan data teknisi...
                                         </button>
                                     </h2>
                                     <div id="customerCollapse" class="accordion-collapse collapse" aria-labelledby="customerData" data-bs-parent="#accordionCustomer">
                                         <div class="accordion-body">
                                             <div id="customer-detail">
-                                                <label for="company-name">Nama Perusahaan</label>
+                                                <label for="technician-name">Nama Teknisi</label>
                                                 <div class="input-group mb-3">
-                                                    <input id="company-name" type="text" class="form-control" name="company_name">
-                                                    <span data-bs-toggle="modal" data-bs-target="#modal-select-company" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
-                                                        <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
-                                                    </span>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="name">Nomor Kantor</label>
-                                                    <input id="company-telephone-number" type="text" class="form-control" id="company_telephone_number" name="company_telephone_number">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="name">Alamat Kantor</label>
-                                                    <input id="company-address" type="text" class="form-control" id="address" name="address">
-                                                </div>
-                                                <label for="name">Nama Customer</label>
-                                                <div class="input-group mb-3">
-                                                    <input id="customer-name" type="text" class="form-control" name="customer_name">
-                                                    <span data-bs-toggle="modal" data-bs-target="#modal-select-customer" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
+                                                    <input id="technician-name" type="text" class="form-control" name="technician_name">
+                                                    <span data-bs-toggle="modal" data-bs-target="#modal-select-technician" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
                                                         <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
                                                     </span>
                                                 </div>
@@ -84,7 +69,7 @@ Pemasukan
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <h1 class="h5 mt-2">Pemasukan</h1>
+                            <h1 class="h5 mt-2">Pengeluaran Teknisi</h1>
                             <!-- <button id="addBreakdown" class="btn btn-primary pull-right" type="button"><i class="fa fa-plus me-1"></i> Tambah Breakdown Baru</button> -->
                         </div>
 
@@ -93,7 +78,7 @@ Pemasukan
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="breakdown">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#breakdownCollapse" aria-expanded="false" aria-controls="breakdownCollapse">
-                                            <span class="breakdown-title" id="breakdown1-title">Daftar Pemasukan</span>
+                                            <span class="breakdown-title" id="breakdown1-title">Daftar Pengeluaran Teknisi</span>
                                         </button>
                                     </h2>
                                     <div id="breakdownCollapse" class="accordion-collapse collapse show" aria-labelledby="breakdown" data-bs-parent="#accordionBreakdown">
@@ -231,27 +216,27 @@ Pemasukan
         </div>
 </form>
 
-<!-- Modal Select Company -->
-<div class="modal fade" id="modal-select-company" tabindex="-1" role="dialog" aria-labelledby="modal-select-company" aria-hidden="true">
+<!-- Modal Select Technician -->
+<div class="modal fade" id="modal-select-technician" tabindex="-1" role="dialog" aria-labelledby="modal-select-technician" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="h6 modal-title">Pilih perusahaan</h2>
+                <h2 class="h6 modal-title">Pilih teknisi</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="a-select" class="form-label">Nama</label>
-                    <select name="company_id" id="company-nice-select" class="select-company w-100" placeholder="Pilih perusahaan...">
-                        <option value="" disabled selected>--- Pilih perusahaan ---</option>
-                        @foreach($companies as $company)
-                        <option value="{{ $company->id }}" data-name="{{ $company->name }}" data-address="{{ $company->address }}" data-telephone-number="{{ $company->telephone_number }}">{{ $company->name }}</option>
+                    <select name="company_id" id="company-nice-select" class="select-company w-100" placeholder="Pilih teknisi...">
+                        <option value="" disabled selected>--- Pilih teknisi ---</option>
+                        @foreach($technicians as $technician)
+                        <option value="{{ $technician->id }}" data-name="{{ $technician->name }}" data-address="{{ $technician->address }}" data-phone-number="{{ $technician->phone_number }}">{{ $technician->name }}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="select-existing-company-button" class="btn btn-secondary add-company-data" data-bs-dismiss="modal">Pilih Perusahaan</button>
+                <button type="button" id="select-existing-technician-button" class="btn btn-secondary add-company-data" data-bs-dismiss="modal">Pilih Perusahaan</button>
                 <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -475,7 +460,7 @@ Pemasukan
     const addNewForm = document.getElementById('add-new-form')
     const addNewItemButton = document.getElementById('add-new-item-button')
     const selectItemForm = document.getElementById('select-item-form')
-    const selectExistingCompanyButton = document.getElementById('select-existing-company-button')
+    const selectExistingCompanyButton = document.getElementById('select-existing-technician-button')
     const selectExistingCustomerButton = document.getElementById('select-existing-customer-button')
     const totalPriceText = document.getElementById('total-price-text')
     const totalPriceInput = document.getElementById('total-price-input')
@@ -723,15 +708,9 @@ Pemasukan
         })
     }
 
-    let setCompanyDetail = (data) => {
-        customerDetail.querySelector("#company-name").value = data.name
-        customerDetail.querySelector("#company-address").value = data.address
-        customerDetail.querySelector("#company-telephone-number").value = data.telephoneNumber
-    }
-
-    let setCustomerDetail = (data) => {
-        customerDetail.querySelector("#customer-name").value = data.name
-        customerDetail.querySelector("#customer-phone-number").value = data.phoneNumber
+    let setTechnicianDetail = (data) => {
+        customerDetail.querySelector("#technician-name").value = data.name
+        customerDetail.querySelector("#technician-phone-number").value = data.phoneNumber
     }
 
     let setImagePreview = (image) => {
@@ -802,7 +781,7 @@ Pemasukan
     }
 
     selectExistingCompanyButton.addEventListener('click', function(e) {
-        setCompanyDetail(companySelect.options[companySelect.selectedIndex].dataset)
+        setTechnicianDetail(companySelect.options[companySelect.selectedIndex].dataset)
         getCompanyCustomers(companySelect.options[companySelect.selectedIndex].value)
     })
     
@@ -927,26 +906,5 @@ Pemasukan
     //         addNewForm.elements.namedItem("image_path").value = ""
     //     }
     // }
-
-    async function getCompanyCustomers(companyId = 0) {
-        const url = "{{ route('api.getCompanyCustomers', 'x') }}".replace('x', companyId)
-        const response = await fetch(url)
-        let data = await response.json()
-        setCustomers(data.data)
-    }
-
-    let setCustomers = (data) => {
-        let el = `<option value="">--- Pilih Customer ---</option>`
-        data.forEach((customer) => {
-            el += `<option value="${customer.id}" data-name="${customer.name}" data-phone-number="${customer.phone_number}" data-address="${customer.address}">${customer.name}</option>`
-        })
-
-        customerSelect.replaceChildren()
-        customerSelect.innerHTML = el
-
-        customerNiceSelect.update()
-    }
-
-    getCompanyCustomers()
 </script>
 @endpush
