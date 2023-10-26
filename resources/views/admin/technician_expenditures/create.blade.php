@@ -22,7 +22,7 @@ Pengeluaran Teknisi
         </div>
     </div>
 </div>
-<form onsubmit="checkForm()" action="{{ route('incomes.store') }}" method="POST" enctype="multipart/form-data">
+<form onsubmit="checkForm()" action="{{ route('technician_expenditures.store') }}" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="total_price" id="total-price-input">
     <input type="hidden" name="total_price_before_discount" id="total-price-before-discount-input">
     @csrf
@@ -41,7 +41,7 @@ Pengeluaran Teknisi
                                     </h2>
                                     <div id="customerCollapse" class="accordion-collapse collapse" aria-labelledby="customerData" data-bs-parent="#accordionCustomer">
                                         <div class="accordion-body">
-                                            <div id="customer-detail">
+                                            <div id="technician-detail">
                                                 <label for="technician-name">Nama Teknisi</label>
                                                 <div class="input-group mb-3">
                                                     <input id="technician-name" type="text" class="form-control" name="technician_name">
@@ -51,7 +51,7 @@ Pengeluaran Teknisi
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="name">Nomor Telepon</label>
-                                                    <input id="customer-phone-number" type="text" class="form-control" id="customer_phone_number" name="customer_phone_number">
+                                                    <input id="technician-phone-number" type="text" class="form-control" id="customer_phone_number" name="customer_phone_number">
                                                 </div>
                                             </div>
                                         </div>
@@ -116,99 +116,18 @@ Pengeluaran Teknisi
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <h1 class="h5 mt-2">Total Harga</h1>
+                            <div class="form-group">
+                                <label for="service-fee-input" class="form-label">Biaya Jasa (Rp)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control discounts" id="service-fee-input" name="service_fee">
+                                </div>
+                            </div>
+                            <h1 class="h5 mt-5">Total Harga</h1>
                             <h1 class="h4" id="total-price-text">Rp 0</h1>
                             <h1 class="h6 text-danger text-decoration-line-through d-none" id="total-price-before-discount-text">Rp 0</h1>
-                            <!-- <div class="mb-3">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="discount-percentage" class="form-label mt-3">Diskon 1 (%)</label>
-                                            <div class="input-group">
-                                                <input type="number" class="form-control discounts" id="discount-percentage" name="discount_percentage" value="0" min="0" max="100">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="discount-nominal" class="form-label mt-3">Diskon 2 (Rp)</label>
-                                            <div class="input-group">
-                                                <input type="number" class="form-control discounts" id="discount-nominal" name="discount_nominal" value="0">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="invoice-type-offer" class="form-label mt-3">Simpan invoice sebagai</label>
-                                    <br>
-                                    <div class="form-check form-check-inline">
-                                        <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-offer" value="Offer">
-                                        <label class="form-check-label" for="invoice-type-offer">Penawaran</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-deal" value="Deal">
-                                        <label class="form-check-label" for="invoice-type-deal">Deal</label>
-                                    </div>
-                                </div>
-                                <div class="mb-3 d-none" id="payment-terms">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <div class="form-group">
-                                                <label for="term" class="form-label mt-3">Termin</label>
-                                                <div class="input-group">
-                                                    <select name="payment_terms" id="term" class="form-select">
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="form-group">
-                                                <label for="dp" class="form-label mt-3">DP</label>
-                                                <div class="input-group">
-                                                    <select name="dp" id="dp" class="form-select">
-                                                        <option value="10">10%</option>
-                                                        <option value="15">15%</option>
-                                                        <option value="20">20%</option>
-                                                        <option value="25">25%</option>
-                                                        <option value="30">30%</option>
-                                                        <option value="40">40%</option>
-                                                        <option value="50">50%</option>
-                                                        <option value="60">60%</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="payment-term-breakdown" class="form-label mt-3">Pembayaran</label>
-                                        <table id="payment-term-breakdown" class="table table-centered table-bordered mb-0 rounded">
-                                            <tr>
-                                                <td width="20%">DP</td>
-                                                <td width="80%" id="dp-amount">Rp 0</td>
-                                                <input type="hidden" id="dp-input" name="dp">
-                                            </tr>
-                                            <tr id="term1">
-                                                <td width="20%">Termin 1</td>
-                                                <td width="80%" id="term1-amount">Rp 0</td>
-                                                <input type="hidden" id="term1-input" name="term1">
-                                            </tr>
-                                            <tr id="term2">
-                                                <td width="20%">Termin 2</td>
-                                                <td width="80%" id="term2-amount">Rp 0</td>
-                                                <input type="hidden" id="term2-input" name="term2">
-                                            </tr>
-                                            <tr id="term3" class="d-none">
-                                                <td width="20%">Termin 3</td>
-                                                <td width="80%" id="term3-amount">Rp 0</td>
-                                                <input type="hidden" id="term3-input" name="term3">
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div> -->
+                            <div class="mb-3">
                                 <button type="submit" class="btn btn-success w-100">Simpan</button>
-                            <!-- </div> -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -227,7 +146,7 @@ Pengeluaran Teknisi
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="a-select" class="form-label">Nama</label>
-                    <select name="company_id" id="company-nice-select" class="select-company w-100" placeholder="Pilih teknisi...">
+                    <select name="company_id" id="technician-nice-select" class="select-company w-100" placeholder="Pilih teknisi...">
                         <option value="" disabled selected>--- Pilih teknisi ---</option>
                         @foreach($technicians as $technician)
                         <option value="{{ $technician->id }}" data-name="{{ $technician->name }}" data-address="{{ $technician->address }}" data-phone-number="{{ $technician->phone_number }}">{{ $technician->name }}</option>
@@ -236,7 +155,7 @@ Pengeluaran Teknisi
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="select-existing-technician-button" class="btn btn-secondary add-company-data" data-bs-dismiss="modal">Pilih Perusahaan</button>
+                <button type="button" id="select-existing-technician-button" class="btn btn-secondary add-company-data" data-bs-dismiss="modal">Pilih Teknisi</button>
                 <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -408,16 +327,15 @@ Pengeluaran Teknisi
 
     let checkForm = () => {
         if(
-            customerDetail.querySelector("#customer-name").value == "" ||
-            customerDetail.querySelector("#companyaddress").value == "" || 
-            customerDetail.querySelector("#customer-phone-number").value == ""
+            technicianDetail.querySelector("#technician-name").value == "" ||
+            technicianDetail.querySelector("#technician-phone-number").value == ""
         ) {
             showNotyf("red", "Data pelanggan belum diisi")
             event.preventDefault()
         }
     }
 
-    let companyNiceSelect = NiceSelect.bind(document.getElementById("company-nice-select"), {
+    let companyNiceSelect = NiceSelect.bind(document.getElementById("technician-nice-select"), {
         searchable: true
     })
     
@@ -429,9 +347,9 @@ Pengeluaran Teknisi
         precision: 0
     })
     
-    // VMasker(document.querySelector(`#discount-nominal`)).maskMoney({
-    //     precision: 0
-    // })
+    VMasker(document.querySelector(`#service-fee-input`)).maskMoney({
+        precision: 0
+    })
 
     let breakdownCounter = 1
     let itemCounter = 0
@@ -442,21 +360,11 @@ Pengeluaran Teknisi
     let discountPercentage = 0
     let discountNominal = 0
 
-    const addBreakdown = document.getElementById('addBreakdown')
-    const addNewImageInput = document.getElementById('add-new-image-input')
-    const addNewImagePreview = document.getElementById('add-new-image-preview')
-    const addItemToBreakdown = document.querySelectorAll('.add-to-breakdown')
     const itemQty = document.querySelectorAll('.item-qty')
     const breakdowns = document.getElementById('breakdowns')
     const breakdown = document.getElementById('accordionBreakdown')
-    const inputTitle = document.querySelectorAll('.breakdown-input')
-    const inputFileWrapper = document.getElementById('input-file-wrapper')
-    const inputFile = document.getElementById('input-file')
-    const imagePreview = document.getElementById('image-preview')
-    const companySelect = document.getElementById('company-nice-select')
+    const technicianDetail = document.getElementById('technician-detail')
     const itemDetail = document.getElementById('item-detail')
-    const customerSelect = document.getElementById('customer-nice-select')
-    const customerDetail = document.getElementById('customer-detail')
     const addNewForm = document.getElementById('add-new-form')
     const addNewItemButton = document.getElementById('add-new-item-button')
     const selectItemForm = document.getElementById('select-item-form')
@@ -467,22 +375,9 @@ Pengeluaran Teknisi
     const totalPriceBeforeDiscountText = document.getElementById('total-price-before-discount-text')
     const totalPriceBeforeDiscountInput = document.getElementById('total-price-before-discount-input')
     const discountPercentageInput = document.getElementById('discount-percentage')
-    const discountNominalInput = document.getElementById('discount-nominal')
-    const paymentTerms = document.getElementById('payment-terms')
-    const term = document.getElementById('term')
-    const dp = document.getElementById('dp')
-    const dpAmount = document.getElementById('dp-amount')
-    const dpInput = document.getElementById('dp-input')
-    const term1 = document.getElementById('term1')
-    const term1Amount = document.getElementById('term1-amount')
-    const term1Input = document.getElementById('term1-input')
-    const term2 = document.getElementById('term2')
-    const term2Amount = document.getElementById('term2-amount')
-    const term2Input = document.getElementById('term2-input')
-    const term3 = document.getElementById('term3')
-    const term3Amount = document.getElementById('term3-amount')
-    const term3Input = document.getElementById('term3-input')
-
+    const serviceFeeInput = document.getElementById('service-fee-input')
+    const technicianSelect = document.getElementById('technician-nice-select')
+    
     const rupiahFormat = new Intl.NumberFormat('id-ID', {
         style: 'currency',
         currency: 'IDR',
@@ -592,8 +487,7 @@ Pengeluaran Teknisi
 
     let calculateTotalPrice = () => {
         totalPrice = 0
-        discountPercentage = 0
-        discountNominal = 0
+        serviceFee = 0
 
         let prices = breakdowns.querySelectorAll('.prices')
         let discounts = document.querySelectorAll('.discounts')
@@ -602,22 +496,15 @@ Pengeluaran Teknisi
             totalPrice += parseInt(e.dataset.price)
         })
 
-        // discountPercentage = document.querySelector('#discount-percentage').value * totalPrice / 100
-        // discountNominal = document.querySelector('#discount-nominal').value.replaceAll('.', '')
+        serviceFee = serviceFeeInput.value.replaceAll('.', '')
 
-        discountTotal = discountPercentage + discountNominal
-
-        setTotalPriceBeforeDiscount(totalPrice, discountTotal)
-
-        totalPrice = totalPrice - discountPercentage - discountNominal
+        totalPrice = +totalPrice + +serviceFee
 
         if (totalPrice < 0) {
             totalPrice = 0
         }
 
         setTotalPrice(totalPrice)
-        // let dpAmount = setDP(totalPrice, dp.value)
-        // setTerm(totalPrice, dpAmount, term.value)
     }
 
     let setTotalPrice = (totalPrice) => {
@@ -660,9 +547,9 @@ Pengeluaran Teknisi
         term3Input.value = terms == 3 ? amountPerTerm : 0
     }
 
-    // Show company detail upon selection changing
-    companySelect.onchange = function(e) {
-        if (!companySelect.value || !companySelect.value.trim().length) {
+    // Show technician detail upon selection changing
+    technicianSelect.onchange = function(e) {
+        if (!technicianSelect.value || !technicianSelect.value.trim().length) {
             selectExistingCompanyButton.classList.add('disabled')
             showItemDetail(false)
         } else {
@@ -672,22 +559,11 @@ Pengeluaran Teknisi
         }
     }
 
-    // Show customer detail upon selection changing
-    customerSelect.onchange = function(e) {
-        if (!customerSelect.value || !customerSelect.value.trim().length) {
-            selectExistingCustomerButton.classList.add('disabled')
-        } else {
-            selectExistingCustomerButton.classList.remove('disabled')
-        }
-    }
-
     let showItemDetail = (toggle) => {
         toggle ? itemDetail.classList.remove('d-none') : itemDetail.classList.add('d-none')
     }
 
     let setItemDetail = (data) => {
-        setImagePreview(data.image)
-
         if (Object.keys(data).length === 0 && data.constructor === Object) {
             itemSelected = false
             selectItemForm.reset()
@@ -709,22 +585,8 @@ Pengeluaran Teknisi
     }
 
     let setTechnicianDetail = (data) => {
-        customerDetail.querySelector("#technician-name").value = data.name
-        customerDetail.querySelector("#technician-phone-number").value = data.phoneNumber
-    }
-
-    let setImagePreview = (image) => {
-        if (!image || !image.trim().length) {
-            inputFile.classList.remove('d-none')
-
-            imagePreview.setAttribute('src', "")
-            imagePreview.classList.add('d-none')
-        } else {
-            inputFile.classList.add('d-none')
-
-            imagePreview.setAttribute('src', image)
-            imagePreview.classList.remove('d-none')
-        }
+        technicianDetail.querySelector("#technician-name").value = data.name
+        technicianDetail.querySelector("#technician-phone-number").value = data.phoneNumber
     }
 
     let deleteElement = (id) => {
@@ -781,8 +643,7 @@ Pengeluaran Teknisi
     }
 
     selectExistingCompanyButton.addEventListener('click', function(e) {
-        setTechnicianDetail(companySelect.options[companySelect.selectedIndex].dataset)
-        getCompanyCustomers(companySelect.options[companySelect.selectedIndex].value)
+        setTechnicianDetail(technicianSelect.options[technicianSelect.selectedIndex].dataset)
     })
     
     selectExistingCustomerButton.addEventListener('click', function(e) {
@@ -796,19 +657,6 @@ Pengeluaran Teknisi
         itemNiceSelect.clear()
     })
 
-    // addNewImageInput.onchange = e => {
-    //     const file = e.target.files[0]
-    //     if (file) {
-    //         addNewImagePreview.classList.remove('d-none')
-    //         addNewImagePreview.src = URL.createObjectURL(file)
-    //         addNewForm.elements.namedItem("image_path").value = URL.createObjectURL(file)
-    //     } else {
-    //         addNewImagePreview.classList.add('d-none')
-    //         addNewImagePreview.src = ""
-    //         addNewForm.elements.namedItem("image_path").value = ""
-    //     }
-    // }
-
     addNewItemButton.onclick = e => {
         const el = addNewForm.elements
         const data = {
@@ -819,40 +667,13 @@ Pengeluaran Teknisi
         addNewForm.reset()
     }
 
-    let copyImageToBreakdown = () => {
-        const image = addNewForm.elements.namedItem("image").cloneNode(true)
-        image.classList.add("visually-hidden")
-        image.setAttribute('name', `breakdown[${breakdownCounter}][item][${itemCounter}][image]`)
-        image.setAttribute('id', `breakdown[${breakdownCounter}][item][${itemCounter}][image]`)
-        document.getElementById(`item${itemCounter}-image-preview`).appendChild(image)
-    }
+    serviceFeeInput.addEventListener('keyup', e => {
+        if (e.target.value == "" || e.target.value < 0) {
+            e.target.value = 0
+        }
 
-    // Discount
-    // discountNominalInput.addEventListener('change', e => {
-    //     calculateTotalPrice()
-    // })
-
-    // discountNominalInput.addEventListener('keyup', e => {
-    //     if (e.target.value == "" || e.target.value < 0) {
-    //         e.target.value = 0
-    //     }
-
-    //     calculateTotalPrice()
-    // })
-
-    // discountPercentageInput.addEventListener('change', e => {
-    //     calculateTotalPrice()
-    // })
-
-    // discountPercentageInput.addEventListener('keyup', e => {
-    //     if (e.target.value == "" || e.target.value < 0) {
-    //         e.target.value = 0
-    //     } else if (e.target.value > 100) {
-    //         e.target.value = 100
-    //     }
-
-    //     calculateTotalPrice()
-    // })
+        calculateTotalPrice()
+    })
 
     let invoiceType = (type) => {
         if (type.value == "Deal") {
@@ -861,50 +682,5 @@ Pengeluaran Teknisi
             paymentTerms.classList.add('d-none')
         }
     }
-
-    // term.onchange = (e) => {
-    //     if(e.target.value == 3) {
-    //         term3.classList.remove('d-none')
-    //     } else {
-    //         term3.classList.add('d-none')
-    //     }
-
-    //     calculateTotalPrice()
-    // }
-    
-    // dp.onchange = (e) => {
-    //     calculateTotalPrice()
-    // }
-
-    let triggerFile = (id) => {
-        let inputFile = document.getElementById(id)
-        let preview = event.target
-
-        if(confirm("Apakah Anda ingin mengubah gambar item ini?")) {
-            inputFile.click()
-
-            inputFile.onchange = e => {
-                const file = e.target.files[0]
-                if (file) {
-                    preview.src = URL.createObjectURL(file)
-                } else {
-                    preview.src = ""
-                }
-            }
-        }
-    }
-
-    // addNewImageInput.onchange = e => {
-    //     const file = e.target.files[0]
-    //     if (file) {
-    //         addNewImagePreview.classList.remove('d-none')
-    //         addNewImagePreview.src = URL.createObjectURL(file)
-    //         addNewForm.elements.namedItem("image_path").value = URL.createObjectURL(file)
-    //     } else {
-    //         addNewImagePreview.classList.add('d-none')
-    //         addNewImagePreview.src = ""
-    //         addNewForm.elements.namedItem("image_path").value = ""
-    //     }
-    // }
 </script>
 @endpush

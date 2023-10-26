@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Income;
 use App\Models\IncomeDetail;
 use App\Models\Item;
+use App\Models\Technician;
 use App\Models\TechnicianExpenditure;
 use Illuminate\Http\Request;
 
@@ -27,11 +28,11 @@ class TechnicianExpenditureController extends Controller
     public function create()
     {
         $items = Item::all();        
-        $companies = Company::where('status', StatusEnum::Active)->get();
+        $technicians = Technician::where('status', StatusEnum::Active)->get();
 
         return view('admin.technician_expenditures.create', [
             'items' => $items,
-            'companies' => $companies,
+            'technicians' => $technicians,
         ]);
     }
 
@@ -40,7 +41,7 @@ class TechnicianExpenditureController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+        dd($request->all());
 
         $incomeData = [
             'company_name' => $request->company_name,
