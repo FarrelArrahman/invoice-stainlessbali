@@ -39,4 +39,20 @@ class TechnicianExpenditureDetail extends Model
     protected $casts = [
         // 
     ];
+
+    // Attribute
+    public function getFormattedPriceAttribute()
+    {
+        return "Rp. " . number_format($this->price, 0, '', '.');
+    }
+
+    public function getTotalPriceAttribute()
+    {
+        return $this->price * $this->qty;
+    }
+    
+    public function getFormattedTotalPriceAttribute()
+    {
+        return "Rp. " . number_format($this->total_price, 0, '', '.');
+    }
 }

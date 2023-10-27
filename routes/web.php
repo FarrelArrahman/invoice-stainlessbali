@@ -3,9 +3,12 @@
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\EmployeeExpenditureController;
 use App\Http\Controllers\ExpenditureController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\MaterialExpenditureController;
+use App\Http\Controllers\OperationalExpenditureController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TechnicianController;

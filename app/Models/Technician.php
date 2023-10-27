@@ -39,4 +39,10 @@ class Technician extends Model
     protected $casts = [
         'status' => StatusEnum::class
     ];
+
+    // Attribute
+    public function expenditures()
+    {
+        return $this->hasMany(EmployeeExpenditure::class, 'employee_id', 'id');
+    }
 }

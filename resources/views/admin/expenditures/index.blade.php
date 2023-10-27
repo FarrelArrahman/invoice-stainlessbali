@@ -37,29 +37,27 @@ Pengeluaran
                     <tr>
                         <th class="border-0 rounded-start">Date</th>
                         <th class="border-0">Buyer</th>
-                        <th class="border-0">Company</th>
-                        <th class="border-0">Date</th>
                         <th class="border-0">Total Price</th>
-                        <th class="border-0">Status</th>
+                        <th class="border-0">Expenditure Type</th>
                         <th class="border-0 rounded-end">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($expenditures as $expenditure)
                     <tr>
-                        <td>{{ $transaction->date }}</td>
-                        <td>{{ $transaction->customer_name }}</td>
-                        <td>{{ $transaction->company_name }}</td>
-                        <td>{{ $transaction->formatted_total_price }}</td>
-                        <td>{!! $transaction->status->badge() !!}</td>
+                        <td>{{ $expenditure->date->format('Y-m-d') }}</td>
+                        @if($expenditure instanceof \App\Models\TechnicianExpenditure)
+                        <td>{{ $expenditure->technician->name }}</td>
+                        @else
+                        <td>{{ $expenditure->customer_name }}</td>
+                        @endif
+                        <td>{{ $expenditure->formatted_total_price }}</td>
+                        <td>{!! $expenditure->badge() !!}</td>
                         <td>
-                            <form action="{{ route('expenditures.destroy', $transaction->id) }}" method="POST">
+                            <form action="{{ $expenditure->delete() }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <a href="{{ route('expenditures.show', $transaction->code) }}" class="btn btn-info btn-sm">
-                                    <i class="fa fa-print"></i>
-                                </a>
-                                <a href="{{ route('expenditures.edit', $transaction->id) }}" class="btn btn-warning btn-sm">
+                                <a href="{{ $expenditure->edit() }}" class="btn btn-warning btn-sm">
                                     <i class="fa fa-pencil"></i>
                                 </a>
                                 <button onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')" type="submit" class="btn btn-danger btn-sm">

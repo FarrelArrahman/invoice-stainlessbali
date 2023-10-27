@@ -5,21 +5,20 @@ namespace App\Http\Controllers;
 use App\Enums\StatusEnum;
 use App\Enums\TransactionEnum;
 use App\Models\Company;
-use App\Models\Income;
-use App\Models\IncomeDetail;
+use App\Models\TechnicianExpenditure;
+use App\Models\TechnicianExpenditureDetail;
 use App\Models\Item;
 use App\Models\Technician;
-use App\Models\TechnicianExpenditure;
 use Illuminate\Http\Request;
 
 class TechnicianExpenditureController extends Controller
 {
     public function index()
     {
-        $technicianExpenditures = TechnicianExpenditure::all();
-        return view('admin.technician_expenditures.index', [
-            'technician_expenditures' => $technicianExpenditures
-        ]);
+        // $technicianExpenditures = TechnicianExpenditure::all();
+        // return view('admin.technician_expenditures.index', [
+        //     'technician_expenditures' => $technicianExpenditures
+        // ]);
     }
 
     /**
@@ -41,44 +40,53 @@ class TechnicianExpenditureController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
 
-        $incomeData = [
-            'company_name' => $request->company_name,
-            'customer_name' => $request->customer_name,
-            'company_telephone_number' => $request->company_telephone_number,
-            'customer_phone_number' => $request->customer_phone_number,
-            'address' => $request->address,
-            'status' => $request->status,
+        $technicianExpenditureData = [
+            'technician_id' => $request->technician_id,
             'total_price' => $request->total_price,
+            'service_fee' => str_replace('.', '', $request->service_fee),
             'handled_by' => NULL,
             'date' => $request->date,
             'status' => TransactionEnum::Paid,
         ];
 
-        $income = Income::create($incomeData);
+        if($request->technician_id == NULL) {
+            $technicianData = [
+                'name' => $request->technician_name,
+                'address' => $request->technician_address,
+                'phone_number' => $request->technician_phone_number,
+                'status' => StatusEnum::Active,
+            ];
+    
+            $technician = Technician::create($technicianData);
+
+            $technicianExpenditureData['technician_id'] = $technician->id;
+        }
+
+        $technicianExpenditure = TechnicianExpenditure::create($technicianExpenditureData);
 
         foreach($request->breakdown[1]['item'] as $item) {
-            $incomeDetail = [
-                'income_id' => $income->id,
-                'name' => $item['name'],
+            $technicianExpenditureDetail = [
+                'technician_expenditure_id' => $technicianExpenditure->id,
+                'item_name' => $item['name'],
                 'price' => str_replace('.', '', $item['price']),
                 'qty' => $item['qty'],
                 'status' => "",
             ];
 
-            IncomeDetail::create($incomeDetail);
+            TechnicianExpenditureDetail::create($technicianExpenditureDetail);
         }
 
-        return to_route('incomes.index')
-            ->with('message', "Berhasil menambahkan pemasukan baru.")
+        return to_route('expenditures.index')
+            ->with('message', "Berhasil menambahkan pengeluaran teknisi baru.")
             ->with('status', 'success');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Income $income)
+    public function show(TechnicianExpenditure $technicianExpenditure)
     {
         //
     }
@@ -86,47 +94,41 @@ class TechnicianExpenditureController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Income $income)
+    public function edit(TechnicianExpenditure $technicianExpenditure)
     {
-        $items = Item::all();        
-        $companies = Company::where('status', StatusEnum::Active)->get();
+        $technicians = Technician::where('status', StatusEnum::Active)->get();
 
-        return view('admin.incomes.edit', [
-            'items' => $items,
-            'companies' => $companies,
-            'income' => $income,
+        return view('admin.technician_expenditures.edit', [
+            'technicians' => $technicians,
+            'technician_expenditure' => $technicianExpenditure,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Income $income)
+    public function update(Request $request, TechnicianExpenditure $technicianExpenditure)
     {
         // dd($request->all());
 
-        $incomeDetailIds = [];
+        $technicianExpenditureDetailIds = [];
 
-        $incomeData = [
-            'company_name' => $request->company_name,
-            'customer_name' => $request->customer_name,
-            'company_telephone_number' => $request->company_telephone_number,
-            'customer_phone_number' => $request->customer_phone_number,
-            'address' => $request->address,
-            'status' => $request->status,
+        $technicianExpenditureData = [
+            'technician_id' => $request->technician_id,
             'total_price' => $request->total_price,
+            'service_fee' => str_replace('.', '', $request->service_fee),
             'handled_by' => NULL,
             'date' => $request->date,
             'status' => TransactionEnum::Paid,
         ];
 
-        $income->update($incomeData);
+        $technicianExpenditure->update($technicianExpenditureData);
 
-        foreach($request->income as $item) {
-            $incomeDetailIds[] = $item['id'];
+        foreach($request->technician_expenditure as $item) {
+            $technicianExpenditureDetailIds[] = $item['id'];
 
-            $income->items->find($item['id'])->update([
-                'income_id' => $income->id,
+            $technicianExpenditure->items->find($item['id'])->update([
+                'technician_expenditure_id' => $technicianExpenditure->id,
                 'name' => $item['name'],
                 'price' => str_replace('.', '', $item['price']),
                 'qty' => $item['qty'],
@@ -134,43 +136,43 @@ class TechnicianExpenditureController extends Controller
             ]);
         }
 
-        foreach($income->items->whereNotIn('id', $incomeDetailIds) as $deletedItem) {
+        foreach($technicianExpenditure->items->whereNotIn('id', $technicianExpenditureDetailIds) as $deletedItem) {
             $deletedItem->delete();
         }
 
         if( ! empty($request->new_item) ) {
             foreach($request->new_item as $newItem) {
-                $incomeDetail = [
-                    'income_id' => $income->id,
+                $technicianExpenditureDetail = [
+                    'technician_expenditure_id' => $technicianExpenditure->id,
                     'name' => $newItem['name'],
                     'price' => str_replace('.', '', $newItem['price']),
                     'qty' => $newItem['qty'],
                     'status' => "",
                 ];
     
-                IncomeDetail::create($incomeDetail);
+                TechnicianExpenditureDetail::create($technicianExpenditureDetail);
             }
         }
 
 
-        return to_route('incomes.index')
-            ->with('message', "Berhasil mengubah data pemasukan.")
+        return to_route('expenditures.index')
+            ->with('message', "Berhasil mengubah data pengeluaran teknisi.")
             ->with('status', 'success');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Income $income)
+    public function destroy(TechnicianExpenditure $technicianExpenditure)
     {
-        foreach($income->items as $item) {
+        foreach($technicianExpenditure->items as $item) {
             $item->delete();
         }
 
-        $income->delete();
+        $technicianExpenditure->delete();
 
-        return to_route('incomes.index')
-            ->with('message', "Berhasil menghapus pemasukan.")
+        return to_route('expenditures.index')
+            ->with('message', "Berhasil menghapus pengeluaran teknisi.")
             ->with('status', 'success');
     }
 }

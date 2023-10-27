@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('employee_expenditures', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->constrained('employees');
+            $table->integer('month')->default(0);
+            $table->integer('year')->default(0);
             $table->integer('working_day')->default(0);
             $table->integer('salary_per_day')->default(0);
             $table->datetime('date')->nullable();

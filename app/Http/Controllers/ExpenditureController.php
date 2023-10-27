@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TechnicianExpenditure;
 use Illuminate\Http\Request;
 
 class ExpenditureController extends Controller
@@ -11,7 +12,15 @@ class ExpenditureController extends Controller
      */
     public function index()
     {
-        $expenditures = [];
+        $expenditures = collect();
+        $technicianExpenditures = TechnicianExpenditure::all();
+
+        foreach($technicianExpenditures as $technicianExpenditure) {
+            $expenditures->push($technicianExpenditure);
+        }
+
+        // dd($expenditures);
+
         return view('admin.expenditures.index', [
             'expenditures' => $expenditures
         ]);

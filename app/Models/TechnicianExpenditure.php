@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TransactionEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +20,8 @@ class TechnicianExpenditure extends Model
         'note',
         'date',
         'status',
+        'service_fee',
+        'total_price'
     ];
 
     /**
@@ -36,6 +39,38 @@ class TechnicianExpenditure extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        // 
+        'date' => 'datetime',
+        'status' => TransactionEnum::class
     ];
+
+    public function technician()
+    {
+        return $this->hasOne(Technician::class, 'id', 'technician_id');
+    }
+
+    // Attribute
+    public function getFormattedTotalPriceAttribute()
+    {
+        return "Rp. " . number_format($this->total_price, 0, '', '.');
+    }
+
+    public function items()
+    {
+        return $this->hasMany(TechnicianExpenditureDetail::class, 'technician_expenditure_id', 'id');
+    }
+
+    public function badge(): string
+    {
+        return "<div class=\"badge bg-success\">Teknisi</div>";
+    }
+
+    public function edit()
+    {
+        return route('technician_expenditures.edit', $this->id);
+    }
+    
+    public function delete()
+    {
+        return route('technician_expenditures.destroy', $this->id);
+    }
 }
