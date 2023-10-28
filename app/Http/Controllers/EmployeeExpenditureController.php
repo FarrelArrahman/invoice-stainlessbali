@@ -42,11 +42,12 @@ class EmployeeExpenditureController extends Controller
         foreach($request->breakdown[1]['item'] as $item) {
             $employeeExpenditure = [
                 'employee_id' => $request->employee_id,
-                'month' => $request->month,
-                'year' => $request->year,
+                'date' => $request->date,
+                'month' => $item['month'],
+                'year' => $item['year'],
                 'salary_per_day' => str_replace('.', '', $item['salary_per_day']),
                 'working_day' => $item['working_day'],
-                'status' => "",
+                'status' => TransactionEnum::Paid,
             ];
             
             EmployeeExpenditure::create($employeeExpenditure);
@@ -70,7 +71,7 @@ class EmployeeExpenditureController extends Controller
      */
     public function edit(EmployeeExpenditure $employeeExpenditure)
     {
-        $employees = Technician::where('status', StatusEnum::Active)->get();
+        $employees = Employee::where('status', StatusEnum::Active)->get();
 
         return view('admin.employee_expenditures.edit', [
             'employees' => $employees,
@@ -84,52 +85,18 @@ class EmployeeExpenditureController extends Controller
     public function update(Request $request, EmployeeExpenditure $employeeExpenditure)
     {
         // dd($request->all());
-
-        $employeeExpenditureDetailIds = [];
-
-        $employeeExpenditureData = [
-            'employee_id' => $request->employee_id,
-            'total_price' => $request->total_price,
-            'service_fee' => str_replace('.', '', $request->service_fee),
-            'handled_by' => NULL,
-            'date' => $request->date,
-            'status' => TransactionEnum::Paid,
-        ];
-
-        $employeeExpenditure->update($employeeExpenditureData);
-
         foreach($request->employee_expenditure as $item) {
-            $employeeExpenditureDetailIds[] = $item['id'];
-
-            $employeeExpenditure->items->find($item['id'])->update([
-                'employee_expenditure_id' => $employeeExpenditure->id,
-                'name' => $item['name'],
-                'price' => str_replace('.', '', $item['price']),
-                'qty' => $item['qty'],
-                'status' => "",
+            $employeeExpenditure->update([
+                'employee_id' => $request->employee_id,
+                'salary_per_day' => str_replace('.', '', $item['salary_per_day']),
+                'working_day' => $item['working_day'],
+                'status' => TransactionEnum::Paid,
             ]);
-        }
-
-        foreach($employeeExpenditure->items->whereNotIn('id', $employeeExpenditureDetailIds) as $deletedItem) {
-            $deletedItem->delete();
-        }
-
-        if( ! empty($request->new_item) ) {
-            foreach($request->new_item as $newItem) {
-                $employeeExpenditureDetail = [
-                    'employee_expenditure_id' => $employeeExpenditure->id,
-                    'name' => $newItem['name'],
-                    'price' => str_replace('.', '', $newItem['price']),
-                    'qty' => $newItem['qty'],
-                    'status' => "",
-                ];
-    create($employeeExpenditureDetail);
-            }
         }
 
 
         return to_route('expenditures.index')
-            ->with('message', "Berhasil mengubah data pengeluaran teknisi.")
+            ->with('message', "Berhasil mengubah data gaji karyawan.")
             ->with('status', 'success');
     }
 
@@ -138,14 +105,10 @@ class EmployeeExpenditureController extends Controller
      */
     public function destroy(EmployeeExpenditure $employeeExpenditure)
     {
-        foreach($employeeExpenditure->items as $item) {
-            $item->delete();
-        }
-
         $employeeExpenditure->delete();
 
         return to_route('expenditures.index')
-            ->with('message', "Berhasil menghapus pengeluaran teknisi.")
+            ->with('message', "Berhasil menghapus data gaji karyawan.")
             ->with('status', 'success');
     }
 }

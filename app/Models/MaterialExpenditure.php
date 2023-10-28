@@ -16,6 +16,10 @@ class MaterialExpenditure extends Model
      */
     protected $fillable = [
         'shop_name',
+        'shop_address',
+        'shop_telephone_number',
+        'total_price',
+        'shop_name',
         'note',
         'date',
         'status',

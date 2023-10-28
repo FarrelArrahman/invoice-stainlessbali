@@ -64,12 +64,12 @@ class TechnicianExpenditure extends Model
         return "<div class=\"badge bg-success\">Teknisi</div>";
     }
 
-    public function edit()
+    public function edit_route()
     {
         return route('technician_expenditures.edit', $this->id);
     }
     
-    public function delete()
+    public function delete_route()
     {
         return route('technician_expenditures.destroy', $this->id);
     }

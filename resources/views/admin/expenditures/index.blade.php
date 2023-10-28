@@ -36,8 +36,8 @@ Pengeluaran
                 <thead class="thead-light">
                     <tr>
                         <th class="border-0 rounded-start">Date</th>
-                        <th class="border-0">Buyer</th>
-                        <th class="border-0">Total Price</th>
+                        <th class="border-0">Name</th>
+                        <th class="border-0">Total (Rp.)</th>
                         <th class="border-0">Expenditure Type</th>
                         <th class="border-0 rounded-end">Action</th>
                     </tr>
@@ -48,16 +48,18 @@ Pengeluaran
                         <td>{{ $expenditure->date->format('Y-m-d') }}</td>
                         @if($expenditure instanceof \App\Models\TechnicianExpenditure)
                         <td>{{ $expenditure->technician->name }}</td>
+                        @elseif($expenditure instanceof \App\Models\EmployeeExpenditure)
+                        <td>{{ $expenditure->employee->name }}</td>
                         @else
-                        <td>{{ $expenditure->customer_name }}</td>
+                        <td>{{ $expenditure->shop_name }}</td>
                         @endif
                         <td>{{ $expenditure->formatted_total_price }}</td>
                         <td>{!! $expenditure->badge() !!}</td>
                         <td>
-                            <form action="{{ $expenditure->delete() }}" method="POST">
+                            <form action="{{ $expenditure->delete_route() }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <a href="{{ $expenditure->edit() }}" class="btn btn-warning btn-sm">
+                                <a href="{{ $expenditure->edit_route() }}" class="btn btn-warning btn-sm">
                                     <i class="fa fa-pencil"></i>
                                 </a>
                                 <button onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')" type="submit" class="btn btn-danger btn-sm">

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EmployeeExpenditure;
+use App\Models\OperationalExpenditure;
 use App\Models\TechnicianExpenditure;
 use Illuminate\Http\Request;
 
@@ -14,15 +16,25 @@ class ExpenditureController extends Controller
     {
         $expenditures = collect();
         $technicianExpenditures = TechnicianExpenditure::all();
+        $employeeExpenditures = EmployeeExpenditure::all();
+        $operationalExpenditures = OperationalExpenditure::all();
 
         foreach($technicianExpenditures as $technicianExpenditure) {
             $expenditures->push($technicianExpenditure);
         }
+        
+        foreach($employeeExpenditures as $employeeExpenditure) {
+            $expenditures->push($employeeExpenditure);
+        }
+        
+        foreach($operationalExpenditures as $operationalExpenditure) {
+            $expenditures->push($operationalExpenditure);
+        }
 
-        // dd($expenditures);
+        $sorted = $expenditures->sortByDesc('date');
 
         return view('admin.expenditures.index', [
-            'expenditures' => $expenditures
+            'expenditures' => $sorted->values()->all()
         ]);
     }
 

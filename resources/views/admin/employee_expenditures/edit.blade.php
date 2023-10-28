@@ -1,7 +1,7 @@
 @extends('layout.template')
 
 @section('title')
-Pengeluaran
+Gaji Karyawan
 @endsection
 
 @section('content')
@@ -12,17 +12,17 @@ Pengeluaran
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                         </path>
                     </svg></a></li>
-            <li class="breadcrumb-item"><a href="#">Pengeluaran</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Edit Pengeluaran</li>
+            <li class="breadcrumb-item"><a href="#">Gaji Karyawan</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Gaji Karyawan</li>
         </ol>
     </nav>
     <div class="d-flex justify-content-between w-100 flex-wrap">
         <div class="mb-3 mb-lg-0">
-            <h1 class="h4">Edit Pengeluaran</h1>
+            <h1 class="h4">Edit Gaji Karyawan</h1>
         </div>
     </div>
 </div>
-<form action="{{ route('technician_expenditures.update', $technician_expenditure->id) }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('employee_expenditures.update', $employee_expenditure->id) }}" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="total_price" id="total-price-input">
     <input type="hidden" name="total_price_before_discount" id="total-price-before-discount-input">
     @method('PUT')
@@ -37,26 +37,26 @@ Pengeluaran
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="customerData">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#customerCollapse" aria-expanded="false" aria-controls="customerCollapse">
-                                            Masukkan data teknisi...
+                                            Masukkan data karyawan...
                                         </button>
                                     </h2>
                                     <div id="customerCollapse" class="accordion-collapse collapse" aria-labelledby="customerData" data-bs-parent="#accordionCustomer">
                                         <div class="accordion-body">
-                                            <div id="technician-detail">
-                                                <label for="technician-name">Nama Teknisi</label>
+                                            <div id="employee-detail">
+                                                <label for="employee-name">Nama Karyawan</label>
                                                 <div class="input-group mb-3">
-                                                    <input id="technician-name" type="text" class="form-control" name="technician_name" value="{{ $technician_expenditure->technician->name }}">
-                                                    <span data-bs-toggle="modal" data-bs-target="#modal-select-technician" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
+                                                    <input id="employee-name" type="text" class="form-control" name="employee_name" value="{{ $employee_expenditure->employee->name }}">
+                                                    <span data-bs-toggle="modal" data-bs-target="#modal-select-employee" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
                                                         <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
                                                     </span>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="technician-phone-number">Nomor Telepon</label>
-                                                    <input id="technician-phone-number" type="text" class="form-control" id="technician_phone_number" name="technician_phone_number" value="{{ $technician_expenditure->technician->phone_number }}">
+                                                    <label for="employee-phone-number">Nomor Telepon</label>
+                                                    <input id="employee-phone-number" type="text" class="form-control" id="employee_phone_number" name="employee_phone_number" value="{{ $employee_expenditure->employee->phone_number }}">
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="technician-address">Alamat</label>
-                                                    <input id="technician-address" type="text" class="form-control" id="technician_address" name="technician_address" value="{{ $technician_expenditure->technician->address }}">
+                                                    <label for="employee-address">Alamat</label>
+                                                    <input id="employee-address" type="text" class="form-control" id="employee_address" name="employee_address" value="{{ $employee_expenditure->employee->address }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -74,7 +74,6 @@ Pengeluaran
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <h1 class="h5 mt-2">Pengeluaran</h1>
                             <!-- <button id="addBreakdown" class="btn btn-primary pull-right" type="button"><i class="fa fa-plus me-1"></i> Tambah Breakdown Baru</button> -->
                         </div>
 
@@ -83,54 +82,46 @@ Pengeluaran
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="breakdown">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#breakdownCollapse" aria-expanded="false" aria-controls="breakdownCollapse">
-                                            <span class="breakdown-title" id="breakdown-title">Daftar pemasukan</span>
+                                            <span class="breakdown-title" id="breakdown-title">Gaji Karyawan</span>
                                         </button>
                                     </h2>
                                     <div id="breakdownCollapse" class="accordion-collapse collapse show" aria-labelledby="breakdown" data-bs-parent="#accordionBreakdown">
                                         <div class="accordion-body">
                                             <label for="">Tanggal</label>
-                                            <input type="date" class="form-control w-100 my-2" name="date" value="{{ $technician_expenditure->date->format('Y-m-d') }}">
-                                            <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown" data-breakdown-counter=""><i class="fa fa-plus me-1"></i> Tambah Item</button>
+                                            <input type="date" class="form-control w-100 my-2" name="date" value="{{ $employee_expenditure->date->format('Y-m-d') }}">
+                                            <!-- <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown" data-breakdown-counter=""><i class="fa fa-plus me-1"></i> Tambah Item</button> -->
                                             <span class="deleteBreakdownPlaceholder"></span>
                                             <div class="table-responsive">
                                                 <table class="table table-centered mb-0 rounded">
                                                     <thead class="thead-light">
                                                         <tr>
-                                                            <th width="60%" class="border-0">Item</th>
-                                                            <th width="15%" class="border-0 text-center">Qty</th>
+                                                            <th width="60%" class="border-0">Bulan / Tahun <br>(Gaji per bulan)</th>
+                                                            <th width="15%" class="border-0 text-center">Hari Kerja</th>
                                                             <th width="25%" class="border-0 rounded-end text-end">Total</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody class="breakdown-table" id="breakdown-table">
-                                                        @foreach($technician_expenditure->items as $item)
-                                                        <tr id="breakdown-item{{ $item->id }}">
+                                                        <tr id="breakdown-item{{ $employee_expenditure->id }}">
                                                             <th class="border-0 rounded-start">
                                                                 <div class="row">
-                                                                    <div class="col-2">
-                                                                        <button type="button" id="item{{ $item->id }}-remove-button" class="btn btn-sm btn-link text-danger remove-item" onclick='removeItem("#breakdown-item{{ $item->id }}")'>
-                                                                            <i class="fa fa-times"></i>
-                                                                        </button>
-                                                                        <input type="hidden" value="{{ $item->id }}" name="technician_expenditure[{{ $item->id }}][id]">
-                                                                    </div>
-                                                                    <div class="col-8" id="item{{ $item->id }}-image-preview">
+                                                                    <div class="col-10" id="item{{ $employee_expenditure->id }}-image-preview">
                                                                         <h6 class="item-name mt-2">
-                                                                            <input class="border-bottom-input" type="text" name="technician_expenditure[{{ $item->id }}][name]" value="{{ $item->item_name }}" placeholder="Masukkan nama barang...">
+                                                                            <input class="border-bottom-input" type="text" name="employee_expenditure[{{ $employee_expenditure->id }}][name]" value="{{ $employee_expenditure->salary_month_and_year }}" placeholder="Masukkan nama barang..." readonly>
                                                                         </h6>
                                                                         <span class="item-dimension">
                                                                             Rp.
-                                                                            <input onfocus="if(this.value.length <= 1) setSelectionRange(0, this.value.length)" class="border-bottom-input item-price" type="text" value="{{ $item->price }}" data-total-price="#item{{ $item->id }}-total-price" data-qty="#item{{ $item->id }}-qty" name="technician_expenditure[{{ $item->id }}][price]">
+                                                                            <input onfocus="if(this.value.length <= 1) setSelectionRange(0, this.value.length)" class="border-bottom-input item-price" type="text" value="{{ $employee_expenditure->salary_per_day }}" data-total-price="#item{{ $employee_expenditure->id }}-total-price" data-qty="#item{{ $employee_expenditure->id }}-qty" name="employee_expenditure[{{ $employee_expenditure->id }}][salary_per_day]">
                                                                         </span> <br>
                                                                     </div>
                                                                 </div>
                                                             </th>
                                                             <th class="border-0 text-center">
-                                                                <input id="item{{ $item->id }}-qty" type="number" name="technician_expenditure[{{ $item->id }}][qty]" data-price="{{ $item->price }}" data-total-price="#item{{ $item->id }}-total-price" class="form-control item-qty" min="1" value="{{ $item->qty }}">
+                                                                <input id="item{{ $employee_expenditure->id }}-qty" type="number" name="employee_expenditure[{{ $employee_expenditure->id }}][working_day]" data-price="{{ $employee_expenditure->salary_per_day }}" data-total-price="#item{{ $employee_expenditure->id }}-total-price" class="form-control item-qty" min="1" value="{{ $employee_expenditure->working_day }}">
                                                             </th>
-                                                            <th id="item{{ $item->id }}-total-price" class="border-0 rounded-end text-end prices" data-price="{{ $item->total_price }}">
-                                                                {{ $item->formatted_total_price }}
+                                                            <th id="item{{ $employee_expenditure->id }}-total-price" class="border-0 rounded-end text-end prices" data-price="{{ $employee_expenditure->total_salary }}">
+                                                                {{ $employee_expenditure->formatted_total_price }}
                                                             </th>
                                                         </tr>
-                                                        @endforeach
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -149,105 +140,10 @@ Pengeluaran
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <div class="form-group">
-                                <label for="service-fee-input" class="form-label">Biaya Jasa (Rp)</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control discounts" id="service-fee-input" name="service_fee" value="{{ $technician_expenditure->service_fee }}">
-                                </div>
-                            </div>
-                            <h1 class="h5 mt-5">Total Harga</h1>
-                            <h1 class="h4" id="total-price-text">{{ $technician_expenditure->formatted_total_price }}</h1>
+                            <h1 class="h5 mt-2">Total Gaji</h1>
+                            <h1 class="h4" id="total-price-text">{{ $employee_expenditure->formatted_total_price }}</h1>
                             <h1 class="h6 text-danger text-decoration-line-through d-none" id="total-price-before-discount-text">Rp 0</h1>
-                            <!-- <div class="mb-3">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="discount-percentage" class="form-label mt-3">Diskon 1 (%)</label>
-                                            <div class="input-group">
-                                                <input type="number" class="form-control discounts" id="discount-percentage" name="discount_percentage" value="0" min="0" max="100">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="discount-nominal" class="form-label mt-3">Diskon 2 (Rp)</label>
-                                            <div class="input-group">
-                                                <input type="number" class="form-control discounts" id="discount-nominal" name="discount_nominal" value="0">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="invoice-type-offer" class="form-label mt-3">Simpan invoice sebagai</label>
-                                    <br>
-                                    <div class="form-check form-check-inline">
-                                        <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-offer" value="Offer">
-                                        <label class="form-check-label" for="invoice-type-offer">Penawaran</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-deal" value="Deal">
-                                        <label class="form-check-label" for="invoice-type-deal">Deal</label>
-                                    </div>
-                                </div>
-                                <div class="mb-3 d-none" id="payment-terms">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <div class="form-group">
-                                                <label for="term" class="form-label mt-3">Termin</label>
-                                                <div class="input-group">
-                                                    <select name="payment_terms" id="term" class="form-select">
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="form-group">
-                                                <label for="dp" class="form-label mt-3">DP</label>
-                                                <div class="input-group">
-                                                    <select name="dp" id="dp" class="form-select">
-                                                        <option value="10">10%</option>
-                                                        <option value="15">15%</option>
-                                                        <option value="20">20%</option>
-                                                        <option value="25">25%</option>
-                                                        <option value="30">30%</option>
-                                                        <option value="40">40%</option>
-                                                        <option value="50">50%</option>
-                                                        <option value="60">60%</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="payment-term-breakdown" class="form-label mt-3">Pembayaran</label>
-                                        <table id="payment-term-breakdown" class="table table-centered table-bordered mb-0 rounded">
-                                            <tr>
-                                                <td width="20%">DP</td>
-                                                <td width="80%" id="dp-amount">Rp 0</td>
-                                                <input type="hidden" id="dp-input" name="dp">
-                                            </tr>
-                                            <tr id="term1">
-                                                <td width="20%">Termin 1</td>
-                                                <td width="80%" id="term1-amount">Rp 0</td>
-                                                <input type="hidden" id="term1-input" name="term1">
-                                            </tr>
-                                            <tr id="term2">
-                                                <td width="20%">Termin 2</td>
-                                                <td width="80%" id="term2-amount">Rp 0</td>
-                                                <input type="hidden" id="term2-input" name="term2">
-                                            </tr>
-                                            <tr id="term3" class="d-none">
-                                                <td width="20%">Termin 3</td>
-                                                <td width="80%" id="term3-amount">Rp 0</td>
-                                                <input type="hidden" id="term3-input" name="term3">
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div> -->
-                                <button type="submit" class="btn btn-success w-100">Simpan</button>
-                            <!-- </div> -->
+                            <button type="submit" class="btn btn-success w-100">Simpan</button>
                         </div>
                     </div>
                 </div>
@@ -256,26 +152,26 @@ Pengeluaran
 </form>
 
 <!-- Modal Select Technician -->
-<div class="modal fade" id="modal-select-technician" tabindex="-1" role="dialog" aria-labelledby="modal-select-technician" aria-hidden="true">
+<div class="modal fade" id="modal-select-employee" tabindex="-1" role="dialog" aria-labelledby="modal-select-employee" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="h6 modal-title">Pilih teknisi</h2>
+                <h2 class="h6 modal-title">Pilih karyawan</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="a-select" class="form-label">Nama</label>
-                    <select name="technician_id" id="technician-nice-select" class="select-company w-100" placeholder="Pilih teknisi...">
-                        <option value="" disabled selected>--- Pilih teknisi ---</option>
-                        @foreach($technicians as $technician)
-                        <option @selected($technician->id == $technician_expenditure->technician_id) value="{{ $technician->id }}" data-name="{{ $technician->name }}" data-address="{{ $technician->address }}" data-phone-number="{{ $technician->phone_number }}">{{ $technician->name }}</option>
+                    <select name="employee_id" id="employee-nice-select" class="select-company w-100" placeholder="Pilih karyawan...">
+                        <option value="" disabled selected>--- Pilih karyawan ---</option>
+                        @foreach($employees as $employee)
+                        <option @selected($employee->id == $employee_expenditure->employee_id) value="{{ $employee->id }}" data-name="{{ $employee->name }}" data-address="{{ $employee->address }}" data-phone-number="{{ $employee->phone_number }}">{{ $employee->name }}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="select-existing-technician-button" class="btn btn-secondary add-company-data" data-bs-dismiss="modal">Pilih Teknisi</button>
+                <button type="button" id="select-existing-employee-button" class="btn btn-secondary add-company-data" data-bs-dismissemployeemodal">Pilih Karyawan</button>
                 <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -348,15 +244,15 @@ Pengeluaran
 
     let checkForm = () => {
         if(
-            technicianDetail.querySelector("#technician-name").value == "" ||
-            technicianDetail.querySelector("#technician-phone-number").value == ""
+            employeeDetail.querySelector("#employee-name").value == "" ||
+            employeeDetail.querySelector("#employee-phone-number").value == ""
         ) {
-            showNotyf("red", "Data teknisi belum diisi")
+            showNotyf("red", "Data karyawan belum diisi")
             event.preventDefault()
         }
     }
 
-    let companyNiceSelect = NiceSelect.bind(document.getElementById("technician-nice-select"), {
+    let companyNiceSelect = NiceSelect.bind(document.getElementById("employee-nice-select"), {
         searchable: true
     })
 
@@ -365,10 +261,6 @@ Pengeluaran
     })
     
     VMasker(document.querySelectorAll(`.item-price`)).maskMoney({
-        precision: 0
-    })
-    
-    VMasker(document.querySelector(`#service-fee-input`)).maskMoney({
         precision: 0
     })
 
@@ -384,12 +276,12 @@ Pengeluaran
     const itemQty = document.querySelectorAll('.item-qty')
     const breakdowns = document.getElementById('breakdowns')
     const breakdown = document.getElementById('accordionBreakdown')
-    const technicianDetail = document.getElementById('technician-detail')
+    const employeeDetail = document.getElementById('employee-detail')
     const itemDetail = document.getElementById('item-detail')
     const addNewForm = document.getElementById('add-new-form')
     const addNewItemButton = document.getElementById('add-new-item-button')
     const selectItemForm = document.getElementById('select-item-form')
-    const selectExistingCompanyButton = document.getElementById('select-existing-technician-button')
+    const selectExistingCompanyButton = document.getElementById('select-existing-employee-button')
     const selectExistingCustomerButton = document.getElementById('select-existing-customer-button')
     const totalPriceText = document.getElementById('total-price-text')
     const totalPriceInput = document.getElementById('total-price-input')
@@ -397,7 +289,7 @@ Pengeluaran
     const totalPriceBeforeDiscountInput = document.getElementById('total-price-before-discount-input')
     const discountPercentageInput = document.getElementById('discount-percentage')
     const serviceFeeInput = document.getElementById('service-fee-input')
-    const technicianSelect = document.getElementById('technician-nice-select')
+    const employeeSelect = document.getElementById('employee-nice-select')
     
     const rupiahFormat = new Intl.NumberFormat('id-ID', {
         style: 'currency',
@@ -444,7 +336,6 @@ Pengeluaran
 
     let calculateTotalPrice = () => {
         totalPrice = 0
-        serviceFee = 0
 
         let prices = breakdowns.querySelectorAll('.prices')
         let discounts = document.querySelectorAll('.discounts')
@@ -452,10 +343,6 @@ Pengeluaran
         prices.forEach(function(e) {
             totalPrice += parseInt(e.dataset.price)
         })
-
-        serviceFee = serviceFeeInput.value.replaceAll('.', '')
-
-        totalPrice = +totalPrice + +serviceFee
 
         if (totalPrice < 0) {
             totalPrice = 0
@@ -504,9 +391,9 @@ Pengeluaran
         term3Input.value = terms == 3 ? amountPerTerm : 0
     }
 
-    // Show technician detail upon selection changing
-    technicianSelect.onchange = function(e) {
-        if (!technicianSelect.value || !technicianSelect.value.trim().length) {
+    // Show employee detail upon selection changing
+    employeeSelect.onchange = function(e) {
+        if (!employeeSelect.value || !employeeSelect.value.trim().length) {
             selectExistingCompanyButton.classList.add('disabled')
             showItemDetail(false)
         } else {
@@ -542,9 +429,9 @@ Pengeluaran
     }
 
     let setTechnicianDetail = (data) => {
-        technicianDetail.querySelector("#technician-name").value = data.name
-        technicianDetail.querySelector("#technician-phone-number").value = data.phoneNumber
-        technicianDetail.querySelector("#technician-address").value = data.address
+        employeeDetail.querySelector("#employee-name").value = data.name
+        employeeDetail.querySelector("#employee-phone-number").value = data.phoneNumber
+        employeeDetail.querySelector("#employee-address").value = data.address
     }
 
     let deleteElement = (id) => {
@@ -564,21 +451,21 @@ Pengeluaran
                         <button id="item${itemCounter}-remove-button" class="btn btn-sm btn-link text-danger remove-item" data-remove-item="#${currentBreakdown}-item${itemCounter}">
                             <i class="fa fa-times"></i>
                         </button>
-                        <input type="hidden" value="${data.id ?? ''}" name="breakdown[${breakdownCounter}][item][${itemCounter}][id]">
+                        <input type="hidden" value="${data.id ?? ''}" name="new_item[${breakdownCounter}][item][${itemCounter}][id]">
                     </div>
                     <div class="col-8" id="item${itemCounter}-image-preview">
                         <h6 class="item-name mt-2">
-                            <input class="border-bottom-input" type="text" value="${data.name}" name="breakdown[${breakdownCounter}][item][${itemCounter}][name]">
+                            <input class="border-bottom-input" type="text" value="${data.name}" name="new_item[${breakdownCounter}][item][${itemCounter}][name]">
                         </h6>
                         <span class="item-dimension mt-2">
                             Rp.  
-                            <input id="item${itemCounter}-price" data-qty="#item${itemCounter}-qty" data-total-price="#item${itemCounter}-total-price" class="border-bottom-input item-price" type="text" value="${data.price}" name="breakdown[${breakdownCounter}][item][${itemCounter}][price]">
+                            <input id="item${itemCounter}-price" data-qty="#item${itemCounter}-qty" data-total-price="#item${itemCounter}-total-price" class="border-bottom-input item-price" type="text" value="${data.price}" name="new_item[${breakdownCounter}][item][${itemCounter}][price]">
                         </span> <br>
                     </div>
                 </div>
             </th>
             <th class="border-0 text-center">
-                <input id="item${itemCounter}-qty" type="number" name="breakdown[${breakdownCounter}][item][${itemCounter}][qty]" data-price="${data.price.replaceAll('.', '')}" data-total-price="#item${itemCounter}-total-price" class="form-control item-qty" min="1" value="1">
+                <input id="item${itemCounter}-qty" type="number" name="new_item[${breakdownCounter}][item][${itemCounter}][qty]" data-price="${data.price.replaceAll('.', '')}" data-total-price="#item${itemCounter}-total-price" class="form-control item-qty" min="1" value="1">
             </th>
             <th id="item${itemCounter}-total-price" class="border-0 rounded-end text-end prices" data-price="${data.price.replaceAll('.', '')}">
                 ${rupiahFormat.format(data.price.replaceAll('.', ''))}
@@ -601,7 +488,7 @@ Pengeluaran
     }
 
     selectExistingCompanyButton.addEventListener('click', function(e) {
-        setTechnicianDetail(technicianSelect.options[technicianSelect.selectedIndex].dataset)
+        setTechnicianDetail(employeeSelect.options[employeeSelect.selectedIndex].dataset)
     })
 
     addNewItemButton.onclick = e => {
@@ -612,22 +499,6 @@ Pengeluaran
         }
         addItem(data)
         addNewForm.reset()
-    }
-
-    serviceFeeInput.addEventListener('keyup', e => {
-        if (e.target.value == "" || e.target.value < 0) {
-            e.target.value = 0
-        }
-
-        calculateTotalPrice()
-    })
-
-    let invoiceType = (type) => {
-        if (type.value == "Deal") {
-            paymentTerms.classList.remove('d-none')
-        } else {
-            paymentTerms.classList.add('d-none')
-        }
     }
 </script>
 @endpush

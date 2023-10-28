@@ -124,16 +124,18 @@ class TechnicianExpenditureController extends Controller
 
         $technicianExpenditure->update($technicianExpenditureData);
 
-        foreach($request->technician_expenditure as $item) {
-            $technicianExpenditureDetailIds[] = $item['id'];
+        if( ! empty($request->technician_expenditure) ) {
+            foreach($request->technician_expenditure as $item) {
+                $technicianExpenditureDetailIds[] = $item['id'];
 
-            $technicianExpenditure->items->find($item['id'])->update([
-                'technician_expenditure_id' => $technicianExpenditure->id,
-                'name' => $item['name'],
-                'price' => str_replace('.', '', $item['price']),
-                'qty' => $item['qty'],
-                'status' => "",
-            ]);
+                $technicianExpenditure->items->find($item['id'])->update([
+                    'technician_expenditure_id' => $technicianExpenditure->id,
+                    'item_name' => $item['name'],
+                    'price' => str_replace('.', '', $item['price']),
+                    'qty' => $item['qty'],
+                    'status' => "",
+                ]);
+            }
         }
 
         foreach($technicianExpenditure->items->whereNotIn('id', $technicianExpenditureDetailIds) as $deletedItem) {
@@ -141,10 +143,10 @@ class TechnicianExpenditureController extends Controller
         }
 
         if( ! empty($request->new_item) ) {
-            foreach($request->new_item as $newItem) {
+            foreach($request->new_item[1]['item'] as $newItem) {
                 $technicianExpenditureDetail = [
                     'technician_expenditure_id' => $technicianExpenditure->id,
-                    'name' => $newItem['name'],
+                    'item_name' => $newItem['name'],
                     'price' => str_replace('.', '', $newItem['price']),
                     'qty' => $newItem['qty'],
                     'status' => "",

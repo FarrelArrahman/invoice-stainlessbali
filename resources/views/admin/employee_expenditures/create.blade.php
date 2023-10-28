@@ -459,7 +459,8 @@ Gaji Karyawan
                     </div>
                     <div class="col-8" id="item${itemCounter}-image-preview">
                         <h6 class="item-name mt-2">
-                            <input type="hidden" value="${data.month}" name="breakdown[${breakdownCounter}][item][${itemCounter}][month]" readonly>
+                            <input type="hidden" value="${data.month}" name="breakdown[${breakdownCounter}][item][${itemCounter}][month]">
+                            <input type="hidden" value="${data.year}" name="breakdown[${breakdownCounter}][item][${itemCounter}][year]">
                             <input class="border-bottom-input" type="text" value="${data.month_name} ${data.year}" name="breakdown[${breakdownCounter}][item][${itemCounter}][name]" readonly>
                         </h6>
                         <span class="item-dimension mt-2">
