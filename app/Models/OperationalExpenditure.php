@@ -52,7 +52,7 @@ class OperationalExpenditure extends Model
 
     public function items()
     {
-        return $this->hasMany(TechnicianExpenditureDetail::class, 'technician_expenditure_id', 'id');
+        return $this->hasMany(OperationalExpenditureDetail::class, 'operational_expenditure_id', 'id');
     }
 
     public function badge(): string

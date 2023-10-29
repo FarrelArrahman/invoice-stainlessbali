@@ -45,7 +45,7 @@ Pengeluaran
                 <tbody>
                     @foreach($expenditures as $expenditure)
                     <tr>
-                        <td>{{ $expenditure->date->format('Y-m-d') }}</td>
+                        <td>{{ $expenditure->date->format('d-m-Y') }}</td>
                         @if($expenditure instanceof \App\Models\TechnicianExpenditure)
                         <td>{{ $expenditure->technician->name }}</td>
                         @elseif($expenditure instanceof \App\Models\EmployeeExpenditure)

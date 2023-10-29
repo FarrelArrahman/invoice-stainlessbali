@@ -37,7 +37,7 @@ class EmployeeExpenditureController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
 
         foreach($request->breakdown[1]['item'] as $item) {
             $employeeExpenditure = [

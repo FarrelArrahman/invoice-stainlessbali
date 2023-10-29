@@ -73,7 +73,6 @@ Pengeluaran Teknisi
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <h1 class="h5 mt-2">Pengeluaran Teknisi</h1>
                             <!-- <button id="addBreakdown" class="btn btn-primary pull-right" type="button"><i class="fa fa-plus me-1"></i> Tambah Breakdown Baru</button> -->
                         </div>
 

@@ -1,7 +1,7 @@
 @extends('layout.template')
 
 @section('title')
-Gaji Karyawan
+Pengeluaran Bahan
 @endsection
 
 @section('content')
@@ -12,19 +12,20 @@ Gaji Karyawan
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                         </path>
                     </svg></a></li>
-            <li class="breadcrumb-item"><a href="#">Gaji Karyawan</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Tambah Gaji Karyawan</li>
+            <li class="breadcrumb-item"><a href="#">Pengeluaran Bahan</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Pengeluaran Bahan</li>
         </ol>
     </nav>
     <div class="d-flex justify-content-between w-100 flex-wrap">
         <div class="mb-3 mb-lg-0">
-            <h1 class="h4">Tambah Gaji Karyawan</h1>
+            <h1 class="h4">Edit Pengeluaran Bahan</h1>
         </div>
     </div>
 </div>
-<form onsubmit="checkForm()" action="{{ route('employee_expenditures.store') }}" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="total_price" id="total-price-input">
-    <input type="hidden" name="total_price_before_discount" id="total-price-before-discount-input">
+<form action="{{ route('material_expenditures.update', $material_expenditures->id) }}" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="total_price" id="total-price-input" value="{{ $material_expenditures->total_price }}">
+    <input type="hidden" name="total_price_before_discount" id="total-price-before-discount-input" value="{{ $material_expenditures->total_price }}">
+    @method('PUT')
     @csrf
     <div class="row">
         <div class="col-12 mb-4">
@@ -35,31 +36,28 @@ Gaji Karyawan
                             <div class="accordion" id="accordionCustomer">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="customerData">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#customerCollapse" aria-expanded="false" aria-controls="customerCollapse">
-                                            Masukkan data karyawan...
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#customerCollapse" aria-expanded="false" aria-controls="customerCollapse">
+                                            Masukkan data toko...
                                         </button>
                                     </h2>
                                     <div id="customerCollapse" class="accordion-collapse collapse" aria-labelledby="customerData" data-bs-parent="#accordionCustomer">
                                         <div class="accordion-body">
-                                            <div id="employee-detail">
-                                                <label for="employee-name">Nama Karyawan</label>
+                                            <div id="customer-detail">
+                                                <label for="shop-name">Nama Toko</label>
                                                 <div class="input-group mb-3">
-                                                    <input id="employee-name" type="text" class="form-control" name="employee_name" readonly>
-                                                    <span data-bs-toggle="modal" data-bs-target="#modal-select-employee" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
+                                                    <input id="shop-name" type="text" class="form-control" name="shop_name" value="{{ $material_expenditures->shop_name }}">
+                                                    <span data-bs-toggle="modal" data-bs-target="#modal-select-company" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
                                                         <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
                                                     </span>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="employee-phone-number">Nomor Telepon</label>
-                                                    <input id="employee-phone-number" type="text" class="form-control" id="employee_phone_number" name="employee_phone_number" readonly>
+                                                    <label for="shop-telephone-number">Nomor Kantor</label>
+                                                    <input id="shop-telephone-number" type="text" class="form-control" id="shop_telephone_number" name="shop_telephone_number" value="{{ $material_expenditures->shop_telephone_number }}">
                                                 </div>
+                                                
                                                 <div class="mb-3">
-                                                    <label for="employee-address">Alamat</label>
-                                                    <input id="employee-address" type="text" class="form-control" id="employee_address" name="employee_address" readonly>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="employee-role">Role</label>
-                                                    <input id="employee-role" type="text" class="form-control" id="employee_role" name="employee_role" readonly>
+                                                    <label for="shop-address">Alamat Kantor</label>
+                                                    <input id="shop-address" type="text" class="form-control" id="shop_address" name="shop_address" value="{{ $material_expenditures->shop_address }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -85,26 +83,54 @@ Gaji Karyawan
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="breakdown">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#breakdownCollapse" aria-expanded="false" aria-controls="breakdownCollapse">
-                                            <span class="breakdown-title" id="breakdown1-title">Daftar Gaji Karyawan</span>
+                                            <span class="breakdown-title" id="breakdown-title">Pengeluaran Bahan</span>
                                         </button>
                                     </h2>
                                     <div id="breakdownCollapse" class="accordion-collapse collapse show" aria-labelledby="breakdown" data-bs-parent="#accordionBreakdown">
                                         <div class="accordion-body">
                                             <label for="">Tanggal</label>
-                                            <input type="date" class="form-control w-100 my-2" name="date" value="{{ today()->format('Y-m-d') }}">
-                                            <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown1" data-breakdown-counter="1"><i class="fa fa-plus me-1"></i> Input Gaji</button>
-                                            <!-- <button class="select-item-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal-select-item" data-breakdown="breakdown1" data-breakdown-counter="1"><i class="fa fa-list me-1"></i> Pilih Item</button> -->
+                                            <input type="date" class="form-control w-100 my-2" name="date" value="{{ $material_expenditures->date->format('Y-m-d') }}">
+                                            <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown" data-breakdown-counter=""><i class="fa fa-plus me-1"></i> Tambah Item</button>
                                             <span class="deleteBreakdownPlaceholder"></span>
                                             <div class="table-responsive">
                                                 <table class="table table-centered mb-0 rounded">
                                                     <thead class="thead-light">
                                                         <tr>
-                                                            <th width="60%" class="border-0">Bulan / Tahun <br> (Gaji per Bulan)</th>
-                                                            <th width="15%" class="border-0 text-center">Hari Kerja</th>
+                                                            <th width="60%" class="border-0">Item</th>
+                                                            <th width="15%" class="border-0 text-center">Qty</th>
                                                             <th width="25%" class="border-0 rounded-end text-end">Total</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody class="breakdown-table" id="breakdown1-table">
+                                                    <tbody class="breakdown-table" id="breakdown-table">
+                                                        @foreach($material_expenditures->items as $item)
+                                                        <tr id="breakdown-item{{ $item->id }}">
+                                                            <th class="border-0 rounded-start">
+                                                                <div class="row">
+                                                                    <div class="col-2">
+                                                                        <button type="button" id="item{{ $item->id }}-remove-button" class="btn btn-sm btn-link text-danger remove-item" onclick='removeItem("#breakdown-item{{ $item->id }}")'>
+                                                                            <i class="fa fa-times"></i>
+                                                                        </button>
+                                                                        <input type="hidden" value="{{ $item->id }}" name="material_expenditure[{{ $item->id }}][id]">
+                                                                    </div>
+                                                                    <div class="col-8" id="item{{ $item->id }}-image-preview">
+                                                                        <h6 class="item-name mt-2">
+                                                                            <input class="border-bottom-input w-100" type="text" name="material_expenditure[{{ $item->id }}][item_name]" value="{{ $item->item_name }}" placeholder="Masukkan nama barang...">
+                                                                        </h6>
+                                                                        <span class="item-dimension">
+                                                                            Rp.
+                                                                            <input class="border-bottom-input item-price" type="text" value="{{ $item->price }}" data-total-price="#item{{ $item->id }}-total-price" data-qty="#item{{ $item->id }}-qty" name="material_expenditure[{{ $item->id }}][price]">
+                                                                        </span> <br>
+                                                                    </div>
+                                                                </div>
+                                                            </th>
+                                                            <th class="border-0 text-center">
+                                                                <input id="item{{ $item->id }}-qty" type="number" name="material_expenditure[{{ $item->id }}][qty]" data-price="{{ $item->price }}" data-total-price="#item{{ $item->id }}-total-price" class="form-control item-qty" min="1" value="{{ $item->qty }}">
+                                                            </th>
+                                                            <th id="item{{ $item->id }}-total-price" class="border-0 rounded-end text-end prices" data-price="{{ $item->total_price }}">
+                                                                {{ $item->formatted_total_price }}
+                                                            </th>
+                                                        </tr>
+                                                        @endforeach
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -123,12 +149,10 @@ Gaji Karyawan
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <h1 class="h5 mt-2">Total Gaji</h1>
-                            <h1 class="h4" id="total-price-text">Rp 0</h1>
+                            <h1 class="h5 mt-2">Total Harga</h1>
+                            <h1 class="h4" id="total-price-text">{{ $material_expenditures->formatted_total_price }}</h1>
                             <h1 class="h6 text-danger text-decoration-line-through d-none" id="total-price-before-discount-text">Rp 0</h1>
-                            <div class="mb-3">
-                                <button type="submit" class="btn btn-success w-100">Simpan</button>
-                            </div>
+                            <button type="submit" class="btn btn-success w-100">Simpan</button>
                         </div>
                     </div>
                 </div>
@@ -136,34 +160,7 @@ Gaji Karyawan
         </div>
 </form>
 
-<!-- Modal Select Technician -->
-<div class="modal fade" id="modal-select-employee" tabindex="-1" role="dialog" aria-labelledby="modal-select-employee" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="h6 modal-title">Pilih karyawan</h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="a-select" class="form-label">Nama</label>
-                    <select name="employee_id" id="employee-nice-select" class="select-company w-100" placeholder="Pilih karyawan...">
-                        <option value="" disabled selected>--- Pilih karyawan ---</option>
-                        @foreach($employees as $employee)
-                        <option value="{{ $employee->id }}" data-name="{{ $employee->name }}" data-address="{{ $employee->address }}" data-phone-number="{{ $employee->phone_number }}">{{ $employee->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="select-existing-employee-button" class="btn btn-secondary add-company-data" data-bs-dismiss="modal">Pilih Karyawan</button>
-                <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Select Customer -->
+<!-- Modal Select Item -->
 <div class="modal fade" id="modal-select-customer" tabindex="-1" role="dialog" aria-labelledby="modal-select-customer" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -192,42 +189,18 @@ Gaji Karyawan
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="h6 modal-title">Input gaji</h2>
+                <h2 class="h6 modal-title">Tambah item baru</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="add-new-form" runat="server">
                     @csrf
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="mb-3">
-                                <label for="name">Bulan</label>
-                                <select name="month" id="month-select" class="form-select">
-                                    <option value="0" selected disabled>-- Pilih Bulan --</option>
-                                    <option value="1">Januari</option>
-                                    <option value="2">Februari</option>
-                                    <option value="3">Maret</option>
-                                    <option value="4">April</option>
-                                    <option value="5">Mei</option>
-                                    <option value="6">Juni</option>
-                                    <option value="7">Juli</option>
-                                    <option value="8">Agustus</option>
-                                    <option value="9">September</option>
-                                    <option value="10">Oktober</option>
-                                    <option value="11">November</option>
-                                    <option value="12">Desember</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="name">Tahun</label>
-                                <input type="number" class="form-control" value="{{ date('Y') }}" name="year">
-                            </div>
-                        </div>
+                    <div class="mb-3">
+                        <label for="name">Nama</label>
+                        <input type="text" class="form-control" id="name" name="name">
                     </div>
                     <div class="mb-3">
-                        <label for="price">Gaji (per hari)</label>
+                        <label for="price">Price</label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1">
                                 Rp.
@@ -248,47 +221,7 @@ Gaji Karyawan
 @endsection
 
 @push('custom-scripts')
-<script type="text/javascript">
-    let showNotyf = (background, message) => {
-        const notyf = new Notyf({
-            position: {
-                x: 'right',
-                y: 'top',
-            },
-            types: [
-                {
-                    type: "info",
-                    background: background,
-                    icon: {
-                        className: 'fa fa-exclamation-circle',
-                        tagName: 'span',
-                        color: '#fff'
-                    },
-                    dismissible: false
-                }
-            ]
-        })
-        
-        notyf.open({
-            type: "info",
-            message: message
-        })
-    }
-
-    let checkForm = () => {
-        if(
-            employeeDetail.querySelector("#employee-name").value == "" ||
-            employeeDetail.querySelector("#employee-phone-number").value == ""
-        ) {
-            showNotyf("red", "Data karyawan belum diisi")
-            event.preventDefault()
-        }
-    }
-
-    let companyNiceSelect = NiceSelect.bind(document.getElementById("employee-nice-select"), {
-        searchable: true
-    })
-    
+<script type="text/javascript">    
     let customerNiceSelect = NiceSelect.bind(document.getElementById("customer-nice-select"), {
         searchable: true
     })
@@ -296,6 +229,14 @@ Gaji Karyawan
     VMasker(document.querySelector(`#new-price`)).maskMoney({
         precision: 0
     })
+    
+    VMasker(document.querySelectorAll('.item-price')).maskMoney({
+        precision: 0
+    })
+    
+    // VMasker(document.querySelector(`#discount-nominal`)).maskMoney({
+    //     precision: 0
+    // })
 
     let breakdownCounter = 1
     let itemCounter = 0
@@ -306,29 +247,54 @@ Gaji Karyawan
     let discountPercentage = 0
     let discountNominal = 0
 
+    const addBreakdown = document.getElementById('addBreakdown')
+    const addNewImageInput = document.getElementById('add-new-image-input')
+    const addNewImagePreview = document.getElementById('add-new-image-preview')
+    const addItemToBreakdown = document.querySelectorAll('.add-to-breakdown')
     const itemQty = document.querySelectorAll('.item-qty')
     const breakdowns = document.getElementById('breakdowns')
     const breakdown = document.getElementById('accordionBreakdown')
-    const employeeDetail = document.getElementById('employee-detail')
+    const inputTitle = document.querySelectorAll('.breakdown-input')
+    const inputFileWrapper = document.getElementById('input-file-wrapper')
+    const inputFile = document.getElementById('input-file')
+    const imagePreview = document.getElementById('image-preview')
+    const itemSelect = document.getElementById('item-nice-select')
     const itemDetail = document.getElementById('item-detail')
+    const customerSelect = document.getElementById('customer-nice-select')
+    const customerDetail = document.getElementById('customer-detail')
     const addNewForm = document.getElementById('add-new-form')
     const addNewItemButton = document.getElementById('add-new-item-button')
     const selectItemForm = document.getElementById('select-item-form')
-    const selectExistingEmployeeButton = document.getElementById('select-existing-employee-button')
+    const selectExistingItemButton = document.getElementById('select-existing-item-button')
     const selectExistingCustomerButton = document.getElementById('select-existing-customer-button')
     const totalPriceText = document.getElementById('total-price-text')
     const totalPriceInput = document.getElementById('total-price-input')
     const totalPriceBeforeDiscountText = document.getElementById('total-price-before-discount-text')
     const totalPriceBeforeDiscountInput = document.getElementById('total-price-before-discount-input')
     const discountPercentageInput = document.getElementById('discount-percentage')
-    const employeeSelect = document.getElementById('employee-nice-select')
-    
+    const discountNominalInput = document.getElementById('discount-nominal')
+    const paymentTerms = document.getElementById('payment-terms')
+    const term = document.getElementById('term')
+    const dp = document.getElementById('dp')
+    const dpAmount = document.getElementById('dp-amount')
+    const dpInput = document.getElementById('dp-input')
+    const term1 = document.getElementById('term1')
+    const term1Amount = document.getElementById('term1-amount')
+    const term1Input = document.getElementById('term1-input')
+    const term2 = document.getElementById('term2')
+    const term2Amount = document.getElementById('term2-amount')
+    const term2Input = document.getElementById('term2-input')
+    const term3 = document.getElementById('term3')
+    const term3Amount = document.getElementById('term3-amount')
+    const term3Input = document.getElementById('term3-input')
+
     const rupiahFormat = new Intl.NumberFormat('id-ID', {
         style: 'currency',
         currency: 'IDR',
         maximumFractionDigits: 0
     });
 
+    // Change breakdown title dynamically
     breakdowns.addEventListener('click', function(e) {
         if (e.target.classList.contains('deleteBreakdownButton')) {
             deleteElement(e.target.getAttribute('data-remove'))
@@ -348,6 +314,7 @@ Gaji Karyawan
             }
             calculateItemPrice(e.target.value, e.target.getAttribute('data-price'), e.target.getAttribute('data-total-price'))
         } else if (e.target.classList.contains('item-price')) {
+            console.log(e.target.getAttribute('data-total-price'))
             let price = breakdowns.querySelector(e.target.getAttribute('data-total-price'))
             price.setAttribute('data-price', e.target.value.replaceAll('.', ''))
             
@@ -368,6 +335,8 @@ Gaji Karyawan
 
     let calculateTotalPrice = () => {
         totalPrice = 0
+        discountPercentage = 0
+        discountNominal = 0
 
         let prices = breakdowns.querySelectorAll('.prices')
         let discounts = document.querySelectorAll('.discounts')
@@ -375,10 +344,6 @@ Gaji Karyawan
         prices.forEach(function(e) {
             totalPrice += parseInt(e.dataset.price)
         })
-
-        if (totalPrice < 0) {
-            totalPrice = 0
-        }
 
         setTotalPrice(totalPrice)
     }
@@ -388,54 +353,19 @@ Gaji Karyawan
         totalPriceInput.value = totalPrice
     }
 
-    let setTotalPriceBeforeDiscount = (totalPriceBeforeDiscount, discountTotal) => {
-        if (discountTotal > 0) {
-            totalPriceBeforeDiscountText.innerHTML = rupiahFormat.format(totalPriceBeforeDiscount)
-            totalPriceBeforeDiscountText.classList.remove('d-none')
+    // Show customer detail upon selection changing
+    customerSelect.onchange = function(e) {
+        if (!customerSelect.value || !customerSelect.value.trim().length) {
+            selectExistingCustomerButton.classList.add('disabled')
         } else {
-            totalPriceBeforeDiscountText.classList.add('d-none')
-        }
-
-        totalPriceBeforeDiscountInput.value = totalPriceBeforeDiscount
-    }
-
-    let setDP = (totalPrice, dpPercentage) => {
-        let dp = dpPercentage * totalPrice / 100
-        dpAmount.innerHTML = rupiahFormat.format(dp)
-        dpInput.value = dp
-
-        return dp
-    }
-
-    let setTerm = (totalPrice, dpAmount, terms) => {
-        let termAmount = totalPrice - dpAmount
-        let amountPerTerm = 0
-
-        amountPerTerm = termAmount / terms
-
-        term1Amount.innerHTML = rupiahFormat.format(amountPerTerm)
-        term1Input.value = amountPerTerm
-        
-        term2Amount.innerHTML = rupiahFormat.format(amountPerTerm)
-        term2Input.value = amountPerTerm
-        
-        term3Amount.innerHTML = terms == 3 ? rupiahFormat.format(amountPerTerm) : 0
-        term3Input.value = terms == 3 ? amountPerTerm : 0
-    }
-
-    // Show employee detail upon selection changing
-    employeeSelect.onchange = function(e) {
-        if (!employeeSelect.value || !employeeSelect.value.trim().length) {
-            selectExistingEmployeeButton.classList.add('disabled')
-        } else {
-            selectExistingEmployeeButton.classList.remove('disabled')
+            selectExistingCustomerButton.classList.remove('disabled')
         }
     }
 
-    let setEmployeeDetail = (data) => {
-        employeeDetail.querySelector("#employee-name").value = data.name
-        employeeDetail.querySelector("#employee-phone-number").value = data.phoneNumber
-        employeeDetail.querySelector("#employee-address").value = data.address
+    let setCustomerDetail = (data) => {
+        customerDetail.querySelector("#customer-name").value = data.name
+        customerDetail.querySelector("#customer-address").value = data.address
+        customerDetail.querySelector("#customer-phone-number").value = data.phoneNumber
     }
 
     let deleteElement = (id) => {
@@ -445,34 +375,33 @@ Gaji Karyawan
 
     let addItem = (data) => {
         let item = document.createElement("tr")
-        item.id = `${currentBreakdown}-item${++itemCounter}`
+        item.id = `new-${currentBreakdown}-item${++itemCounter}`
         // console.log("Add item to Current Breakdown: " + currentBreakdown)
         item.innerHTML =
             `
             <th class="border-0 rounded-start">
                 <div class="row">
                     <div class="col-2">
-                        <button id="item${itemCounter}-remove-button" class="btn btn-sm btn-link text-danger remove-item" data-remove-item="#${currentBreakdown}-item${itemCounter}">
+                        <button type="button" id="new-item${itemCounter}-remove-button" class="btn btn-sm btn-link text-danger remove-item" data-remove-item="#new-${currentBreakdown}-item${itemCounter}">
                             <i class="fa fa-times"></i>
                         </button>
+                        <input type="hidden" value="${data.id ?? ''}" name="new_item[${itemCounter}][id]">
                     </div>
                     <div class="col-8" id="item${itemCounter}-image-preview">
                         <h6 class="item-name mt-2">
-                            <input type="hidden" value="${data.month}" name="breakdown[${breakdownCounter}][item][${itemCounter}][month]">
-                            <input type="hidden" value="${data.year}" name="breakdown[${breakdownCounter}][item][${itemCounter}][year]">
-                            <input class="border-bottom-input" type="text" value="${data.month_name} ${data.year}" name="breakdown[${breakdownCounter}][item][${itemCounter}][name]" readonly>
+                            <input class="border-bottom-input" type="text" value="${data.name}" name="new_item[${itemCounter}][item_name]">
                         </h6>
                         <span class="item-dimension mt-2">
                             Rp.  
-                            <input id="item${itemCounter}-price" data-qty="#item${itemCounter}-qty" data-total-price="#item${itemCounter}-total-price" class="border-bottom-input item-price" type="text" value="${data.price}" name="breakdown[${breakdownCounter}][item][${itemCounter}][salary_per_day]">
+                            <input id="new-item${itemCounter}-price" data-qty="#new-item${itemCounter}-qty" data-total-price="#new-item${itemCounter}-total-price" class="border-bottom-input item-price" type="text" value="${data.price}" name="new_item[${itemCounter}][price]">
                         </span> <br>
                     </div>
                 </div>
             </th>
             <th class="border-0 text-center">
-                <input id="item${itemCounter}-qty" type="number" name="breakdown[${breakdownCounter}][item][${itemCounter}][working_day]" data-price="${data.price.replaceAll('.', '')}" data-total-price="#item${itemCounter}-total-price" class="form-control item-qty" min="0" value="1">
+                <input id="new-item${itemCounter}-qty" type="number" name="new_item[${itemCounter}][qty]" data-price="${data.price.replaceAll('.', '')}" data-total-price="#new-item${itemCounter}-total-price" class="form-control item-qty" min="1" value="1">
             </th>
-            <th id="item${itemCounter}-total-price" class="border-0 rounded-end text-end prices" data-price="${data.price.replaceAll('.', '')}">
+            <th id="new-item${itemCounter}-total-price" class="border-0 rounded-end text-end prices" data-price="${data.price.replaceAll('.', '')}">
                 ${rupiahFormat.format(data.price.replaceAll('.', ''))}
             </th>
         `
@@ -480,28 +409,31 @@ Gaji Karyawan
         let table = breakdowns.querySelector('#' + currentBreakdown + '-table')
         table.appendChild(item)
 
-        breakdowns.querySelector(`#item${itemCounter}-remove-button`).addEventListener('click', function(e) {
+        breakdowns.querySelector(`#new-item${itemCounter}-remove-button`).addEventListener('click', function(e) {
             breakdowns.querySelector(this.getAttribute('data-remove-item')).remove()
             calculateTotalPrice()
         })
 
         calculateTotalPrice()
 
-        VMasker(document.querySelector(`#item${itemCounter}-price`)).maskMoney({
+        VMasker(document.querySelector(`#new-item${itemCounter}-price`)).maskMoney({
             precision: 0
         })
     }
 
-    selectExistingEmployeeButton.addEventListener('click', function(e) {
-        setEmployeeDetail(employeeSelect.options[employeeSelect.selectedIndex].dataset)
+    let removeItem = (id) => {
+        breakdowns.querySelector(id).remove()
+        calculateTotalPrice()
+    }
+
+    selectExistingCustomerButton.addEventListener('click', function(e) {
+        setCustomerDetail(customerSelect.options[customerSelect.selectedIndex].dataset)
     })
 
     addNewItemButton.onclick = e => {
         const el = addNewForm.elements
         const data = {
-            month: el.namedItem("month").value,
-            month_name: document.querySelector('#month-select').options[el.namedItem("month").value].text,
-            year: el.namedItem("year").value,
+            name: el.namedItem("name").value,
             price: el.namedItem("price").value
         }
         addItem(data)

@@ -15,8 +15,10 @@ class MaterialExpenditureDetail extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'shop_name',
-        'note',
+        'material_expenditure_id',
+        'item_name',
+        'price',
+        'qty',
         'status',
     ];
 
@@ -37,4 +39,20 @@ class MaterialExpenditureDetail extends Model
     protected $casts = [
         // 
     ];
+
+    // Attribute
+    public function getFormattedPriceAttribute()
+    {
+        return "Rp. " . number_format($this->price, 0, '', '.');
+    }
+
+    public function getTotalPriceAttribute()
+    {
+        return $this->price * $this->qty;
+    }
+    
+    public function getFormattedTotalPriceAttribute()
+    {
+        return "Rp. " . number_format($this->total_price, 0, '', '.');
+    }
 }

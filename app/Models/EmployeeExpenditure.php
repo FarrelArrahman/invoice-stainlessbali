@@ -18,11 +18,12 @@ class EmployeeExpenditure extends Model
      */
     protected $fillable = [
         'employee_id',
+        'date',
         'month',
         'year',
         'working_day',
         'salary_per_day',
-        'status',
+        'status'
     ];
 
     /**

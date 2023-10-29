@@ -26,6 +26,11 @@ class DatabaseSeeder extends Seeder
             CompanySeeder::class,
             TechnicianSeeder::class,
             EmployeeSeeder::class,
+            IncomeSeeder::class,
+            EmployeeExpenditureSeeder::class,
+            TechnicianExpenditureSeeder::class,
+            OperationalExpenditureSeeder::class,
+            MaterialExpenditureSeeder::class,
         ]);
     }
 }

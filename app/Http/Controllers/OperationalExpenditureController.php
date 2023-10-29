@@ -86,13 +86,8 @@ class OperationalExpenditureController extends Controller
      */
     public function edit(OperationalExpenditure $operationalExpenditure)
     {
-        $items = Item::all();        
-        $companies = Company::where('status', StatusEnum::Active)->get();
-
         return view('admin.operational_expenditures.edit', [
-            'items' => $items,
-            'companies' => $companies,
-            'income' => $operationalExpenditure,
+            'operational_expenditures' => $operationalExpenditure,
         ]);
     }
 
@@ -101,14 +96,14 @@ class OperationalExpenditureController extends Controller
      */
     public function update(Request $request, OperationalExpenditure $operationalExpenditure)
     {
-        dd($request->all());
+        // dd($request->all());
 
         $operationalExpenditureDetailIds = [];
 
         $operationalExpenditureData = [
             'shop_name' => $request->shop_name,
             'shop_address' => $request->shop_address,
-            'shop_telephone_number' => $request->company_telephone_number,
+            'shop_telephone_number' => $request->shop_telephone_number,
             'total_price' => $request->total_price,
             'handled_by' => NULL,
             'date' => $request->date,
@@ -117,7 +112,7 @@ class OperationalExpenditureController extends Controller
 
         $operationalExpenditure->update($operationalExpenditureData);
 
-        foreach($request->income as $item) {
+        foreach($request->operational_expenditure as $item) {
             $operationalExpenditureDetailIds[] = $item['id'];
 
             $operationalExpenditure->items->find($item['id'])->update([
@@ -137,7 +132,7 @@ class OperationalExpenditureController extends Controller
             foreach($request->new_item as $newItem) {
                 $operationalExpenditureDetail = [
                     'operational_expenditure_id' => $operationalExpenditure->id,
-                    'name' => $newItem['name'],
+                    'item_name' => $newItem['item_name'],
                     'price' => str_replace('.', '', $newItem['price']),
                     'qty' => $newItem['qty'],
                     'status' => "",

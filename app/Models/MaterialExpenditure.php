@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TransactionEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -40,6 +41,33 @@ class MaterialExpenditure extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        // 
+        'date' => 'datetime',
+        'status' => TransactionEnum::class
     ];
+
+    // Attribute
+    public function getFormattedTotalPriceAttribute()
+    {
+        return "Rp. " . number_format($this->total_price, 0, '', '.');
+    }
+
+    public function items()
+    {
+        return $this->hasMany(MaterialExpenditureDetail::class, 'material_expenditure_id', 'id');
+    }
+
+    public function badge(): string
+    {
+        return "<div class=\"badge bg-danger\">Bahan</div>";
+    }
+
+    public function edit_route()
+    {
+        return route('material_expenditures.edit', $this->id);
+    }
+    
+    public function delete_route()
+    {
+        return route('material_expenditures.destroy', $this->id);
+    }
 }

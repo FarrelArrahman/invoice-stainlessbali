@@ -17,7 +17,7 @@ class IncomeController extends Controller
      */
     public function index()
     {
-        $incomes = Income::all();
+        $incomes = Income::all()->sortByDesc('date');
         return view('admin.incomes.index', [
             'incomes' => $incomes
         ]);

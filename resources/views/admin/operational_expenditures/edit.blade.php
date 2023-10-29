@@ -1,7 +1,7 @@
 @extends('layout.template')
 
 @section('title')
-Pemasukan
+Pengeluaran Operasional
 @endsection
 
 @section('content')
@@ -12,19 +12,19 @@ Pemasukan
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                         </path>
                     </svg></a></li>
-            <li class="breadcrumb-item"><a href="#">Pemasukan</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Edit Pemasukan</li>
+            <li class="breadcrumb-item"><a href="#">Pengeluaran Operasional</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Pengeluaran Operasional</li>
         </ol>
     </nav>
     <div class="d-flex justify-content-between w-100 flex-wrap">
         <div class="mb-3 mb-lg-0">
-            <h1 class="h4">Edit Pemasukan</h1>
+            <h1 class="h4">Edit Pengeluaran Operasional</h1>
         </div>
     </div>
 </div>
-<form action="{{ route('incomes.update', $income->id) }}" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="total_price" id="total-price-input">
-    <input type="hidden" name="total_price_before_discount" id="total-price-before-discount-input">
+<form action="{{ route('operational_expenditures.update', $operational_expenditures->id) }}" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="total_price" id="total-price-input" value="{{ $operational_expenditures->total_price }}">
+    <input type="hidden" name="total_price_before_discount" id="total-price-before-discount-input" value="{{ $operational_expenditures->total_price }}">
     @method('PUT')
     @csrf
     <div class="row">
@@ -37,38 +37,27 @@ Pemasukan
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="customerData">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#customerCollapse" aria-expanded="false" aria-controls="customerCollapse">
-                                            Masukkan data pelanggan...
+                                            Masukkan data toko...
                                         </button>
                                     </h2>
                                     <div id="customerCollapse" class="accordion-collapse collapse" aria-labelledby="customerData" data-bs-parent="#accordionCustomer">
                                         <div class="accordion-body">
                                             <div id="customer-detail">
-                                                <label for="company-name">Nama Perusahaan</label>
+                                                <label for="shop-name">Nama Toko</label>
                                                 <div class="input-group mb-3">
-                                                    <input id="company-name" type="text" class="form-control" name="company_name" value="{{ $income->company_name }}">
+                                                    <input id="shop-name" type="text" class="form-control" name="shop_name" value="{{ $operational_expenditures->shop_name }}">
                                                     <span data-bs-toggle="modal" data-bs-target="#modal-select-company" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
                                                         <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
                                                     </span>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="name">Nomor Kantor</label>
-                                                    <input id="company-telephone-number" type="text" class="form-control" id="company_telephone_number" name="company_telephone_number" value="{{ $income->company_telephone_number }}">
+                                                    <label for="shop-telephone-number">Nomor Kantor</label>
+                                                    <input id="shop-telephone-number" type="text" class="form-control" id="shop_telephone_number" name="shop_telephone_number" value="{{ $operational_expenditures->shop_telephone_number }}">
                                                 </div>
                                                 
                                                 <div class="mb-3">
-                                                    <label for="name">Alamat Kantor</label>
-                                                    <input id="customer-address" type="text" class="form-control" id="address" name="address" value="{{ $income->address }}">
-                                                </div>
-                                                <label for="name">Nama Customer</label>
-                                                <div class="input-group mb-3">
-                                                    <input id="customer-name" type="text" class="form-control" name="customer_name" value="{{ $income->customer_name }}">
-                                                    <span data-bs-toggle="modal" data-bs-target="#modal-select-customer" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
-                                                        <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
-                                                    </span>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="name">Nomor Telepon</label>
-                                                    <input id="customer-phone-number" type="text" class="form-control" id="customer_phone_number" name="customer_phone_number" value="{{ $income->customer_phone_number }}">
+                                                    <label for="shop-address">Alamat Kantor</label>
+                                                    <input id="shop-address" type="text" class="form-control" id="shop_address" name="shop_address" value="{{ $operational_expenditures->shop_address }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -86,7 +75,6 @@ Pemasukan
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <h1 class="h5 mt-2">Pemasukan</h1>
                             <!-- <button id="addBreakdown" class="btn btn-primary pull-right" type="button"><i class="fa fa-plus me-1"></i> Tambah Breakdown Baru</button> -->
                         </div>
 
@@ -95,13 +83,13 @@ Pemasukan
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="breakdown">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#breakdownCollapse" aria-expanded="false" aria-controls="breakdownCollapse">
-                                            <span class="breakdown-title" id="breakdown-title">Daftar pemasukan</span>
+                                            <span class="breakdown-title" id="breakdown-title">Pengeluaran Operasional</span>
                                         </button>
                                     </h2>
                                     <div id="breakdownCollapse" class="accordion-collapse collapse show" aria-labelledby="breakdown" data-bs-parent="#accordionBreakdown">
                                         <div class="accordion-body">
                                             <label for="">Tanggal</label>
-                                            <input type="date" class="form-control w-100 my-2" name="date" value="{{ $income->date->format('Y-m-d') }}">
+                                            <input type="date" class="form-control w-100 my-2" name="date" value="{{ $operational_expenditures->date->format('Y-m-d') }}">
                                             <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown" data-breakdown-counter=""><i class="fa fa-plus me-1"></i> Tambah Item</button>
                                             <span class="deleteBreakdownPlaceholder"></span>
                                             <div class="table-responsive">
@@ -114,7 +102,7 @@ Pemasukan
                                                         </tr>
                                                     </thead>
                                                     <tbody class="breakdown-table" id="breakdown-table">
-                                                        @foreach($income->items as $item)
+                                                        @foreach($operational_expenditures->items as $item)
                                                         <tr id="breakdown-item{{ $item->id }}">
                                                             <th class="border-0 rounded-start">
                                                                 <div class="row">
@@ -122,21 +110,21 @@ Pemasukan
                                                                         <button type="button" id="item{{ $item->id }}-remove-button" class="btn btn-sm btn-link text-danger remove-item" onclick='removeItem("#breakdown-item{{ $item->id }}")'>
                                                                             <i class="fa fa-times"></i>
                                                                         </button>
-                                                                        <input type="hidden" value="{{ $item->id }}" name="income[{{ $item->id }}][id]">
+                                                                        <input type="hidden" value="{{ $item->id }}" name="operational_expenditure[{{ $item->id }}][id]">
                                                                     </div>
                                                                     <div class="col-8" id="item{{ $item->id }}-image-preview">
                                                                         <h6 class="item-name mt-2">
-                                                                            <input class="border-bottom-input" type="text" name="income[{{ $item->id }}][name]" value="{{ $item->name }}" placeholder="Masukkan nama barang...">
+                                                                            <input class="border-bottom-input w-100" type="text" name="operational_expenditure[{{ $item->id }}][item_name]" value="{{ $item->item_name }}" placeholder="Masukkan nama barang...">
                                                                         </h6>
                                                                         <span class="item-dimension">
                                                                             Rp.
-                                                                            <input class="border-bottom-input item-price" type="text" value="{{ $item->price }}" data-total-price="#item{{ $item->id }}-total-price" data-qty="#item{{ $item->id }}-qty" name="income[{{ $item->id }}][price]">
+                                                                            <input class="border-bottom-input item-price" type="text" value="{{ $item->price }}" data-total-price="#item{{ $item->id }}-total-price" data-qty="#item{{ $item->id }}-qty" name="operational_expenditure[{{ $item->id }}][price]">
                                                                         </span> <br>
                                                                     </div>
                                                                 </div>
                                                             </th>
                                                             <th class="border-0 text-center">
-                                                                <input id="item{{ $item->id }}-qty" type="number" name="income[{{ $item->id }}][qty]" data-price="{{ $item->price }}" data-total-price="#item{{ $item->id }}-total-price" class="form-control item-qty" min="1" value="{{ $item->qty }}">
+                                                                <input id="item{{ $item->id }}-qty" type="number" name="operational_expenditure[{{ $item->id }}][qty]" data-price="{{ $item->price }}" data-total-price="#item{{ $item->id }}-total-price" class="form-control item-qty" min="1" value="{{ $item->qty }}">
                                                             </th>
                                                             <th id="item{{ $item->id }}-total-price" class="border-0 rounded-end text-end prices" data-price="{{ $item->total_price }}">
                                                                 {{ $item->formatted_total_price }}
@@ -162,98 +150,9 @@ Pemasukan
                     <div class="row">
                         <div class="col-12">
                             <h1 class="h5 mt-2">Total Harga</h1>
-                            <h1 class="h4" id="total-price-text">{{ $income->formatted_total_price }}</h1>
+                            <h1 class="h4" id="total-price-text">{{ $operational_expenditures->formatted_total_price }}</h1>
                             <h1 class="h6 text-danger text-decoration-line-through d-none" id="total-price-before-discount-text">Rp 0</h1>
-                            <!-- <div class="mb-3">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="discount-percentage" class="form-label mt-3">Diskon 1 (%)</label>
-                                            <div class="input-group">
-                                                <input type="number" class="form-control discounts" id="discount-percentage" name="discount_percentage" value="0" min="0" max="100">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="discount-nominal" class="form-label mt-3">Diskon 2 (Rp)</label>
-                                            <div class="input-group">
-                                                <input type="number" class="form-control discounts" id="discount-nominal" name="discount_nominal" value="0">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="invoice-type-offer" class="form-label mt-3">Simpan invoice sebagai</label>
-                                    <br>
-                                    <div class="form-check form-check-inline">
-                                        <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-offer" value="Offer">
-                                        <label class="form-check-label" for="invoice-type-offer">Penawaran</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-deal" value="Deal">
-                                        <label class="form-check-label" for="invoice-type-deal">Deal</label>
-                                    </div>
-                                </div>
-                                <div class="mb-3 d-none" id="payment-terms">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <div class="form-group">
-                                                <label for="term" class="form-label mt-3">Termin</label>
-                                                <div class="input-group">
-                                                    <select name="payment_terms" id="term" class="form-select">
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="form-group">
-                                                <label for="dp" class="form-label mt-3">DP</label>
-                                                <div class="input-group">
-                                                    <select name="dp" id="dp" class="form-select">
-                                                        <option value="10">10%</option>
-                                                        <option value="15">15%</option>
-                                                        <option value="20">20%</option>
-                                                        <option value="25">25%</option>
-                                                        <option value="30">30%</option>
-                                                        <option value="40">40%</option>
-                                                        <option value="50">50%</option>
-                                                        <option value="60">60%</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="payment-term-breakdown" class="form-label mt-3">Pembayaran</label>
-                                        <table id="payment-term-breakdown" class="table table-centered table-bordered mb-0 rounded">
-                                            <tr>
-                                                <td width="20%">DP</td>
-                                                <td width="80%" id="dp-amount">Rp 0</td>
-                                                <input type="hidden" id="dp-input" name="dp">
-                                            </tr>
-                                            <tr id="term1">
-                                                <td width="20%">Termin 1</td>
-                                                <td width="80%" id="term1-amount">Rp 0</td>
-                                                <input type="hidden" id="term1-input" name="term1">
-                                            </tr>
-                                            <tr id="term2">
-                                                <td width="20%">Termin 2</td>
-                                                <td width="80%" id="term2-amount">Rp 0</td>
-                                                <input type="hidden" id="term2-input" name="term2">
-                                            </tr>
-                                            <tr id="term3" class="d-none">
-                                                <td width="20%">Termin 3</td>
-                                                <td width="80%" id="term3-amount">Rp 0</td>
-                                                <input type="hidden" id="term3-input" name="term3">
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div> -->
-                                <button type="submit" class="btn btn-success w-100">Simpan</button>
-                            <!-- </div> -->
+                            <button type="submit" class="btn btn-success w-100">Simpan</button>
                         </div>
                     </div>
                 </div>
@@ -279,82 +178,6 @@ Pemasukan
             </div>
             <div class="modal-footer">
                 <button type="button" id="select-existing-customer-button" class="btn btn-secondary add-customer-data disabled" data-bs-dismiss="modal">Tambah Data Customer</button>
-                <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Modal Select Item -->
-<div class="modal fade" id="modal-select-item" tabindex="-1" role="dialog" aria-labelledby="modal-select-item" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="h6 modal-title">Pilih dari daftar item</h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="select-item-form">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="item-nice-select" class="form-label">Nama</label>
-                        <select name="name" id="item-nice-select" class="select-item w-100" placeholder="Pilih item...">
-                            <option value="" disabled selected>--- Pilih item ---</option>
-                            @foreach($items as $item)
-                            <option value="{{ $item->id }}" data-image="{{ $item->image_real_path }}" data-brand="{{ $item->brand }}" data-model="{{ $item->model }}" data-width="{{ $item->width }}" data-depth="{{ $item->depth }}" data-height="{{ $item->height }}" data-price="{{ $item->price }}">{{ $item->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div id="item-detail" class="d-none">
-                        <div class="mb-3">
-                            <label for="formFile" class="form-label mt-3">Foto</label>
-                            <br>
-                            <img class="d-none" width="128" id="image-preview" src="" alt="">
-                            <div id="input-file-wrapper">
-                                <input class="form-control" type="file" id="input-file" name="image">
-                            </div>
-                            <input type="hidden" name="image_path">
-                        </div>
-                        <div class="mb-3">
-                            <label for="brand" aria-describedby="brandHelp">Brand</label>
-                            <input type="text" class="form-control" id="brand" name="brand">
-                            <small id="brandHelp" class="form-text text-muted">Kosongkan field ini jika tanpa brand / custom.</small>
-                        </div>
-                        <div class="mb-3">
-                            <label for="model">Model</label>
-                            <input type="text" class="form-control" id="model" name="model">
-                        </div>
-                        <div class="mb-3">
-                            <div class="row mb-3">
-                                <div class="col-lg-4 col-sm-12 mb-lg-0 mb-sm-3">
-                                    <label for="width">Width (mm)</label>
-                                    <input type="number" class="form-control" id="width" name="width">
-                                </div>
-                                <div class="col-lg-4 col-sm-12 mb-lg-0 mb-sm-3">
-                                    <label for="depth">Depth (mm)</label>
-                                    <input type="number" class="form-control" id="depth" name="depth">
-                                </div>
-                                <div class="col-lg-4 col-sm-12 mb-lg-0 mb-sm-3">
-                                    <label for="height">Height (mm)</label>
-                                    <input type="number" class="form-control" id="height" name="height">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="price">Price</label>
-                            <div class="input-group">
-                                <span class="input-group-text" id="basic-addon1">
-                                    Rp.
-                                </span>
-                                <input type="text" class="form-control" id="existing-price" name="price">
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="select-existing-item-button" class="btn btn-secondary add-to-breakdown disabled" data-bs-dismiss="modal">Tambah ke Breakdown</button>
                 <button type="button" class="btn btn-link text-gray ms-auto" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -398,11 +221,7 @@ Pemasukan
 @endsection
 
 @push('custom-scripts')
-<script type="text/javascript">
-    let itemNiceSelect = NiceSelect.bind(document.getElementById("item-nice-select"), {
-        searchable: true
-    })
-    
+<script type="text/javascript">    
     let customerNiceSelect = NiceSelect.bind(document.getElementById("customer-nice-select"), {
         searchable: true
     })
@@ -475,63 +294,6 @@ Pemasukan
         maximumFractionDigits: 0
     });
 
-
-    // Add new breakdown upon clicking
-    // addBreakdown.addEventListener('click', function() {
-    //     breakdownCounter = breakdownCounter + 1
-    //     const clonedBreakdown = breakdown.cloneNode(true)
-    //     clonedBreakdown.id = 'accordionBreakdown' + breakdownCounter
-
-    //     const clonedBreakdownIndex = clonedBreakdown.querySelector('.breakdown-index')
-    //     clonedBreakdownIndex.value = breakdownCounter
-    //     console.log("Breakdown Counter: " + clonedBreakdownIndex.value)
-
-    //     const clonedBreakdownTitle = clonedBreakdown.querySelector('.breakdown-title')
-    //     clonedBreakdownTitle.setAttribute('id', 'breakdown' + breakdownCounter + '-title')
-    //     clonedBreakdownTitle.innerHTML = 'Breakdown #' + breakdownCounter
-
-    //     const clonedBreakdownInput = clonedBreakdown.querySelector('.breakdown-input')
-    //     clonedBreakdownInput.value = ""
-    //     clonedBreakdownInput.setAttribute('data-breakdown-title', 'breakdown' + breakdownCounter + '-title')
-    //     clonedBreakdownInput.setAttribute('data-breakdown-title-default', 'Breakdown #' + breakdownCounter)
-    //     clonedBreakdownInput.setAttribute('name', `breakdown[${breakdownCounter}][name]`)
-        
-    //     // const clonedFileInput = clonedBreakdown.querySelector('.testfileinput')
-    //     // clonedFileInput.setAttribute('name', `breakdown[${breakdownCounter}][name]`)
-
-    //     clonedBreakdown.querySelector('.add-manual-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
-    //     clonedBreakdown.querySelector('.add-manual-button').setAttribute('data-breakdown-counter', 'breakdown' + breakdownCounter)
-    //     clonedBreakdown.querySelector('.select-item-button').setAttribute('data-breakdown', 'breakdown' + breakdownCounter)
-    //     clonedBreakdown.querySelector('.select-item-button').setAttribute('data-breakdown-counter', 'breakdown' + breakdownCounter)
-
-    //     const clonedBreakdownAccordionButton = clonedBreakdown.querySelector('.accordion-button')
-    //     clonedBreakdownAccordionButton.setAttribute('data-bs-target', '#breakdownCollapse' + breakdownCounter)
-    //     clonedBreakdownAccordionButton.setAttribute('aria-controls', '#breakdownCollapse' + breakdownCounter)
-
-    //     const clonedBreakdownAccordionCollapse = clonedBreakdown.querySelector('.accordion-collapse')
-    //     clonedBreakdownAccordionCollapse.setAttribute('id', 'breakdownCollapse' + breakdownCounter)
-    //     clonedBreakdownAccordionCollapse.setAttribute('data-bs-parent', '#accordionBreakdown' + breakdownCounter)
-
-    //     const clonedBreakdownTable = clonedBreakdown.querySelector('.breakdown-table')
-    //     clonedBreakdownTable.replaceChildren()
-    //     clonedBreakdownTable.setAttribute('id', 'breakdown' + breakdownCounter + '-table')
-
-    //     const deleteBreakdownButton = document.createElement("button")
-    //     deleteBreakdownButton.setAttribute("class", "btn btn-danger deleteBreakdownButton")
-    //     deleteBreakdownButton.setAttribute("data-remove", `#accordionBreakdown${breakdownCounter}`)
-    //     deleteBreakdownButton.innerHTML = "Hapus Breakdown"
-
-    //     clonedBreakdown.querySelector('.deleteBreakdownPlaceholder').appendChild(deleteBreakdownButton)
-    //     breakdowns.appendChild(clonedBreakdown)
-
-    //     clonedBreakdown.querySelector('.breakdown-input').addEventListener('keyup', e => {
-    //         const title = document.getElementById(e.target.getAttribute('data-breakdown-title'))
-    //         title.innerHTML = !clonedBreakdownInput.value || !clonedBreakdownInput.value.trim().length ?
-    //             e.target.getAttribute('data-breakdown-title-default') :
-    //             clonedBreakdownInput.value
-    //     })
-    // })
-
     // Change breakdown title dynamically
     breakdowns.addEventListener('click', function(e) {
         if (e.target.classList.contains('deleteBreakdownButton')) {
@@ -583,74 +345,12 @@ Pemasukan
             totalPrice += parseInt(e.dataset.price)
         })
 
-        // discountPercentage = document.querySelector('#discount-percentage').value * totalPrice / 100
-        // discountNominal = document.querySelector('#discount-nominal').value.replaceAll('.', '')
-
-        // discountTotal = discountPercentage + discountNominal
-
-        // setTotalPriceBeforeDiscount(totalPrice, discountTotal)
-
-        // totalPrice = totalPrice - discountPercentage - discountNominal
-
-        // if (totalPrice < 0) {
-        //     totalPrice = 0
-        // }
-
         setTotalPrice(totalPrice)
-        // let dpAmount = setDP(totalPrice, dp.value)
-        // setTerm(totalPrice, dpAmount, term.value)
     }
 
     let setTotalPrice = (totalPrice) => {
         totalPriceText.innerHTML = rupiahFormat.format(totalPrice)
         totalPriceInput.value = totalPrice
-    }
-
-    let setTotalPriceBeforeDiscount = (totalPriceBeforeDiscount, discountTotal) => {
-        if (discountTotal > 0) {
-            totalPriceBeforeDiscountText.innerHTML = rupiahFormat.format(totalPriceBeforeDiscount)
-            totalPriceBeforeDiscountText.classList.remove('d-none')
-        } else {
-            totalPriceBeforeDiscountText.classList.add('d-none')
-        }
-
-        totalPriceBeforeDiscountInput.value = totalPriceBeforeDiscount
-    }
-
-    let setDP = (totalPrice, dpPercentage) => {
-        let dp = dpPercentage * totalPrice / 100
-        dpAmount.innerHTML = rupiahFormat.format(dp)
-        dpInput.value = dp
-
-        return dp
-    }
-
-    let setTerm = (totalPrice, dpAmount, terms) => {
-        let termAmount = totalPrice - dpAmount
-        let amountPerTerm = 0
-
-        amountPerTerm = termAmount / terms
-
-        term1Amount.innerHTML = rupiahFormat.format(amountPerTerm)
-        term1Input.value = amountPerTerm
-        
-        term2Amount.innerHTML = rupiahFormat.format(amountPerTerm)
-        term2Input.value = amountPerTerm
-        
-        term3Amount.innerHTML = terms == 3 ? rupiahFormat.format(amountPerTerm) : 0
-        term3Input.value = terms == 3 ? amountPerTerm : 0
-    }
-
-    // Show item detail upon selection changing
-    itemSelect.onchange = function(e) {
-        if (!itemSelect.value || !itemSelect.value.trim().length) {
-            selectExistingItemButton.classList.add('disabled')
-            showItemDetail(false)
-        } else {
-            selectExistingItemButton.classList.remove('disabled')
-            showItemDetail(true)
-            setItemDetail(e.target.options[e.target.selectedIndex].dataset)
-        }
     }
 
     // Show customer detail upon selection changing
@@ -662,51 +362,10 @@ Pemasukan
         }
     }
 
-    let showItemDetail = (toggle) => {
-        toggle ? itemDetail.classList.remove('d-none') : itemDetail.classList.add('d-none')
-    }
-
-    let setItemDetail = (data) => {
-        setImagePreview(data.image)
-
-        if (Object.keys(data).length === 0 && data.constructor === Object) {
-            itemSelected = false
-            selectItemForm.reset()
-        } else {
-            itemSelected = true
-            const inputs = selectItemForm.elements
-            inputs.namedItem("image_path").value = data.image
-            inputs.namedItem("brand").value = data.brand
-            inputs.namedItem("model").value = data.model
-            inputs.namedItem("width").value = data.width
-            inputs.namedItem("depth").value = data.depth
-            inputs.namedItem("height").value = data.height
-            inputs.namedItem("price").value = data.price
-        }
-
-        VMasker(document.querySelector(`#existing-price`)).maskMoney({
-            precision: 0
-        })
-    }
-
     let setCustomerDetail = (data) => {
         customerDetail.querySelector("#customer-name").value = data.name
         customerDetail.querySelector("#customer-address").value = data.address
         customerDetail.querySelector("#customer-phone-number").value = data.phoneNumber
-    }
-
-    let setImagePreview = (image) => {
-        if (!image || !image.trim().length) {
-            inputFile.classList.remove('d-none')
-
-            imagePreview.setAttribute('src', "")
-            imagePreview.classList.add('d-none')
-        } else {
-            inputFile.classList.add('d-none')
-
-            imagePreview.setAttribute('src', image)
-            imagePreview.classList.remove('d-none')
-        }
     }
 
     let deleteElement = (id) => {
@@ -730,7 +389,7 @@ Pemasukan
                     </div>
                     <div class="col-8" id="item${itemCounter}-image-preview">
                         <h6 class="item-name mt-2">
-                            <input class="border-bottom-input" type="text" value="${data.name}" name="new_item[${itemCounter}][name]">
+                            <input class="border-bottom-input" type="text" value="${data.name}" name="new_item[${itemCounter}][item_name]">
                         </h6>
                         <span class="item-dimension mt-2">
                             Rp.  
@@ -767,32 +426,8 @@ Pemasukan
         calculateTotalPrice()
     }
 
-    selectExistingItemButton.addEventListener('click', function(e) {
-        const el = selectItemForm.elements
-        const data = {
-            id: el.namedItem("name").value,
-            name: itemSelect.options[el.namedItem("name").value].text,
-            image: el.namedItem("image_path").value,
-            brand: el.namedItem("brand").value,
-            model: el.namedItem("model").value,
-            width: el.namedItem("width").value,
-            depth: el.namedItem("depth").value,
-            height: el.namedItem("height").value,
-            dimension: el.namedItem("width").value + " x " + el.namedItem("depth").value + " x " + el.namedItem("height").value,
-            price: el.namedItem("price").value
-        }
-        addItem(data)
-    })
-    
     selectExistingCustomerButton.addEventListener('click', function(e) {
         setCustomerDetail(customerSelect.options[customerSelect.selectedIndex].dataset)
-    })
-
-    let modalSelectItem = document.getElementById('modal-select-item')
-    modalSelectItem.addEventListener('hidden.bs.modal', function(event) {
-        showItemDetail(false)
-        setItemDetail({})
-        itemNiceSelect.clear()
     })
 
     addNewItemButton.onclick = e => {
@@ -804,93 +439,5 @@ Pemasukan
         addItem(data)
         addNewForm.reset()
     }
-
-    let copyImageToBreakdown = () => {
-        const image = addNewForm.elements.namedItem("image").cloneNode(true)
-        image.classList.add("visually-hidden")
-        image.setAttribute('name', `new_item[${itemCounter}][image]`)
-        image.setAttribute('id', `new_item[${itemCounter}][image]`)
-        document.getElementById(`item${itemCounter}-image-preview`).appendChild(image)
-    }
-
-    // Discount
-    // discountNominalInput.addEventListener('change', e => {
-    //     calculateTotalPrice()
-    // })
-
-    // discountNominalInput.addEventListener('keyup', e => {
-    //     if (e.target.value == "" || e.target.value < 0) {
-    //         e.target.value = 0
-    //     }
-
-    //     calculateTotalPrice()
-    // })
-
-    // discountPercentageInput.addEventListener('change', e => {
-    //     calculateTotalPrice()
-    // })
-
-    // discountPercentageInput.addEventListener('keyup', e => {
-    //     if (e.target.value == "" || e.target.value < 0) {
-    //         e.target.value = 0
-    //     } else if (e.target.value > 100) {
-    //         e.target.value = 100
-    //     }
-
-    //     calculateTotalPrice()
-    // })
-
-    // let invoiceType = (type) => {
-    //     if (type.value == "Deal") {
-    //         paymentTerms.classList.remove('d-none')
-    //     } else {
-    //         paymentTerms.classList.add('d-none')
-    //     }
-    // }
-
-    // term.onchange = (e) => {
-    //     if(e.target.value == 3) {
-    //         term3.classList.remove('d-none')
-    //     } else {
-    //         term3.classList.add('d-none')
-    //     }
-
-    //     calculateTotalPrice()
-    // }
-    
-    // dp.onchange = (e) => {
-    //     calculateTotalPrice()
-    // }
-
-    // let triggerFile = (id) => {
-    //     let inputFile = document.getElementById(id)
-    //     let preview = event.target
-
-    //     if(confirm("Apakah Anda ingin mengubah gambar item ini?")) {
-    //         inputFile.click()
-
-    //         inputFile.onchange = e => {
-    //             const file = e.target.files[0]
-    //             if (file) {
-    //                 preview.src = URL.createObjectURL(file)
-    //             } else {
-    //                 preview.src = ""
-    //             }
-    //         }
-    //     }
-    // }
-
-    // addNewImageInput.onchange = e => {
-    //     const file = e.target.files[0]
-    //     if (file) {
-    //         addNewImagePreview.classList.remove('d-none')
-    //         addNewImagePreview.src = URL.createObjectURL(file)
-    //         addNewForm.elements.namedItem("image_path").value = URL.createObjectURL(file)
-    //     } else {
-    //         addNewImagePreview.classList.add('d-none')
-    //         addNewImagePreview.src = ""
-    //         addNewForm.elements.namedItem("image_path").value = ""
-    //     }
-    // }
 </script>
 @endpush

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EmployeeExpenditure;
+use App\Models\MaterialExpenditure;
 use App\Models\OperationalExpenditure;
 use App\Models\TechnicianExpenditure;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ class ExpenditureController extends Controller
         $technicianExpenditures = TechnicianExpenditure::all();
         $employeeExpenditures = EmployeeExpenditure::all();
         $operationalExpenditures = OperationalExpenditure::all();
+        $materialExpenditures = MaterialExpenditure::all();
 
         foreach($technicianExpenditures as $technicianExpenditure) {
             $expenditures->push($technicianExpenditure);
@@ -29,6 +31,10 @@ class ExpenditureController extends Controller
         
         foreach($operationalExpenditures as $operationalExpenditure) {
             $expenditures->push($operationalExpenditure);
+        }
+        
+        foreach($materialExpenditures as $materialExpenditure) {
+            $expenditures->push($materialExpenditure);
         }
 
         $sorted = $expenditures->sortByDesc('date');

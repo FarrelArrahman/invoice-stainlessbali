@@ -51,6 +51,12 @@ Route::resource('companies', CompanyController::class);
 Route::resource('technicians', TechnicianController::class);
 Route::resource('employees', EmployeeController::class);
 
+// Testing
+Route::get('test', function() {
+    $data = App\Models\Technician::where('status', \App\Enums\StatusEnum::Active)->get()->toArray();
+    return fake()->randomElement($data);
+})->name('test');
+
 // API
 Route::prefix('/api/v1')->group(function() {
     Route::get('items', [ItemController::class, 'getItems'])->name('api.getItems');

@@ -1,7 +1,7 @@
 @extends('layout.template')
 
 @section('title')
-Pengeluaran Operasional
+Pengeluaran Bahan
 @endsection
 
 @section('content')
@@ -12,17 +12,17 @@ Pengeluaran Operasional
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                         </path>
                     </svg></a></li>
-            <li class="breadcrumb-item"><a href="#">Pengeluaran Operasional</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Tambah Pengeluaran Operasional</li>
+            <li class="breadcrumb-item"><a href="#">Pengeluaran Bahan</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tambah Pengeluaran Bahan</li>
         </ol>
     </nav>
     <div class="d-flex justify-content-between w-100 flex-wrap">
         <div class="mb-3 mb-lg-0">
-            <h1 class="h4">Tambah Pengeluaran Operasional</h1>
+            <h1 class="h4">Tambah Pengeluaran Bahan</h1>
         </div>
     </div>
 </div>
-<form onsubmit="checkForm()" action="{{ route('operational_expenditures.store') }}" method="POST" enctype="multipart/form-data">
+<form onsubmit="checkForm()" action="{{ route('material_expenditures.store') }}" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="total_price" id="total-price-input">
     <input type="hidden" name="total_price_before_discount" id="total-price-before-discount-input">
     @csrf
@@ -92,7 +92,7 @@ Pengeluaran Operasional
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="breakdown">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#breakdownCollapse" aria-expanded="false" aria-controls="breakdownCollapse">
-                                            <span class="breakdown-title" id="breakdown1-title">Daftar Pengeluaran Operasional</span>
+                                            <span class="breakdown-title" id="breakdown1-title">Daftar Pengeluaran Bahan</span>
                                         </button>
                                     </h2>
                                     <div id="breakdownCollapse" class="accordion-collapse collapse show" aria-labelledby="breakdown" data-bs-parent="#accordionBreakdown">
