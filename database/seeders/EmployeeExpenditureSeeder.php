@@ -22,7 +22,7 @@ class EmployeeExpenditureSeeder extends Seeder
 
         foreach($employees as $employee) {
             $salaryPerDay = fake()->numberBetween(5, 15) * 10000;
-            for($i = 1; $i <= 9; $i++) {
+            for($i = 1; $i <= 10; $i++) {
                 $workingDays = fake()->numberBetween(20, 26);
 
                 $employeeExpenditureData[] = [

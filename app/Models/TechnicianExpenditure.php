@@ -64,6 +64,11 @@ class TechnicianExpenditure extends Model
         return "<div class=\"badge bg-success\">Teknisi</div>";
     }
 
+    public function getTypeAttribute(): string
+    {
+        return "Teknisi";
+    }
+
     public function edit_route()
     {
         return route('technician_expenditures.edit', $this->id);

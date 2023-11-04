@@ -60,6 +60,11 @@ class OperationalExpenditure extends Model
         return "<div class=\"badge bg-warning\">Operasional</div>";
     }
 
+    public function getTypeAttribute(): string
+    {
+        return "Operasional";
+    }
+
     public function edit_route()
     {
         return route('operational_expenditures.edit', $this->id);

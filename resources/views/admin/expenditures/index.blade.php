@@ -21,10 +21,29 @@ Pengeluaran
         <div class="mb-3 mb-lg-0">
             <h1 class="h4">Daftar Pengeluaran</h1>
         </div>
-        <div>
-            <a href="#" data-bs-toggle="modal" data-bs-target="#modal-add-expenditure" class="btn btn-info d-inline-flex align-items-center">
-                <i class="fa fa-plus me-2"></i> Tambah Pengeluaran
-            </a>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <select data-column="3" class="form-select filter-select">
+                <option value="">All</option>
+                <option value="Teknisi">Teknisi</option>
+                <option value="Karyawan">Karyawan</option>
+                <option value="Operasional">Operasional</option>
+                <option value="Bahan">Bahan</option>
+            </select>
+        </div>
+
+        <div class="col-md-8">
+            <div class="input-group mb-3">
+                <input type="search" id="min" class="form-control">
+                <span class="input-group-text">s/d</span>
+                <input type="search" id="max" class="form-control">
+                <div class="input-group-append ms-2">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#modal-add-expenditure" class="btn btn-info d-inline-flex align-items-center">
+                        <i class="fa fa-plus me-2"></i> Tambah Pengeluaran
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -32,7 +51,7 @@ Pengeluaran
 <div class="card border-0 shadow mb-4">
     <div class="card-body">
         <div class="table-responsive">
-            <table id="example" class="table table-centered mb-0 rounded">
+            <table id="datatable" class="table table-centered mb-0 rounded">
                 <thead class="thead-light">
                     <tr>
                         <th class="border-0 rounded-start">Date</th>
@@ -43,32 +62,6 @@ Pengeluaran
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($expenditures as $expenditure)
-                    <tr>
-                        <td>{{ $expenditure->date->format('d-m-Y') }}</td>
-                        @if($expenditure instanceof \App\Models\TechnicianExpenditure)
-                        <td>{{ $expenditure->technician->name }}</td>
-                        @elseif($expenditure instanceof \App\Models\EmployeeExpenditure)
-                        <td>{{ $expenditure->employee->name }}</td>
-                        @else
-                        <td>{{ $expenditure->shop_name }}</td>
-                        @endif
-                        <td>{{ $expenditure->formatted_total_price }}</td>
-                        <td>{!! $expenditure->badge() !!}</td>
-                        <td>
-                            <form action="{{ $expenditure->delete_route() }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <a href="{{ $expenditure->edit_route() }}" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-pencil"></i>
-                                </a>
-                                <button onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')" type="submit" class="btn btn-danger btn-sm">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -99,6 +92,60 @@ Pengeluaran
 
 @push('custom-scripts')
 <script>
-    new DataTable('#example')
+    // Create date inputs
+    minDate = new DateTime('#min', {
+        format: 'YYYY-MM-DD'
+    });
+    maxDate = new DateTime('#max', {
+        format: 'YYYY-MM-DD'
+    });
+
+    var dataTable = $('#datatable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            type: "GET",
+            url: "{{ route('datatables.expenditures') }}",
+            data: function(d) {
+                d.start_date = $('#min').val(),
+                d.end_date = $('#max').val()
+            }
+        },
+        columnDefs: [
+            {targets: 0, width: "15%"},
+        ],
+        columns: [
+            {data: 'date', name: 'date'},
+            {data: 'name', name: 'name'},
+            {data: 'total_price', name: 'total_price'},
+            {
+                data: 'type', 
+                name: 'type',
+                render: function(data, type, row, meta) {
+                    return row.expenditure_type
+                }
+            },
+            {
+                data: 'action', 
+                name: 'action', 
+                orderable: false, 
+                searchable: false
+            },
+        ]
+    })
+
+    $('.filter-select').change(function() {
+        dataTable.column($(this).data('column'))
+        .search($(this).val())
+        .draw()
+    })
+
+    
+    // Refilter the table
+    document.querySelectorAll('#min, #max').forEach((el) => {
+        el.addEventListener('change', () => { 
+            dataTable.draw()
+        })
+    })
 </script>
 @endpush

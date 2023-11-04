@@ -57,6 +57,11 @@ Route::get('test', function() {
     return fake()->randomElement($data);
 })->name('test');
 
+// DataTables
+Route::prefix('/datatables')->group(function() {
+    Route::get('expenditures', [ExpenditureController::class, 'getExpenditures'])->name('datatables.expenditures');
+});
+
 // API
 Route::prefix('/api/v1')->group(function() {
     Route::get('items', [ItemController::class, 'getItems'])->name('api.getItems');

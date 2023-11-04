@@ -61,6 +61,11 @@ class MaterialExpenditure extends Model
         return "<div class=\"badge bg-danger\">Bahan</div>";
     }
 
+    public function getTypeAttribute(): string
+    {
+        return "Bahan";
+    }
+
     public function edit_route()
     {
         return route('material_expenditures.edit', $this->id);

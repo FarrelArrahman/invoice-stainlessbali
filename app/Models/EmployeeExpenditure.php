@@ -71,6 +71,11 @@ class EmployeeExpenditure extends Model
         return "<div class=\"badge bg-info\">Karyawan</div>";
     }
 
+    public function getTypeAttribute(): string
+    {
+        return "Karyawan";
+    }
+
     public function edit_route()
     {
         return route('employee_expenditures.edit', $this->id);

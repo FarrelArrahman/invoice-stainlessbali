@@ -1,5 +1,6 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Primary Meta Tags -->
     <title>Stainless Bali &mdash; @yield('title')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -43,6 +44,7 @@
 
     <!-- Datatables -->
     <link href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.datatables.net/datetime/1.5.1/css/dataTables.dateTime.min.css" rel="stylesheet" type="text/css">
 
     <!-- FontAwesome -->
     <script src="https://use.fontawesome.com/b960bebf32.js"></script>
@@ -52,7 +54,7 @@
 
     <!-- Froala -->
     <link href="https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
-
+    
     <!-- NOTICE: You can use the _analytics.html partial to include production code specific code & trackers -->
 
     <style>
