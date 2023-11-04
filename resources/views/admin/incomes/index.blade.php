@@ -21,10 +21,27 @@ Pemasukan
         <div class="mb-3 mb-lg-0">
             <h1 class="h4">Daftar Pemasukan</h1>
         </div>
-        <div>
-            <a href="{{ route('incomes.create') }}" class="btn btn-info d-inline-flex align-items-center">
-                <i class="fa fa-plus me-2"></i> Tambah Pemasukan
-            </a>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <select data-column="4" class="form-select filter-select">
+                <option value="">All</option>
+                <option value="Paid">Paid</option>
+                <option value="Unpaid">Unpaid</option>
+            </select>
+        </div>
+
+        <div class="col-md-8">
+            <div class="input-group mb-3">
+                <input type="search" id="min" class="form-control">
+                <span class="input-group-text">s/d</span>
+                <input type="search" id="max" class="form-control">
+                <div class="input-group-append ms-2">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#modal-add-income" class="btn btn-info d-inline-flex align-items-center">
+                        <i class="fa fa-plus me-2"></i> Tambah Pemasukan
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -32,7 +49,7 @@ Pemasukan
 <div class="card border-0 shadow mb-4">
     <div class="card-body">
         <div class="table-responsive">
-            <table id="example" class="table table-centered mb-0 rounded">
+            <table id="datatable" class="table table-centered mb-0 rounded">
                 <thead class="thead-light">
                     <tr>
                         <th class="border-0 rounded-start">Date</th>
@@ -44,30 +61,6 @@ Pemasukan
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($incomes as $income)
-                    <tr>
-                        <td>{{ $income->date->format('d-m-Y') }}</td>
-                        <td>{{ $income->customer_name }}</td>
-                        <td>{{ $income->company_name }}</td>
-                        <td>{{ $income->formatted_total_price }}</td>
-                        <td>{!! $income->status->badge() !!}</td>
-                        <td>
-                            <form action="{{ route('incomes.destroy', $income->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <!-- <a href="{{ route('incomes.show', $income->id) }}" class="btn btn-info btn-sm">
-                                    <i class="fa fa-eye"></i>
-                                </a> -->
-                                <a href="{{ route('incomes.edit', $income->id) }}" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-pencil"></i>
-                                </a>
-                                <button onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')" type="submit" class="btn btn-danger btn-sm">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -77,6 +70,58 @@ Pemasukan
 
 @push('custom-scripts')
 <script>
-    new DataTable('#example')
+    // Create date inputs
+    minDate = new DateTime('#min', {
+        format: 'YYYY-MM-DD'
+    });
+    maxDate = new DateTime('#max', {
+        format: 'YYYY-MM-DD'
+    });
+
+    var dataTable = $('#datatable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            type: "GET",
+            url: "{{ route('datatables.incomes') }}",
+            data: function(d) {
+                d.start_date = $('#min').val(),
+                d.end_date = $('#max').val()
+            }
+        },
+        columnDefs: [
+            {targets: 0, width: "15%"},
+        ],
+        columns: [
+            {data: 'date', name: 'date'},
+            {data: 'customer_name', name: 'customer_name'},
+            {data: 'company_name', name: 'company_name'},
+            {data: 'total_price', name: 'total_price'},
+            {
+                data: 'badge', 
+                name: 'badge',
+            },
+            {
+                data: 'action', 
+                name: 'action', 
+                orderable: false, 
+                searchable: false
+            },
+        ]
+    })
+
+    $('.filter-select').change(function() {
+        dataTable.column($(this).data('column'))
+        .search($(this).val())
+        .draw()
+    })
+
+    
+    // Refilter the table
+    document.querySelectorAll('#min, #max').forEach((el) => {
+        el.addEventListener('change', () => { 
+            dataTable.draw()
+        })
+    })
 </script>
 @endpush

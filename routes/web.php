@@ -60,6 +60,7 @@ Route::get('test', function() {
 // DataTables
 Route::prefix('/datatables')->group(function() {
     Route::get('expenditures', [ExpenditureController::class, 'getExpenditures'])->name('datatables.expenditures');
+    Route::get('incomes', [IncomeController::class, 'getIncomes'])->name('datatables.incomes');
 });
 
 // API
@@ -73,4 +74,9 @@ Route::prefix('/api/v1')->group(function() {
     
     Route::get('customers', [CustomerController::class, 'getCustomers'])->name('api.getCustomers');
     Route::get('customer/{customer}', [CustomerController::class, 'getCustomer'])->name('api.getCustomer');
+});
+
+Route::prefix('/reports')->group(function() {
+    Route::get('expenditure', [ExpenditureController::class, 'getExpenditureReport'])->name('report.expenditure');
+    Route::get('income', [IncomeController::class, 'getIncomeReport'])->name('report.income');
 });

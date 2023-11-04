@@ -52,5 +52,9 @@
     <script src="{{ asset('js/vanilla-masker.min.js') }}"></script>
 
     <!-- Volt JS -->
-    <script src="{{ asset('assets/js/volt.js') }}"></script>    
+    <script src="{{ asset('assets/js/volt.js') }}"></script>   
+    
+    <!-- Chart JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     @stack('custom-scripts')
