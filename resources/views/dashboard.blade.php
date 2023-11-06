@@ -8,12 +8,12 @@ Dashboard
 <div class="row pt-4">
     <div class="col-md-12">
         <div class="input-group mb-3">
-            <select data-time="year" class="form-select filter-select">
+            <select data-time="year" class="form-select filter-select" id="year">
                 <option value="0">Semua Tahun</option>
                 <option value="2023">2023</option>
                 <option value="2022">2022</option>
             </select>
-            <select data-time="month" class="form-select filter-select ms-2">
+            <select data-time="month" class="form-select filter-select ms-2" id="month">
                 <option value="0">Semua Bulan</option>
                 <option value="1">Januari</option>
                 <option value="2">Februari</option>
@@ -222,11 +222,24 @@ Dashboard
     )
 
     async function getIncomeReport() {
-        const url = "{{ route('api.getCompanyCustomers', 'x') }}".replace('x', companyId)
-        const response = await fetch(url)
-        let data = await response.json()
-        setCustomers(data.data)
+        const params = new URLSearchParams()
+        params.append('year', $('#year'))
+        params.append('month', $('#month'))
+
+        const url = "{{ route('statistic.income') }}"
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: params
+        })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error(error))
     }
+
+    getIncomeReport()
 
     // Reload data
     $('.filter-select').change(function() {

@@ -76,7 +76,7 @@ Route::prefix('/api/v1')->group(function() {
     Route::get('customer/{customer}', [CustomerController::class, 'getCustomer'])->name('api.getCustomer');
 });
 
-Route::prefix('/reports')->group(function() {
-    Route::get('expenditure', [ExpenditureController::class, 'getExpenditureReport'])->name('report.expenditure');
-    Route::get('income', [IncomeController::class, 'getIncomeReport'])->name('report.income');
+Route::prefix('/statistics')->group(function() {
+    Route::get('expenditure', [ExpenditureController::class, 'getExpenditureReport'])->name('statistic.expenditure');
+    Route::get('income', [IncomeController::class, 'getIncomeReport'])->name('statistic.income');
 });
