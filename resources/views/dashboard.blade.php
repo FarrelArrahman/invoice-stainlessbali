@@ -155,8 +155,8 @@ Dashboard
                     <h2 class="h3 fw-extrabold">452</h2>
                 </div>
             </div>
-            <div class="card-body p-2" style="position: relative; height:40vh; width:80vw">
-                <canvas id="incomeChart"></canvas>
+            <div class="card-body p-2">
+                <canvas id="incomeXExpenditureCanvas"></canvas>
             </div>
         </div>
     </div>
@@ -169,8 +169,8 @@ Dashboard
                     <h2 class="h3 fw-extrabold">452</h2>
                 </div>
             </div>
-            <div class="card-body p-2" style="position: relative; height:40vh; width:80vw">
-                <canvas id="expenditureChart"></canvas>
+            <div class="card-body p-2">
+                <canvas id="expenditureCanvas"></canvas>
             </div>
         </div>
     </div>
@@ -179,19 +179,19 @@ Dashboard
 
 @push('custom-scripts')
 <script>
-    const incomeChart = document.getElementById('incomeChart');
-    const expenditureChart = document.getElementById('expenditureChart');
+    const incomeXExpenditureCanvas = document.getElementById('incomeXExpenditureCanvas');
+    const expenditureCanvas = document.getElementById('expenditureCanvas');
 
     let generateChart = (canvas, type, data, options) => new Chart(canvas, {type, data, options})
 
-    generateChart(incomeChart, 'line', 
+    let incomeXExpenditureChart = generateChart(incomeXExpenditureCanvas, 'line', 
         {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
             datasets: [{
-                label: 'Jumlah Data Pemasukan',
-                data: [12, 19, 3, 5, 2, 3],
+                label: 'Pemasukan',
                 borderWidth: 2,
-                borderColor: 'rgb(75, 192, 192)',
+            }, {
+                label: 'Pengeluaran',
+                borderWidth: 2,
             }]
         }, 
         {
@@ -203,14 +203,18 @@ Dashboard
         }
     )
 
-    generateChart(expenditureChart, 'line', 
+    let expenditureChart = generateChart(expenditureCanvas, 'line', 
         {
             labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
             datasets: [{
                 label: '# of Votes',
                 data: [12, 19, 3, 5, 2, 3],
                 borderWidth: 2
-            }]
+            }, {
+                label: '# of Cool',
+                data: [120, 190, 30, 50, 20, 30],
+                borderWidth: 2
+            }],
         }, 
         {
             scales: {
@@ -223,27 +227,34 @@ Dashboard
 
     async function getIncomeReport() {
         const params = new URLSearchParams()
-        params.append('year', $('#year'))
-        params.append('month', $('#month'))
+        params.append('year', $('#year').val() ?? "")
+        params.append('month', $('#month').val() ?? "")
 
-        const url = "{{ route('statistic.income') }}"
+        const url = "{{ route('statistic.income') }}?" + params.toString()
         const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: params
         })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.error(error))
+        .then(response => response.json())
+        .then(data => {
+            setIncomeReport(data)
+        })
+        .catch(error => console.error(error))
+    }
+
+    let setIncomeReport = (data) => {
+        incomeXExpenditureChart.config.data.labels = data.labels
+        incomeXExpenditureChart.config.data.datasets[0].data = data.data
+        incomeXExpenditureChart.update()
     }
 
     getIncomeReport()
 
     // Reload data
     $('.filter-select').change(function() {
-        
+        getIncomeReport()
     })
 </script>
 @endpush

@@ -60,7 +60,7 @@ class IncomeController extends Controller
         $data = [];
 
         if( ! empty($request->year) && ! empty($request->month) ) {
-            $income = Income::selectRaw('date(date), count(*) data')
+            $income = Income::selectRaw('date(date), sum(total_price) data')
                 ->groupBy('date')
                 ->orderBy('date', 'asc')
                 ->where('date', Carbon::createFromDate($request->year, $request->month, 2)->format('Y-m-d'))
@@ -68,7 +68,7 @@ class IncomeController extends Controller
             
             for($i = 0; $i < Carbon::now()->month($request->month)->daysInMonth; $i++) {
                 $labels[] = Carbon::now()->month($request->month)->day($i + 1)->format('d-m-Y');
-                $data[] = Income::selectRaw('date(date), count(*) data')
+                $data[] = Income::selectRaw('date(date), sum(total_price) data')
                     ->groupBy('date')
                     ->orderBy('date', 'asc')
                     ->where('date', Carbon::createFromDate($request->year, $request->month, $i + 1)->format('Y-m-d'))
@@ -76,7 +76,7 @@ class IncomeController extends Controller
             }
 
         } else if( ! empty($request->year) && empty($request->month) ) {
-            $income = Income::selectRaw('year(date) year, month(date) month, monthname(date) name, count(*) data')
+            $income = Income::selectRaw('year(date) year, month(date) month, monthname(date) name, sum(total_price) data')
                 ->groupBy('year')
                 ->groupBy('month')
                 ->groupBy('name')
@@ -84,10 +84,16 @@ class IncomeController extends Controller
                 ->orderBy('month', 'asc')
                 ->whereYear('date', $request->year);
 
-                $labels = $income->pluck('name');
-                $data = $income->pluck('data');
+                for($i = 1; $i <= 12; $i++) {
+                    $labels[] = Carbon::now()->month($i)->isoFormat('MMMM');
+                    $data[] = Income::selectRaw('month(date) month, sum(total_price) data')
+                        ->groupBy('month')
+                        ->orderBy('month', 'asc')
+                        ->whereRaw("month(date) = {$i} and year(date) = {$request->year}")
+                        ->first()->data ?? 0;
+                }
         } else {
-            $income = Income::selectRaw('year(date) name, count(*) data')
+            $income = Income::selectRaw('year(date) name, sum(total_price) data')
                 ->groupBy('name')
                 ->orderBy('name', 'asc');
 
