@@ -88,69 +88,99 @@ class ExpenditureController extends Controller
         $labels = [];
         $data = [];
 
-        if( ! empty($request->year) && ! empty($request->month) ) {
-            $expenditure = DB::raw("SELECT YEAR, SUM(total_price) FROM (
-                SELECT YEAR(DATE) year, SUM(service_fee + total_price) AS total_price FROM technician_expenditures
-                GROUP BY YEAR(DATE)
-                UNION
-                SELECT YEAR(DATE) year, SUM(working_day * salary_per_day) AS total_price FROM employee_expenditures
-                GROUP BY YEAR(DATE)
-                UNION
-                SELECT YEAR(DATE) YEAR, SUM(total_price) FROM operational_expenditures
-                GROUP BY YEAR(DATE)
-                UNION
-                SELECT YEAR(DATE) YEAR, SUM(total_price) FROM material_expenditures
-                GROUP BY YEAR(DATE)
-            ) AS T
-            WHERE year = 2022
-            GROUP BY year");
-            
+        if( ! empty($request->year) && ! empty($request->month) ) {            
+            $technician_expenditures = DB::table('technician_expenditures')
+                ->selectRaw('DATE(DATE) AS date, SUM(service_fee + total_price) AS total_price')
+                ->groupByRaw('DATE(DATE)');
+
+            $employee_expenditures = DB::table('employee_expenditures')
+                ->selectRaw('DATE(DATE) AS date, SUM(working_day * salary_per_day) AS total_price')
+                ->groupByRaw('DATE(DATE)');
+
+            $operational_expenditures = DB::table('operational_expenditures')
+                ->selectRaw('DATE(DATE) AS date, SUM(total_price)')
+                ->groupByRaw('DATE(DATE)');
+
+            $material_expenditures = DB::table('material_expenditures')
+                ->selectRaw('DATE(DATE) AS date, SUM(total_price)')
+                ->groupByRaw('DATE(DATE)');
+
             for($i = 0; $i < Carbon::now()->month($request->month)->daysInMonth; $i++) {
                 $labels[] = Carbon::now()->month($request->month)->day($i + 1)->format('d-m-Y');
-                $data[] = Expenditure::selectRaw('date(date), sum(total_price) data')
-                    ->groupBy('date')
-                    ->orderBy('date', 'asc')
+                $data[] = $expenditure = DB::query()->fromSub(
+                    $technician_expenditures
+                        ->union($employee_expenditures)
+                        ->union($operational_expenditures)
+                        ->union($material_expenditures)
+                , 't')
+                    ->selectRaw('DATE(date) as date, SUM(total_price) as total_price')
                     ->where('date', Carbon::createFromDate($request->year, $request->month, $i + 1)->format('Y-m-d'))
-                    ->first()->data ?? 0;
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->first()->total_price ?? 0;
             }
 
         } else if( ! empty($request->year) && empty($request->month) ) {
-            $expenditure = Expenditure::selectRaw('year(date) year, month(date) month, monthname(date) name, sum(total_price) data')
-                ->groupBy('year')
-                ->groupBy('month')
-                ->groupBy('name')
-                ->orderBy('year', 'asc')
-                ->orderBy('month', 'asc')
-                ->whereYear('date', $request->year);
+            $technician_expenditures = DB::table('technician_expenditures')
+                ->selectRaw('YEAR(DATE) year, MONTH(DATE) month, SUM(service_fee + total_price) AS total_price')
+                ->groupByRaw('MONTH(DATE), YEAR(DATE)');
+
+            $employee_expenditures = DB::table('employee_expenditures')
+                ->selectRaw('YEAR(DATE) year, MONTH(DATE) month, SUM(working_day * salary_per_day) AS total_price')
+                ->groupByRaw('MONTH(DATE), YEAR(DATE)');
+
+            $operational_expenditures = DB::table('operational_expenditures')
+                ->selectRaw('YEAR(DATE) year, MONTH(DATE) month, SUM(total_price)')
+                ->groupByRaw('MONTH(DATE), YEAR(DATE)');
+
+            $material_expenditures = DB::table('material_expenditures')
+                ->selectRaw('YEAR(DATE) year, MONTH(DATE) month, SUM(total_price)')
+                ->groupByRaw('MONTH(DATE), YEAR(DATE)');
 
                 for($i = 1; $i <= 12; $i++) {
                     $labels[] = Carbon::now()->month($i)->isoFormat('MMMM');
-                    $data[] = Expenditure::selectRaw('month(date) month, sum(total_price) data')
-                        ->groupBy('month')
-                        ->orderBy('month', 'asc')
-                        ->whereRaw("month(date) = {$i} and year(date) = {$request->year}")
-                        ->first()->data ?? 0;
+                    $data[] = DB::query()->fromSub(
+                        $technician_expenditures
+                            ->union($employee_expenditures)
+                            ->union($operational_expenditures)
+                            ->union($material_expenditures)
+                    , 't')
+                        ->selectRaw('month, year, SUM(total_price) as total_price')
+                        ->where('year', $request->year)
+                        ->where('month', $i)
+                        ->groupBy('month', 'year')
+                        ->first()->total_price ?? 0;
                 }
         } else {
-            $expenditure = DB::table()->raw("SELECT YEAR, SUM(total_price) FROM (
-                SELECT YEAR(DATE) year, SUM(service_fee + total_price) AS total_price FROM technician_expenditures
-                GROUP BY YEAR(DATE)
-                UNION
-                SELECT YEAR(DATE) year, SUM(working_day * salary_per_day) AS total_price FROM employee_expenditures
-                GROUP BY YEAR(DATE)
-                UNION
-                SELECT YEAR(DATE) YEAR, SUM(total_price) FROM operational_expenditures
-                GROUP BY YEAR(DATE)
-                UNION
-                SELECT YEAR(DATE) YEAR, SUM(total_price) FROM material_expenditures
-                GROUP BY YEAR(DATE)
-            ) AS T
-            WHERE year = 2022
-            GROUP BY year");
-            dd($expenditure);
+            $technician_expenditures = DB::table('technician_expenditures')
+                ->selectRaw('YEAR(DATE) year, SUM(service_fee + total_price) AS total_price')
+                ->groupByRaw('YEAR(DATE)');
 
-            $labels = $expenditure->pluck('name');
-            $data = $expenditure->pluck('data');
+            $employee_expenditures = DB::table('employee_expenditures')
+                ->selectRaw('YEAR(DATE) year, SUM(working_day * salary_per_day) AS total_price')
+                ->groupByRaw('YEAR(DATE)');
+
+            $operational_expenditures = DB::table('operational_expenditures')
+                ->selectRaw('YEAR(DATE) year, SUM(total_price)')
+                ->groupByRaw('YEAR(DATE)');
+
+            $material_expenditures = DB::table('material_expenditures')
+                ->selectRaw('YEAR(DATE) year, SUM(total_price)')
+                ->groupByRaw('YEAR(DATE)');
+
+            $expenditure = DB::query()->fromSub(
+                $technician_expenditures
+                    ->union($employee_expenditures)
+                    ->union($operational_expenditures)
+                    ->union($material_expenditures)
+            , 't')
+                ->selectRaw('year, SUM(total_price) as total_price')
+                ->groupBy('year')
+                ->orderBy('year')
+                ->get();
+
+            $labels = $expenditure->pluck('year');
+            $data = $expenditure->pluck('total_price');
         }
 
         return [

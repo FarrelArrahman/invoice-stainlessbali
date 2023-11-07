@@ -151,8 +151,8 @@ Dashboard
         <div class="card border-0 shadow">
             <div class="card-header d-flex flex-row align-items-center flex-0 border-bottom">
                 <div class="d-block">
-                    <div class="h6 fw-normal text-gray mb-2">Total pemasukan</div>
-                    <h2 class="h3 fw-extrabold">452</h2>
+                    <div class="h6 fw-normal text-gray mb-2">Pemasukan x Pengeluaran</div>
+                    <h2 class="h3 fw-extrabold" id="income-x-expenditure-title">Semua Tahun</h2>
                 </div>
             </div>
             <div class="card-body p-2">
@@ -181,6 +181,10 @@ Dashboard
 <script>
     const incomeXExpenditureCanvas = document.getElementById('incomeXExpenditureCanvas');
     const expenditureCanvas = document.getElementById('expenditureCanvas');
+    const month = $('#month')
+    const year = $('#year')
+
+    month.css('visibility', 'hidden')
 
     let generateChart = (canvas, type, data, options) => new Chart(canvas, {type, data, options})
 
@@ -244,17 +248,51 @@ Dashboard
         .catch(error => console.error(error))
     }
 
+    async function getExpenditureReport() {
+        const params = new URLSearchParams()
+        params.append('year', $('#year').val() ?? "")
+        params.append('month', $('#month').val() ?? "")
+
+        const url = "{{ route('statistic.expenditure') }}?" + params.toString()
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            setExpenditureReport(data)
+        })
+        .catch(error => console.error(error))
+    }
+
     let setIncomeReport = (data) => {
         incomeXExpenditureChart.config.data.labels = data.labels
         incomeXExpenditureChart.config.data.datasets[0].data = data.data
         incomeXExpenditureChart.update()
     }
+    
+    let setExpenditureReport = (data) => {
+        incomeXExpenditureChart.config.data.labels = data.labels
+        incomeXExpenditureChart.config.data.datasets[1].data = data.data
+        incomeXExpenditureChart.update()
+    }
 
     getIncomeReport()
+    getExpenditureReport()
 
     // Reload data
     $('.filter-select').change(function() {
         getIncomeReport()
+        getExpenditureReport()
+
+        let selectedMonth = $('#month option:selected')
+        let selectedYear = $('#year option:selected')
+
+        selectedYear.val() == 0 ? month.css('visibility', 'hidden') : month.css('visibility', 'visible')
+
+        // $('#income-x-expenditure-title').html()
     })
 </script>
 @endpush
