@@ -290,9 +290,17 @@ Dashboard
         let selectedMonth = $('#month option:selected')
         let selectedYear = $('#year option:selected')
 
-        selectedYear.val() == 0 ? month.css('visibility', 'hidden') : month.css('visibility', 'visible')
-
-        // $('#income-x-expenditure-title').html()
+        if(selectedYear.val() == 0) {
+            $('#income-x-expenditure-title').html("Semua Tahun")
+            month.css('visibility', 'hidden')
+        } else {
+            if(selectedMonth.val() == 0) {
+                $('#income-x-expenditure-title').html(`${selectedYear.text()}`)
+            } else {
+                $('#income-x-expenditure-title').html(`${selectedMonth.text()} ${selectedYear.text()}`)
+            }
+            month.css('visibility', 'visible')
+        }
     })
 </script>
 @endpush

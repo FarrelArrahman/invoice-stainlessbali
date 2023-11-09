@@ -36,7 +36,7 @@ class OperationalExpenditureSeeder extends Seeder
             $totalPrice = 0;
 
             for($j = 0; $j <= fake()->numberBetween(1, 10); $j++) {
-                $price = fake()->numberBetween(1, 10) * 50000;
+                $price = fake()->numberBetween(1, 10) * 5000;
                 $qty = fake()->numberBetween(1, 100);
                 
                 $operationalExpenditureDetailData[] = [
