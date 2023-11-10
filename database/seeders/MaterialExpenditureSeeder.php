@@ -19,7 +19,7 @@ class MaterialExpenditureSeeder extends Seeder
     {
         $shops = Company::where('status', StatusEnum::Active)->get()->toArray();
 
-        for($i = 0; $i <= fake()->numberBetween(100, 1000); $i++) {
+        for($i = 0; $i <= fake()->numberBetween(1000, 10000); $i++) {
             $shop = fake()->randomElement($shops);
             $materialExpenditureData = [
                 'shop_name' => $shop['name'],
@@ -27,7 +27,7 @@ class MaterialExpenditureSeeder extends Seeder
                 'shop_address' => $shop['address'],
                 'status' => TransactionEnum::Paid,
                 'total_price' => 0,
-                'date' => Carbon::today()->subDays(rand(0, 365)),
+                'date' => Carbon::today()->subDays(rand(0, 1460)),
             ];
 
             $materialExpenditure = MaterialExpenditure::create($materialExpenditureData);

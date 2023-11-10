@@ -10,10 +10,11 @@ Dashboard
         <div class="input-group mb-3">
             <select data-time="year" class="form-select filter-select" id="year">
                 <option value="0">Semua Tahun</option>
-                <option value="2023">2023</option>
-                <option value="2022">2022</option>
+                @foreach($years as $year)
+                <option value="{{ $year }}">{{ $year }}</option>
+                @endforeach
             </select>
-            <select data-time="month" class="form-select filter-select ms-2" id="month">
+            <select data-time="month" class="form-select filter-select ms-2" style="visibility: hidden;" id="month">
                 <option value="0">Semua Bulan</option>
                 <option value="1">Januari</option>
                 <option value="2">Februari</option>
@@ -28,16 +29,16 @@ Dashboard
                 <option value="11">November</option>
                 <option value="12">Desember</option>
             </select>
-            <div class="input-group-append ms-2">
+            <!-- <div class="input-group-append ms-2">
                 <a href="#" data-bs-toggle="modal" data-bs-target="#modal-add-income" class="btn btn-info d-inline-flex align-items-center">
                     <i class="fa fa-refresh me-2"></i> Reload Data
                 </a>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
 
-<div class="row pt-2">
+<!-- <div class="row pt-2">
     <div class="col-12 col-sm-6 col-xl-4 mb-4">
         <div class="card border-0 shadow">
             <div class="card-body">
@@ -145,9 +146,9 @@ Dashboard
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <div class="row">
-    <div class="col-12 col-xl-6 mb-4">
+    <div class="col-12 col-xl-8 mb-4">
         <div class="card border-0 shadow">
             <div class="card-header d-flex flex-row align-items-center flex-0 border-bottom">
                 <div class="d-block">
@@ -161,16 +162,16 @@ Dashboard
         </div>
     </div>
 
-    <div class="col-12 col-xl-6 mb-4">
+    <div class="col-12 col-xl-4 mb-4">
         <div class="card border-0 shadow">
             <div class="card-header d-flex flex-row align-items-center flex-0 border-bottom">
                 <div class="d-block">
                     <div class="h6 fw-normal text-gray mb-2">Total pengeluaran</div>
-                    <h2 class="h3 fw-extrabold">452</h2>
+                    <h2 class="h3 fw-extrabold" id="expenditure-comparison-title">Semua Tahun</h2>
                 </div>
             </div>
             <div class="card-body p-2">
-                <canvas id="expenditureCanvas"></canvas>
+                <canvas id="expenditureComparisonReport"></canvas>
             </div>
         </div>
     </div>
@@ -180,7 +181,7 @@ Dashboard
 @push('custom-scripts')
 <script>
     const incomeXExpenditureCanvas = document.getElementById('incomeXExpenditureCanvas');
-    const expenditureCanvas = document.getElementById('expenditureCanvas');
+    const expenditureComparisonCanvas = document.getElementById('expenditureComparisonReport');
     const month = $('#month')
     const year = $('#year')
 
@@ -207,26 +208,15 @@ Dashboard
         }
     )
 
-    let expenditureChart = generateChart(expenditureCanvas, 'line', 
+    let expenditureComparisonChart = generateChart(expenditureComparisonCanvas, 'pie', 
         {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            labels: [],
             datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                borderWidth: 2
-            }, {
-                label: '# of Cool',
-                data: [120, 190, 30, 50, 20, 30],
+                label: 'Pengeluaran',
+                data: [0,0,0,0],
                 borderWidth: 2
             }],
-        }, 
-        {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
+        },
     )
 
     async function getIncomeReport() {
@@ -267,6 +257,25 @@ Dashboard
         .catch(error => console.error(error))
     }
 
+    async function getExpenditureComparisonReport() {
+        const params = new URLSearchParams()
+        params.append('year', $('#year').val() ?? "")
+        params.append('month', $('#month').val() ?? "")
+
+        const url = "{{ route('statistic.expenditure_comparison') }}?" + params.toString()
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            setExpenditureComparisonReport(data)
+        })
+        .catch(error => console.error(error))
+    }
+
     let setIncomeReport = (data) => {
         incomeXExpenditureChart.config.data.labels = data.labels
         incomeXExpenditureChart.config.data.datasets[0].data = data.data
@@ -278,26 +287,37 @@ Dashboard
         incomeXExpenditureChart.config.data.datasets[1].data = data.data
         incomeXExpenditureChart.update()
     }
+    
+    let setExpenditureComparisonReport = (data) => {
+        expenditureComparisonChart.config.data.labels = data.labels
+        expenditureComparisonChart.config.data.datasets[0].data = data.data
+        expenditureComparisonChart.update()
+    }
 
     getIncomeReport()
     getExpenditureReport()
+    getExpenditureComparisonReport()
 
     // Reload data
     $('.filter-select').change(function() {
         getIncomeReport()
         getExpenditureReport()
+        getExpenditureComparisonReport()
 
         let selectedMonth = $('#month option:selected')
         let selectedYear = $('#year option:selected')
 
         if(selectedYear.val() == 0) {
             $('#income-x-expenditure-title').html("Semua Tahun")
+            $('#expenditure-comparison-title').html("Semua Tahun")
             month.css('visibility', 'hidden')
         } else {
             if(selectedMonth.val() == 0) {
                 $('#income-x-expenditure-title').html(`${selectedYear.text()}`)
+                $('#expenditure-comparison-title').html(`${selectedYear.text()}`)
             } else {
                 $('#income-x-expenditure-title').html(`${selectedMonth.text()} ${selectedYear.text()}`)
+                $('#expenditure-comparison-title').html(`${selectedMonth.text()} ${selectedYear.text()}`)
             }
             month.css('visibility', 'visible')
         }

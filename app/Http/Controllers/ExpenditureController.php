@@ -48,7 +48,7 @@ class ExpenditureController extends Controller
             if( ! empty($request->start_date) && ! empty($request->end_date) ) {
                 $data = $expenditures->whereBetween('date', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])->sortByDesc('date');
             } else {
-                $data = $expenditures->sortByDesc('date');
+                $data = $expenditures->whereBetween('date', [today()->startOfMonth()->format('Y-m-d') . ' 00:00:00', today()->endOfMonth()->format('Y-m-d') . ' 23:59:59'])->sortByDesc('date');
             }
 
             return DataTables::of($data)
@@ -182,6 +182,87 @@ class ExpenditureController extends Controller
             $labels = $expenditure->pluck('year');
             $data = $expenditure->pluck('total_price');
         }
+
+        return [
+            'labels' => $labels,
+            'data' => $data
+        ];
+    }
+
+    public function getExpenditureComparisonReport(Request $request)
+    {
+        $labels = ["Teknisi", "Karyawan", "Operasional", "Material"];
+        $data = [];
+
+        if( ! empty($request->year) && ! empty($request->month) ) {            
+            $technician_expenditures = DB::table('technician_expenditures')
+                ->selectRaw('SUM(service_fee + total_price) AS total_price')
+                ->whereRaw("YEAR(date) = {$request->year}")
+                ->whereRaw("MONTH(date) = {$request->month}")
+                ->first();
+
+            $employee_expenditures = DB::table('employee_expenditures')
+                ->selectRaw('SUM(working_day * salary_per_day) AS total_price')
+                ->whereRaw("YEAR(date) = {$request->year}")
+                ->whereRaw("MONTH(date) = {$request->month}")
+                ->first();
+
+            $operational_expenditures = DB::table('operational_expenditures')
+                ->selectRaw('SUM(total_price) AS total_price')
+                ->whereRaw("YEAR(date) = {$request->year}")
+                ->whereRaw("MONTH(date) = {$request->month}")
+                ->first();
+
+            $material_expenditures = DB::table('material_expenditures')
+                ->selectRaw('SUM(total_price) AS total_price')
+                ->whereRaw("YEAR(date) = {$request->year}")
+                ->whereRaw("MONTH(date) = {$request->month}")
+                ->first();
+
+        } else if( ! empty($request->year) && empty($request->month) ) {
+            $technician_expenditures = DB::table('technician_expenditures')
+                ->selectRaw('SUM(service_fee + total_price) AS total_price')
+                ->whereRaw("YEAR(date) = {$request->year}")
+                ->first();
+
+            $employee_expenditures = DB::table('employee_expenditures')
+                ->selectRaw('SUM(working_day * salary_per_day) AS total_price')
+                ->whereRaw("YEAR(date) = {$request->year}")
+                ->first();
+
+            $operational_expenditures = DB::table('operational_expenditures')
+                ->selectRaw('SUM(total_price) AS total_price')
+                ->whereRaw("YEAR(date) = {$request->year}")
+                ->first();
+
+            $material_expenditures = DB::table('material_expenditures')
+                ->selectRaw('SUM(total_price) AS total_price')
+                ->whereRaw("YEAR(date) = {$request->year}")
+                ->first();
+        } else {
+            $technician_expenditures = DB::table('technician_expenditures')
+                ->selectRaw('SUM(service_fee + total_price) AS total_price')
+                ->first();
+
+            $employee_expenditures = DB::table('employee_expenditures')
+                ->selectRaw('SUM(working_day * salary_per_day) AS total_price')
+                ->first();
+
+            $operational_expenditures = DB::table('operational_expenditures')
+                ->selectRaw('SUM(total_price) AS total_price')
+                ->first();
+
+            $material_expenditures = DB::table('material_expenditures')
+                ->selectRaw('SUM(total_price) AS total_price')
+                ->first();
+        }
+
+        $data = [
+            $technician_expenditures->total_price ?? 0,
+            $employee_expenditures->total_price ?? 0,
+            $operational_expenditures->total_price ?? 0,
+            $material_expenditures->total_price ?? 0,
+        ];
 
         return [
             'labels' => $labels,

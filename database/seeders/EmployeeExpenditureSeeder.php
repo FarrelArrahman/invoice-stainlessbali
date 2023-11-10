@@ -20,20 +20,22 @@ class EmployeeExpenditureSeeder extends Seeder
         $employeeExpenditureData = [];
         $employees = Employee::where('status', StatusEnum::Active)->get()->toArray();
 
-        foreach($employees as $employee) {
-            $salaryPerDay = fake()->numberBetween(5, 15) * 10000;
-            for($i = 1; $i <= 10; $i++) {
-                $workingDays = fake()->numberBetween(20, 26);
-
-                $employeeExpenditureData[] = [
-                    'employee_id' => $employee['id'],
-                    'date' => Carbon::createFromDate(2023, $i)->lastOfMonth(),
-                    'month' => $i,
-                    'year' => 2023,
-                    'working_day' => $workingDays,
-                    'salary_per_day' => $salaryPerDay,
-                    'status' => TransactionEnum::Paid,
-                ];
+        for($year = 2020; $year <= 2023; $year++) {
+            foreach($employees as $employee) {
+                $salaryPerDay = fake()->numberBetween(5, 15) * 10000;
+                for($i = 1; $i <= 10; $i++) {
+                    $workingDays = fake()->numberBetween(20, 26);
+    
+                    $employeeExpenditureData[] = [
+                        'employee_id' => $employee['id'],
+                        'date' => Carbon::createFromDate($year, $i)->lastOfMonth(),
+                        'month' => $i,
+                        'year' => $year,
+                        'working_day' => $workingDays,
+                        'salary_per_day' => $salaryPerDay,
+                        'status' => TransactionEnum::Paid,
+                    ];
+                }
             }
         }
 

@@ -19,14 +19,14 @@ class TechnicianExpenditureSeeder extends Seeder
     {
         $technicians = Technician::where('status', StatusEnum::Active)->get()->toArray();
 
-        for($i = 0; $i <= fake()->numberBetween(100, 1000); $i++) {
+        for($i = 0; $i <= fake()->numberBetween(1000, 10000); $i++) {
             $serviceFee = fake()->numberBetween(1, 20) * 50000;
 
             $technician = fake()->randomElement($technicians);
             $technicianExpenditureData = [
                 'technician_id' => $technician['id'],
                 'note' => "",
-                'date' => Carbon::today()->subDays(rand(0, 365)),
+                'date' => Carbon::today()->subDays(rand(0, 1460)),
                 'status' => TransactionEnum::Paid,
                 'service_fee' => $serviceFee,
                 'total_price' => 0,

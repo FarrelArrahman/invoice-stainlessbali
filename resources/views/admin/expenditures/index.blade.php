@@ -35,9 +35,9 @@ Pengeluaran
 
         <div class="col-md-8">
             <div class="input-group mb-3">
-                <input type="search" id="min" class="form-control">
+                <input type="search" id="min" class="form-control" value="{{ today()->startOfMonth()->format('Y-m-d') }}">
                 <span class="input-group-text">s/d</span>
-                <input type="search" id="max" class="form-control">
+                <input type="search" id="max" class="form-control" value="{{ today()->endOfMonth()->format('Y-m-d') }}">
                 <div class="input-group-append ms-2">
                     <a href="#" data-bs-toggle="modal" data-bs-target="#modal-add-expenditure" class="btn btn-info d-inline-flex align-items-center">
                         <i class="fa fa-plus me-2"></i> Tambah Pengeluaran

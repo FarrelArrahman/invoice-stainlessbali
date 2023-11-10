@@ -19,7 +19,7 @@ class IncomeSeeder extends Seeder
     {
         $customers = Customer::with('company')->where('status', StatusEnum::Active)->get()->toArray();
 
-        for($i = 0; $i <= fake()->numberBetween(100, 1000); $i++) {
+        for($i = 0; $i <= fake()->numberBetween(1000, 10000); $i++) {
             $customer = fake()->randomElement($customers);
             $incomeData = [
                 'company_name' => $customer['company']['name'],
@@ -30,7 +30,7 @@ class IncomeSeeder extends Seeder
                 'status' => TransactionEnum::Paid,
                 'total_price' => 0,
                 'handled_by' => NULL,
-                'date' => Carbon::today()->subDays(rand(0, 365)),
+                'date' => Carbon::today()->subDays(rand(0, 1460)),
             ];
 
             $income = Income::create($incomeData);
