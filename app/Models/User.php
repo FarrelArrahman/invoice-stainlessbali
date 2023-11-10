@@ -49,4 +49,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(TransactionBreakdown::class, 'handled_by');
     }
+
+    public function isAdmin()
+    {
+        return $this->role == "Admin";
+    }
+    
+    public function isKaryawan()
+    {
+        return $this->role == "Karyawan";
+    }
 }

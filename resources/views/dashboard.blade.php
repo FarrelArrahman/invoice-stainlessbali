@@ -31,7 +31,7 @@ Dashboard
             </select>
             <!-- <div class="input-group-append ms-2">
                 <a href="#" data-bs-toggle="modal" data-bs-target="#modal-add-income" class="btn btn-info d-inline-flex align-items-center">
-                    <i class="fa fa-refresh me-2"></i> Reload Data
+                    <i class="fa fa-download me-2"></i> Download Laporan
                 </a>
             </div> -->
         </div>

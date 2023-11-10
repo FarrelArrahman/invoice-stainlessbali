@@ -111,6 +111,7 @@ Pengeluaran
                 d.end_date = $('#max').val()
             }
         },
+        order: [[ 0, 'desc' ]],
         columnDefs: [
             {targets: 0, width: "15%"},
         ],

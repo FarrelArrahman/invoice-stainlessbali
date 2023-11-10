@@ -33,7 +33,7 @@ class IncomeController extends Controller
         if( ! empty($request->start_date) && ! empty($request->end_date) ) {
             $data = $incomes->whereBetween('date', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])->sortByDesc('date');
         } else {
-            $data = $incomes->sortByDesc('date');
+            $data = $incomes->whereBetween('date', [today()->startOfMonth()->format('Y-m-d') . ' 00:00:00', today()->endOfMonth()->format('Y-m-d') . ' 23:59:59'])->sortByDesc('date');
         }
 
         return DataTables::of($data)

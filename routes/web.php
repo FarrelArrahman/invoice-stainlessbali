@@ -14,6 +14,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TechnicianController;
 use App\Http\Controllers\TechnicianExpenditureController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,25 +27,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
-Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-
-Route::resource('items', ItemController::class);
-Route::resource('customers', CustomerController::class);
-Route::resource('transactions', TransactionController::class);
-Route::resource('settings', SettingController::class);
-Route::resource('technician_expenditures', TechnicianExpenditureController::class);
-Route::resource('employee_expenditures', EmployeeExpenditureController::class);
-Route::resource('operational_expenditures', OperationalExpenditureController::class);
-Route::resource('material_expenditures', MaterialExpenditureController::class);
-Route::resource('expenditures', ExpenditureController::class);
-Route::resource('incomes', IncomeController::class);
-
-// Master Data
-Route::resource('companies', CompanyController::class);
-Route::resource('technicians', TechnicianController::class);
-Route::resource('employees', EmployeeController::class);
 
 // Testing
 Route::get('test', function() {
@@ -78,6 +60,26 @@ Route::prefix('/statistics')->group(function() {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+
+    Route::resource('items', ItemController::class);
+    Route::resource('customers', CustomerController::class);
+    Route::resource('transactions', TransactionController::class);
+    Route::resource('settings', SettingController::class);
+    Route::resource('technician_expenditures', TechnicianExpenditureController::class);
+    Route::resource('employee_expenditures', EmployeeExpenditureController::class);
+    Route::resource('operational_expenditures', OperationalExpenditureController::class);
+    Route::resource('material_expenditures', MaterialExpenditureController::class);
+    Route::resource('expenditures', ExpenditureController::class);
+    Route::resource('incomes', IncomeController::class);
+
+    // Master Data
+    Route::resource('companies', CompanyController::class);
+    Route::resource('technicians', TechnicianController::class);
+    Route::resource('employees', EmployeeController::class);
+    Route::resource('users', UserController::class);
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

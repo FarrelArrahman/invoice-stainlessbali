@@ -35,15 +35,15 @@
                 </div>
             </div>
             <ul class="nav flex-column pt-3 pt-md-0">
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="nav-link d-flex align-items-center">
                         <span class="sidebar-icon">
                             <img src="{{ asset('assets/img/brand/light.svg')}} " height="20" width="20" alt="Volt Logo">
                         </span>
                         <span class="mt-1 ms-1 sidebar-text">Stainless Bali</span>
                     </a>
-                </li>
-                <li class="nav-item  active ">
+                </li> -->
+                <li class="nav-item mt-2">
                     <a href="{{ route('dashboard') }}" class="nav-link">
                         <span class="sidebar-icon">
                             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -54,7 +54,7 @@
                         <span class="sidebar-text">Dashboard</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="{{ route('items.index') }}" class="nav-link">
                         <span class="sidebar-icon">
                             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -73,7 +73,7 @@
                         </span>
                         <span class="sidebar-text">Customer</span>
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item ">
                     <a href="{{ route('transactions.index') }}" class="nav-link">
                         <span class="sidebar-icon">
@@ -107,6 +107,7 @@
                         <span class="sidebar-text">Pengeluaran</span>
                     </a>
                 </li>
+                @if(auth()->user()->isAdmin())
                 <li class="nav-item">
                     <span
                         class="nav-link  collapsed  d-flex justify-content-between align-items-center"
@@ -124,6 +125,16 @@
                     <div class="multi-level collapse " role="list" id="master-data" aria-expanded="false">
                         <ul class="flex-column nav">
                             <li class="nav-item">
+                                <a class="nav-link" href="{{ route('items.index') }}">
+                                    <span class="sidebar-text">Barang</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('customers.index') }}">
+                                    <span class="sidebar-text">Customer</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ route('technicians.index') }}">
                                     <span class="sidebar-text">Teknisi</span>
                                 </a>
@@ -136,6 +147,11 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('employees.index') }}">
                                     <span class="sidebar-text">Karyawan</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('users.index') }}">
+                                    <span class="sidebar-text">User</span>
                                 </a>
                             </li>
                         </ul>
@@ -151,6 +167,7 @@
                         <span class="sidebar-text">Pengaturan</span>
                     </a>
                 </li>
+                @endif
                 <li class="nav-item">
                     <a href="#" class="btn btn-danger d-flex align-items-center justify-content-center btn-upgrade-pro">
                         <span class="sidebar-icon d-inline-flex align-items-center justify-content-center">
