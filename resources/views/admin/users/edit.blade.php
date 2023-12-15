@@ -47,6 +47,7 @@ User
                                 <label for="role">Role</label>
                                 <select class="form-select" name="role" id="">
                                     <option value="" selected disabled>-- Pilih Role --</option>
+                                    <option @selected($user->role == "Super Admin") value="Super Admin">Super Admin</option>
                                     <option @selected($user->role == "Admin") value="Admin">Admin</option>
                                     <option @selected($user->role == "Karyawan") value="Karyawan">Karyawan</option>
                                 </select>

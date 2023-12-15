@@ -46,6 +46,7 @@ User
                                 <label for="role">Role</label>
                                 <select class="form-select" name="role" id="">
                                     <option value="" selected disabled>-- Pilih Role --</option>
+                                    <option value="Super Admin">Super Admin</option>
                                     <option value="Admin">Admin</option>
                                     <option value="Karyawan">Karyawan</option>
                                 </select>
