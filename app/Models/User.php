@@ -50,6 +50,11 @@ class User extends Authenticatable
         return $this->hasMany(TransactionBreakdown::class, 'handled_by');
     }
 
+    public function isSuperAdmin()
+    {
+        return $this->role == "Super Admin";
+    }
+
     public function isAdmin()
     {
         return $this->role == "Admin";

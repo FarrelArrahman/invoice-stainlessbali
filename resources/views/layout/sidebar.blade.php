@@ -107,7 +107,7 @@
                         <span class="sidebar-text">Pengeluaran</span>
                     </a>
                 </li>
-                @if(auth()->user()->isAdmin())
+                @if(auth()->user()->isSuperAdmin())
                 <li class="nav-item">
                     <span
                         class="nav-link  collapsed  d-flex justify-content-between align-items-center"
