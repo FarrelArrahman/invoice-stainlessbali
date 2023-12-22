@@ -53,7 +53,7 @@
         <tr>
             <td width="100%" style="padding: 0px; text-align: center;">
                 <a href="#" target="_blank">
-                    <img src="{{ asset('img/stainlessbali-header.jpg') }}" align="center" border="0" style="width: 100%;">
+                    <img src="{{ asset('img/dewatakitchen-header2.jpg') }}" align="center" border="0" style="width: 100%;">
                 </a>
             </td>
         </tr>
@@ -181,9 +181,9 @@
                             Hormat kami
                             <br>
                             <br>
-                            <img src="{{ asset('img/ttd-stainless.jpg') }}" style="display: block; margin: auto;">
+                            <img width="128px" src="{{ asset('img/logo-dewata-kitchen.png') }}" style="display: block; margin: auto;">
                             <br>
-                            Ferrizal Stainless Bali
+                            Ferrizal Dewata Kitchen
                         </td>
                     </tr>
                 </table>
