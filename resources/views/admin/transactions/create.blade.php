@@ -815,7 +815,7 @@ Transaksi
         const el = selectItemForm.elements
         const data = {
             id: el.namedItem("name").value,
-            name: itemSelect.options[el.namedItem("name").value].text,
+            name: itemSelect.options[itemSelect.selectedIndex].text,
             image: el.namedItem("image_path").value,
             brand: el.namedItem("brand").value,
             model: el.namedItem("model").value,
