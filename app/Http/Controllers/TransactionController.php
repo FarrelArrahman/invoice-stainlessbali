@@ -127,7 +127,7 @@ class TransactionController extends Controller
     public function show($transaction)
     {
         $transaction = Transaction::whereCode($transaction)->first();
-        return view('admin.transactions.pdf', ['transaction' => $transaction]);
+        // return view('admin.transactions.pdf', ['transaction' => $transaction]);
         $pdf = PDF::loadView('admin.transactions.pdf', ['transaction' => $transaction]);
 
         return $pdf->download('invoice-' . $transaction->code . '.pdf');
