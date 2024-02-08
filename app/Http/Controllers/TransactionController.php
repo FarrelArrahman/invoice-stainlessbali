@@ -33,10 +33,12 @@ class TransactionController extends Controller
     {
         $items = Item::all();        
         $customers = Customer::all();  
+        $setting = Setting::first();
 
         return view('admin.transactions.create', [
             'items' => $items,
             'customers' => $customers,
+            'setting' => $setting,
         ]);
     }
 
@@ -49,7 +51,7 @@ class TransactionController extends Controller
         // dd(is_file($request->breakdown[1]['item'][2]['image']));
 
         $code = date('ymdHis');
-        $note = Setting::first()->value;
+        // $note = Setting::first()->value;
 
         $transactionData = [
             'code' => $code,
@@ -62,7 +64,7 @@ class TransactionController extends Controller
             'payment_terms' => $request->payment_terms,
             'status' => TransactionEnum::Unpaid,
             'invoice_type' => $request->invoice_type,
-            'note' => str_replace('${down_payment}', number_format($request->dp, 0, '', '.'), $note)
+            'note' => str_replace('${down_payment}', number_format($request->dp, 0, '', '.'), $request->note)
         ];
 
         if(empty($request->customer_id)) {
@@ -100,7 +102,7 @@ class TransactionController extends Controller
                         'item_id' => $item['id'] ?? NULL,
                         'image' => ! empty($item['image']) && is_file($item['image']) 
                             ? ($item['image'])->store('public/items') 
-                            : $item['image'],
+                            : asset('img/no_image.png'),
                         'name' => $item['name'],
                         'brand' => $item['brand'],
                         'model' => $item['model'],
@@ -128,10 +130,10 @@ class TransactionController extends Controller
     public function show($transaction)
     {
         $transaction = Transaction::whereCode($transaction)->first();
-        // return view('admin.transactions.pdf', ['transaction' => $transaction]);
+        return view('admin.transactions.pdf', ['transaction' => $transaction]);
         $pdf = PDF::loadView('admin.transactions.pdf', ['transaction' => $transaction]);
 
-        return $pdf->download('invoice-' . $transaction->code . '.pdf');
+        return $pdf->stream('invoice-' . $transaction->code . '.pdf');
     }
 
     /**

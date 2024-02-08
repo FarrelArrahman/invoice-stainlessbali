@@ -84,14 +84,12 @@
             </tr>
             <tr style="text-transform: uppercase;">
                 <td rowspan="2" width="5%" style="text-align: center; vertical-align: middle;"><strong>No</strong></td>
-                <td rowspan="2" width="10%" style="text-align: center; vertical-align: middle;"><strong>Description</strong></td>
+                <td rowspan="2" width="20%" style="text-align: center; vertical-align: middle;"><strong>Description</strong></td>
                 <td rowspan="2" width="10%" style="text-align: center;"><strong></strong></td>
-                <td rowspan="2" width="10%" style="text-align: center; vertical-align: middle;"><strong>Brand</strong></td>
-                <td rowspan="2" width="10%" style="text-align: center; vertical-align: middle;"><strong>Model</strong></td>
                 <td colspan="3" width="10%" style="text-align: center; vertical-align: middle;"><strong>Dimensi</strong></td>
-                <td rowspan="2" width="15%" style="text-align: center; vertical-align: middle;"><strong>Price</strong></td>
+                <td rowspan="2" width="25%" style="text-align: center; vertical-align: middle;"><strong>Price</strong></td>
                 <td rowspan="2" width="5%" style="text-align: center; vertical-align: middle;"><strong>Qty</strong></td>
-                <td rowspan="2" width="15%" style="text-align: center; vertical-align: middle;"><strong>Total</strong></td>
+                <td rowspan="2" width="25%" style="text-align: center; vertical-align: middle;"><strong>Total</strong></td>
             </tr>
             <tr style="text-transform: uppercase;">
                 <td style="text-align: center; vertical-align: middle;"><strong>Width</strong></td>
@@ -103,12 +101,14 @@
             @foreach($breakdown->items as $item)
             <tr>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $loop->iteration }}</td>
-                <td style="padding: 0px 7px; line-height: 20px; vertical-align: middle;">{{ $item->name }}</td>
+                <td style="padding: 0px 7px; line-height: 20px; vertical-align: middle;">
+                    {{ $item->name }}<br>
+                    Brand: {{ $item->brand }}<br>
+                    Type: {{ $item->model }}<br>
+                </td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">
                     <img style="padding: 5px;" src="{{ $item->item_id == NULL || Storage::exists($item->image) ? Storage::url($item->image) : asset($item->image) }}" width="48px">
                 </td>
-                <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->brand }}</td>
-                <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->model }}</td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->width }}</td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->depth }}</td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->height }}</td>
@@ -177,11 +177,9 @@
                 <table width="75%" align="left" style="font-family: sans-serif; font-size: 13px; text-align: left;">
                     <tr>
                         <td style="padding: 0px; line-height: 20px;">
-                        @if($transaction->invoice_type == "Deal")
                         Note <br>
                         {!! $transaction->note !!}
                         </td>
-                        @endif
                     </tr>
                 </table>
                 <table width="25%" align="right" style="font-family: sans-serif; font-size: 14px;">
