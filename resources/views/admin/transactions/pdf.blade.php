@@ -79,6 +79,9 @@
     @foreach($transaction->breakdowns as $breakdown)
     <table border="1" class="items" width="100%" style="font-size: 11px; border-collapse: collapse;" cellpadding="8">
         <thead>
+            <tr>
+                <td colspan="11" style="text-align: left">{{ $breakdown->breakdown_name }}</td>
+            </tr>
             <tr style="text-transform: uppercase;">
                 <td rowspan="2" width="5%" style="text-align: center; vertical-align: middle;"><strong>No</strong></td>
                 <td rowspan="2" width="10%" style="text-align: center; vertical-align: middle;"><strong>Description</strong></td>
@@ -102,7 +105,7 @@
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $loop->iteration }}</td>
                 <td style="padding: 0px 7px; line-height: 20px; vertical-align: middle;">{{ $item->name }}</td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">
-                    
+                    <img style="padding: 5px;" src="{{ $item->item_id == NULL || Storage::exists($item->image) ? Storage::url($item->image) : asset($item->image) }}" width="48px">
                 </td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->brand }}</td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->model }}</td>
@@ -116,6 +119,7 @@
             @endforeach
         </tbody>
     </table>
+    <br>
     @endforeach
     
     <table width="100%" style="font-family: sans-serif; font-size: 14px;">
@@ -137,7 +141,7 @@
                 <table cellpadding="10" width="40%" align="right" style="font-family: sans-serif; font-size: 14px;">
                     <tr>
                         <td style="border: 1px #000 solid; line-height: 20px; width: 30%"><strong>DP</strong></td>
-                        <td style="border: 1px #000 solid; line-height: 20px; width: 70%">{{ $transaction->dp }}</td>
+                        <td style="border: 1px #000 solid; line-height: 20px; width: 70%">{{ $transaction->formatted_dp }}</td>
                     </tr>
                 </table>
                 <table cellpadding="10" width="40%" align="right" style="font-family: sans-serif; font-size: 14px;">

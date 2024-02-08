@@ -48,7 +48,7 @@ class TransactionController extends Controller
         // dd($request->all());
         // dd(is_file($request->breakdown[1]['item'][2]['image']));
 
-        $code = date('ymdhis');
+        $code = date('ymdHis');
         $note = Setting::first()->value;
 
         $transactionData = [
@@ -127,7 +127,7 @@ class TransactionController extends Controller
     public function show($transaction)
     {
         $transaction = Transaction::whereCode($transaction)->first();
-        // return view('admin.transactions.pdf', ['transaction' => $transaction]);
+        return view('admin.transactions.pdf', ['transaction' => $transaction]);
         $pdf = PDF::loadView('admin.transactions.pdf', ['transaction' => $transaction]);
 
         return $pdf->download('invoice-' . $transaction->code . '.pdf');
