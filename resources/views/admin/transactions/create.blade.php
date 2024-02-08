@@ -180,7 +180,7 @@ Transaksi
                                                         <option value="30">30%</option>
                                                         <option value="40">40%</option>
                                                         <option value="50">50%</option>
-                                                        <option value="60">60%</option>
+                                                        <option selected value="60">60%</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -199,15 +199,10 @@ Transaksi
                                                 <td width="80%" id="term1-amount">Rp 0</td>
                                                 <input type="hidden" id="term1-input" name="term1">
                                             </tr>
-                                            <tr id="term2">
+                                            <tr id="term2" class="d-none">
                                                 <td width="20%">Termin 2</td>
                                                 <td width="80%" id="term2-amount">Rp 0</td>
                                                 <input type="hidden" id="term2-input" name="term2">
-                                            </tr>
-                                            <tr id="term3" class="d-none">
-                                                <td width="20%">Termin 3</td>
-                                                <td width="80%" id="term3-amount">Rp 0</td>
-                                                <input type="hidden" id="term3-input" name="term3">
                                             </tr>
                                         </table>
                                     </div>
@@ -285,7 +280,7 @@ Transaksi
                             <small id="brandHelp" class="form-text text-muted">Kosongkan field ini jika tanpa brand / custom.</small>
                         </div>
                         <div class="mb-3">
-                            <label for="model">Model</label>
+                            <label for="model">Type</label>
                             <input type="text" class="form-control" id="model" name="model">
                         </div>
                         <div class="mb-3">
@@ -352,7 +347,7 @@ Transaksi
                         <small id="brandHelp" class="form-text text-muted">Kosongkan field ini jika tanpa brand / custom.</small>
                     </div>
                     <div class="mb-3">
-                        <label for="model">Model</label>
+                        <label for="model">Type</label>
                         <input type="text" class="form-control" id="model" name="model">
                     </div>
                     <div class="mb-3">
@@ -493,9 +488,6 @@ Transaksi
     const term2 = document.getElementById('term2')
     const term2Amount = document.getElementById('term2-amount')
     const term2Input = document.getElementById('term2-input')
-    const term3 = document.getElementById('term3')
-    const term3Amount = document.getElementById('term3-amount')
-    const term3Input = document.getElementById('term3-input')
 
     const rupiahFormat = new Intl.NumberFormat('id-ID', {
         style: 'currency',
@@ -659,6 +651,7 @@ Transaksi
     }
 
     let setTerm = (totalPrice, dpAmount, terms) => {
+        terms = terms - 1
         let termAmount = totalPrice - dpAmount
         let amountPerTerm = 0
 
@@ -667,11 +660,8 @@ Transaksi
         term1Amount.innerHTML = rupiahFormat.format(amountPerTerm)
         term1Input.value = amountPerTerm
         
-        term2Amount.innerHTML = rupiahFormat.format(amountPerTerm)
-        term2Input.value = amountPerTerm
-        
-        term3Amount.innerHTML = terms == 3 ? rupiahFormat.format(amountPerTerm) : 0
-        term3Input.value = terms == 3 ? amountPerTerm : 0
+        term2Amount.innerHTML = terms == 2 ? rupiahFormat.format(amountPerTerm) : 0
+        term2Input.value = terms == 2 ? amountPerTerm : 0
     }
 
     // Show item detail upon selection changing
@@ -763,7 +753,7 @@ Transaksi
                     </div>
                     <div class="col-2">
                         <img alt="Klik untuk mengubah gambar..." style="cursor: pointer;" onclick="triggerFile('breakdown[${breakdownCounter}][item][${itemCounter}][image]')" src="${data.image}" width="128">
-                        ${data.image != "" ? `<input type="hidden" name="breakdown[${breakdownCounter}][item][${itemCounter}][image]" value="${data.image}">` : ``}
+                        <input type="hidden" name="breakdown[${breakdownCounter}][item][${itemCounter}][image]" value="${data.image ?? ""}">
                     </div>
                     <div class="col-8" id="item${itemCounter}-image-preview">
                         <h6 class="item-name mt-2">
@@ -776,7 +766,7 @@ Transaksi
                             Model: <input class="border-bottom-input" type="text" value="${data.model}" name="breakdown[${breakdownCounter}][item][${itemCounter}][model]">
                         </span> <br>
                         <span class="item-dimension mt-2">
-                            Dimension (W x D x H): <br>
+                            Dimension (W x D x H) (mm): <br>
                             <input size="4" class="border-bottom-input" type="text" value="${data.width}" name="breakdown[${breakdownCounter}][item][${itemCounter}][width]"> x 
                             <input size="4" class="border-bottom-input" type="text" value="${data.depth}" name="breakdown[${breakdownCounter}][item][${itemCounter}][depth]"> x 
                             <input size="4" class="border-bottom-input" type="text" value="${data.height}" name="breakdown[${breakdownCounter}][item][${itemCounter}][height]">
@@ -916,9 +906,9 @@ Transaksi
 
     term.onchange = (e) => {
         if(e.target.value == 3) {
-            term3.classList.remove('d-none')
+            term2.classList.remove('d-none')
         } else {
-            term3.classList.add('d-none')
+            term2.classList.add('d-none')
         }
 
         calculateTotalPrice()

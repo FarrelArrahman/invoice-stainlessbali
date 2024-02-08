@@ -71,6 +71,7 @@ class TransactionController extends Controller
                     'name' => $request->name,
                     'address' => $request->address ?? "-",
                     'phone_number' => $request->phone_number ?? "-",
+                    'status' => 'Active'
                 ]);
 
                 $transactionData['customer_id'] = $customer->id;
@@ -97,7 +98,7 @@ class TransactionController extends Controller
                     $breakdownItemData = [
                         'transaction_breakdown_id' => $transactionBreakdown->id,
                         'item_id' => $item['id'] ?? NULL,
-                        'image' => is_file($item['image']) 
+                        'image' => ! empty($item['image']) && is_file($item['image']) 
                             ? ($item['image'])->store('public/items') 
                             : $item['image'],
                         'name' => $item['name'],

@@ -76,7 +76,7 @@
                                 <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path>
                             </svg>
                         </span>
-                        <span class="sidebar-text">Transaksi</span>
+                        <span class="sidebar-text">Invoice</span>
                     </a>
                 </li>
                 <li class="nav-item ">
