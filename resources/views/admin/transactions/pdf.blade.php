@@ -80,15 +80,20 @@
     <table border="1" class="items" width="100%" style="font-size: 11px; border-collapse: collapse;" cellpadding="8">
         <thead>
             <tr style="text-transform: uppercase;">
-                <td width="5%" style="text-align: center; vertical-align: middle;"><strong>No</strong></td>
-                <td width="10%" style="text-align: center; vertical-align: middle;"><strong>Description</strong></td>
-                <td width="10%" style="text-align: center;"><strong></strong></td>
-                <td width="10%" style="text-align: center; vertical-align: middle;"><strong>Brand</strong></td>
-                <td width="10%" style="text-align: center; vertical-align: middle;"><strong>Model</strong></td>
-                <td colspan="3" width="10%" style="text-align: center; vertical-align: middle;"><strong>Dimensi <br> (W x D x H)</strong></td>
-                <td width="15%" style="text-align: center; vertical-align: middle;"><strong>Price</strong></td>
-                <td width="5%" style="text-align: center; vertical-align: middle;"><strong>Qty</strong></td>
-                <td width="15%" style="text-align: center; vertical-align: middle;"><strong>Total</strong></td>
+                <td rowspan="2" width="5%" style="text-align: center; vertical-align: middle;"><strong>No</strong></td>
+                <td rowspan="2" width="10%" style="text-align: center; vertical-align: middle;"><strong>Description</strong></td>
+                <td rowspan="2" width="10%" style="text-align: center;"><strong></strong></td>
+                <td rowspan="2" width="10%" style="text-align: center; vertical-align: middle;"><strong>Brand</strong></td>
+                <td rowspan="2" width="10%" style="text-align: center; vertical-align: middle;"><strong>Model</strong></td>
+                <td colspan="3" width="10%" style="text-align: center; vertical-align: middle;"><strong>Dimensi</strong></td>
+                <td rowspan="2" width="15%" style="text-align: center; vertical-align: middle;"><strong>Price</strong></td>
+                <td rowspan="2" width="5%" style="text-align: center; vertical-align: middle;"><strong>Qty</strong></td>
+                <td rowspan="2" width="15%" style="text-align: center; vertical-align: middle;"><strong>Total</strong></td>
+            </tr>
+            <tr style="text-transform: uppercase;">
+                <td style="text-align: center; vertical-align: middle;"><strong>Width</strong></td>
+                <td style="text-align: center; vertical-align: middle;"><strong>Depth</strong></td>
+                <td style="text-align: center; vertical-align: middle;"><strong>Height</strong></td>
             </tr>
         </thead>
         <tbody>
@@ -97,7 +102,7 @@
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $loop->iteration }}</td>
                 <td style="padding: 0px 7px; line-height: 20px; vertical-align: middle;">{{ $item->name }}</td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">
-                    <img style="padding: 5px;" src="{{ $item->item_id == NULL ? Storage::url($item->image) : asset($item->image) }}" width="48px">
+                    
                 </td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->brand }}</td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->model }}</td>
