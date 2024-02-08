@@ -281,7 +281,13 @@ Transaksi
                         </div>
                         <div class="mb-3">
                             <label for="model">Type</label>
-                            <input type="text" class="form-control" id="model" name="model">
+                            <input list="dl-type" type="text" class="form-control" id="model" name="model">
+                            <datalist id="dl-type">
+                                <option value="SS.201|1mm">
+                                <option value="SS.201|1,2mm">
+                                <option value="SS.304|1mm">
+                                <option value="SS.304|1.2mm">
+                            </datalist>
                         </div>
                         <div class="mb-3">
                             <div class="row mb-3">
@@ -348,7 +354,13 @@ Transaksi
                     </div>
                     <div class="mb-3">
                         <label for="model">Type</label>
-                        <input type="text" class="form-control" id="model" name="model">
+                        <input list="dl-type" type="text" class="form-control" id="model" name="model">
+                        <datalist id="dl-type">
+                            <option value="SS.201|1mm">
+                            <option value="SS.201|1,2mm">
+                            <option value="SS.304|1mm">
+                            <option value="SS.304|1.2mm">
+                        </datalist>
                     </div>
                     <div class="mb-3">
                         <div class="row mb-3">
@@ -763,7 +775,7 @@ Transaksi
                             Brand: <input class="border-bottom-input" type="text" value="${data.brand}" name="breakdown[${breakdownCounter}][item][${itemCounter}][brand]">
                         </span> <br>
                         <span class="item-model mt-2">
-                            Model: <input class="border-bottom-input" type="text" value="${data.model}" name="breakdown[${breakdownCounter}][item][${itemCounter}][model]">
+                            Type: <input class="border-bottom-input" type="text" value="${data.model}" name="breakdown[${breakdownCounter}][item][${itemCounter}][model]">
                         </span> <br>
                         <span class="item-dimension mt-2">
                             Dimension (W x D x H) (mm): <br>
