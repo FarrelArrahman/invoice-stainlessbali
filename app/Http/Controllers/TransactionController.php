@@ -20,7 +20,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::all();
+        $transactions = Transaction::latest()->get();
         return view('admin.transactions.index', [
             'transactions' => $transactions
         ]);
