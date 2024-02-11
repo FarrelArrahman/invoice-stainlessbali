@@ -21,10 +21,19 @@ Invoice
         <div class="mb-3 mb-lg-0">
             <h1 class="h4">Daftar Invoice</h1>
         </div>
-        <div>
-            <a href="{{ route('transactions.create') }}" class="btn btn-info d-inline-flex align-items-center">
-                <i class="fa fa-plus me-2"></i> Tambah Invoice
-            </a>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="input-group mb-3">
+                    <input type="search" id="min" class="form-control" value="{{ today()->startOfMonth()->format('Y-m-d') }}">
+                    <span class="input-group-text">s/d</span>
+                    <input type="search" id="max" class="form-control" value="{{ today()->endOfMonth()->format('Y-m-d') }}">
+                    <div class="input-group-append ms-2">
+                        <a href="{{ route('transactions.create') }}" class="btn btn-info d-inline-flex align-items-center">
+                            <i class="fa fa-plus me-2"></i> Tambah Invoice
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -32,44 +41,17 @@ Invoice
 <div class="card border-0 shadow mb-4">
     <div class="card-body">
         <div class="table-responsive">
-            <table id="example" class="table table-centered mb-0 rounded">
+            <table id="datatable" class="table table-centered mb-0 rounded">
                 <thead class="thead-light">
                     <tr>
                         <th class="border-0 rounded-start">Code</th>
                         <th class="border-0">Customer</th>
                         <th class="border-0">Date</th>
                         <th class="border-0">Total Price</th>
-                        <th class="border-0">Status</th>
                         <th class="border-0 rounded-end">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($transactions as $transaction)
-                    <tr>
-                        <td>
-                            <a href="{{ route('transactions.show', $transaction->code) }}">{{ $transaction->code }}</a>
-                        </td>
-                        <td>{{ $transaction->customer->name }}</td>
-                        <td>{{ $transaction->date }}</td>
-                        <td>{{ $transaction->formatted_total_price }}</td>
-                        <td>{!! $transaction->status->badge() !!}</td>
-                        <td>
-                            <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <a href="{{ route('transactions.show', $transaction->code) }}" class="btn btn-info btn-sm">
-                                    <i class="fa fa-print"></i>
-                                </a>
-                                <a href="{{ route('transactions.edit', $transaction->id) }}" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-pencil"></i>
-                                </a>
-                                <button onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')" type="submit" class="btn btn-danger btn-sm">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -79,6 +61,55 @@ Invoice
 
 @push('custom-scripts')
 <script>
-    new DataTable('#example')
+    // Create date inputs
+    minDate = new DateTime('#min', {
+        format: 'YYYY-MM-DD'
+    });
+    maxDate = new DateTime('#max', {
+        format: 'YYYY-MM-DD'
+    });
+
+    var dataTable = $('#datatable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            type: "GET",
+            url: "{{ route('datatables.transactions') }}",
+            data: function(d) {
+                d.start_date = $('#min').val(),
+                d.end_date = $('#max').val()
+            }
+        },
+        order: [[ 0, 'desc' ]],
+        columnDefs: [
+            {targets: 0, width: "15%"},
+        ],
+        columns: [
+            {data: 'code', name: 'code'},
+            {data: 'customer_name', name: 'customer_name'},
+            {data: 'date', name: 'date'},
+            {data: 'total_price', name: 'total_price'},
+            {
+                data: 'action', 
+                name: 'action', 
+                orderable: false, 
+                searchable: false
+            },
+        ]
+    })
+
+    $('.filter-select').change(function() {
+        dataTable.column($(this).data('column'))
+        .search($(this).val())
+        .draw()
+    })
+
+    
+    // Refilter the table
+    document.querySelectorAll('#min, #max').forEach((el) => {
+        el.addEventListener('change', () => { 
+            dataTable.draw()
+        })
+    })
 </script>
 @endpush

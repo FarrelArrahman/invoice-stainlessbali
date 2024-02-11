@@ -38,6 +38,7 @@ Route::get('test', function() {
 Route::prefix('/datatables')->group(function() {
     Route::get('expenditures', [ExpenditureController::class, 'getExpenditures'])->name('datatables.expenditures');
     Route::get('incomes', [IncomeController::class, 'getIncomes'])->name('datatables.incomes');
+    Route::get('transactions', [TransactionController::class, 'getTransactions'])->name('datatables.transactions');
 });
 
 // API

@@ -102,12 +102,12 @@
             <tr>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $loop->iteration }}</td>
                 <td style="padding: 0px 7px; line-height: 20px; vertical-align: middle;">
-                    {{ $item->name }}<br>
-                    Brand: {{ $item->brand }}<br>
-                    Type: {{ $item->model }}<br>
+                    <p style="white-space: pre-line;">{{ $item->name }}</p>
+                    <strong>Brand</strong>: {{ $item->brand }}<br>
+                    <strong>Type</strong>: {{ $item->model }}<br>
                 </td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">
-                    <img style="padding: 5px;" src="{{ $item->item_id == NULL || Storage::exists($item->image) ? Storage::url($item->image) : asset($item->image) }}" width="48px">
+                    <img style="padding: 5px;" src="{{ $item->item_id == NULL || Storage::exists($item->image) ? Storage::url($item->image) : asset('img/no_image.jpg') }}" width="96px">
                 </td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->width }}</td>
                 <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->depth }}</td>

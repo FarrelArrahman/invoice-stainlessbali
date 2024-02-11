@@ -11,6 +11,8 @@ use App\Models\Item;
 use App\Models\Setting;
 use App\Models\TransactionBreakdown;
 use App\Models\TransactionItem;
+use Illuminate\Http\Request;
+use DataTables;
 use PDF;
 
 class TransactionController extends Controller
@@ -24,6 +26,39 @@ class TransactionController extends Controller
         return view('admin.transactions.index', [
             'transactions' => $transactions
         ]);
+    }
+
+    public function getTransactions(Request $request)
+    {
+        $invoices = Transaction::all();
+
+        if( ! empty($request->start_date) && ! empty($request->end_date) ) {
+            $data = $invoices->whereBetween('date', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])->sortByDesc('date');
+        } else {
+            $data = $invoices->whereBetween('date', [today()->startOfMonth()->format('Y-m-d') . ' 00:00:00', today()->endOfMonth()->format('Y-m-d') . ' 23:59:59'])->sortByDesc('date');
+        }
+
+        return DataTables::of($data)
+            ->addColumn('action', function($row) {
+                $action = '<form action="' . route('transactions.destroy', $row->id) . '" method="POST">';
+                $action .= '<input type="hidden" name="_token" value="' . csrf_token() . '"><input type="hidden" name="_method" value="DELETE">';
+                $action .= '<a href="' . route('transactions.show', $row->code) . '" class="btn btn-info btn-sm"><i class="fa fa-print"></i></a>';
+                $action .= '<a href="' . route('transactions.edit', $row->id) . '" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i></a>';
+                $action .= '<button onclick="return confirm(\'Apakah anda yakin ingin menghapus data ini?\')" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>';
+                $action .= '</form>';
+                return $action;
+            })
+            ->addColumn('customer_name', function($row) {
+                return $row->customer->name;
+            })
+            ->addColumn('total_price', function($row) {
+                return $row->formatted_total_price;
+            })
+            ->editColumn('date', function($row) {
+                return $row->date->format('Y-m-d H:i:s');
+            })
+            ->rawColumns(['action', 'badge'])
+            ->make(true);
     }
 
     /**
@@ -102,7 +137,7 @@ class TransactionController extends Controller
                         'item_id' => $item['id'] ?? NULL,
                         'image' => ! empty($item['image']) && is_file($item['image']) 
                             ? ($item['image'])->store('public/items') 
-                            : asset('img/no_image.png'),
+                            : NULL,
                         'name' => $item['name'],
                         'brand' => $item['brand'],
                         'model' => $item['model'],

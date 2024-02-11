@@ -367,7 +367,7 @@ Transaksi
                     @csrf
                     <div class="mb-3">
                         <label for="name">Nama</label>
-                        <input type="text" class="form-control" id="name" name="name">
+                        <textarea style="white-space: pre-line;" class="form-control" id="name" name="breakdown[${breakdownCounter}][item][${itemCounter}][name]"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Foto</label>
@@ -432,7 +432,7 @@ Transaksi
 <!-- Froala -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js"></script>
 <script>
-    new FroalaEditor('textarea', {
+    new FroalaEditor('#note', {
         // Set custom buttons.
         toolbarButtons: {
             // Key represents the more button from the toolbar.
@@ -799,6 +799,11 @@ Transaksi
     }
 
     let addItem = (data) => {
+        if( ! data.image) {
+            data.image = "{{ asset('img/no_image.jpg') }}"
+        }
+
+        console.log(data.image)
         let item = document.createElement("tr")
         item.id = `${currentBreakdown}-item${++itemCounter}`
         console.log("Add item to Current Breakdown: " + currentBreakdown)
@@ -814,11 +819,11 @@ Transaksi
                     </div>
                     <div class="col-2">
                         <img alt="Klik untuk mengubah gambar..." style="cursor: pointer;" onclick="triggerFile('breakdown[${breakdownCounter}][item][${itemCounter}][image]')" src="${data.image}" width="128">
-                        <input type="hidden" name="breakdown[${breakdownCounter}][item][${itemCounter}][image]" value="${data.image ?? ""}">
+                        <input type="hidden" name="breakdown[${breakdownCounter}][item][${itemCounter}][image]" value="${data.image}">
                     </div>
                     <div class="col-8" id="item${itemCounter}-image-preview">
                         <h6 class="item-name mt-2">
-                            <input class="border-bottom-input" type="text" value="${data.name}" name="breakdown[${breakdownCounter}][item][${itemCounter}][name]">
+                            <textarea style="white-space: pre-line;" class="border-bottom-input" name="breakdown[${breakdownCounter}][item][${itemCounter}][name]">${data.name}</textarea>
                         </h6>
                         <span class="item-brand mt-2">
                             Brand: <input class="border-bottom-input" type="text" value="${data.brand}" name="breakdown[${breakdownCounter}][item][${itemCounter}][brand]">

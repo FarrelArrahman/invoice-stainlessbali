@@ -23,15 +23,7 @@ Pemasukan
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4">
-            <select data-column="4" class="form-select filter-select">
-                <option value="">All</option>
-                <option value="Paid">Paid</option>
-                <option value="Unpaid">Unpaid</option>
-            </select>
-        </div>
-
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="input-group mb-3">
                 <input type="search" id="min" class="form-control" value="{{ today()->startOfMonth()->format('Y-m-d') }}">
                 <span class="input-group-text">s/d</span>
