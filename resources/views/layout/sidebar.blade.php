@@ -151,7 +151,7 @@
                         </ul>
                     </div>
                 </li>
-                <!-- <li class="nav-item ">
+                <li class="nav-item ">
                     <a href="{{ route('settings.index') }}" class="nav-link">
                         <span class="sidebar-icon">
                             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -160,7 +160,7 @@
                         </span>
                         <span class="sidebar-text">Pengaturan</span>
                     </a>
-                </li> -->
+                </li>
                 @endif
                 <li class="nav-item">
                     <a onclick="$('#logout-form').submit()" href="#" class="btn btn-danger d-flex align-items-center justify-content-center btn-upgrade-pro">

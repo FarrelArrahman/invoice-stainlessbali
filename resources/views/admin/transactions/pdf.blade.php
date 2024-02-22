@@ -2,9 +2,9 @@
 
 <head>
     <style>
-        body {
+        * {
             font-family: sans-serif;
-            font-size: 10pt;
+            font-size: 8pt;
         }
 
         p {
@@ -60,7 +60,7 @@
         <tr>
             <td width="100%" style="text-align: center; font-size: 20px; font-weight: bold; padding: 0px;">
                 <br>
-                INVOICE STAINLESS EQUIPMENT
+                {{ str()->upper($transaction->invoice_type) }} KITCHEN EQUIPMENT
             </td>
         </tr>
         <tr>
@@ -84,17 +84,17 @@
             </tr>
             <tr style="text-transform: uppercase;">
                 <td rowspan="2" width="5%" style="text-align: center; vertical-align: middle;"><strong>No</strong></td>
-                <td rowspan="2" width="20%" style="text-align: center; vertical-align: middle;"><strong>Description</strong></td>
-                <td rowspan="2" width="10%" style="text-align: center;"><strong></strong></td>
-                <td colspan="3" width="10%" style="text-align: center; vertical-align: middle;"><strong>Dimensi</strong></td>
+                <td rowspan="2" width="20%" style="text-align: center; vertical-align: middle;"><strong>Nama</strong></td>
+                <td rowspan="2" width="10%" style="text-align: center;"><strong>Preview</strong></td>
+                <td colspan="3" width="10%" style="text-align: center; vertical-align: middle;"><strong>Size (mm)</strong></td>
                 <td rowspan="2" width="25%" style="text-align: center; vertical-align: middle;"><strong>Price</strong></td>
                 <td rowspan="2" width="5%" style="text-align: center; vertical-align: middle;"><strong>Qty</strong></td>
                 <td rowspan="2" width="25%" style="text-align: center; vertical-align: middle;"><strong>Total</strong></td>
             </tr>
             <tr style="text-transform: uppercase;">
-                <td style="text-align: center; vertical-align: middle;"><strong>Width</strong></td>
-                <td style="text-align: center; vertical-align: middle;"><strong>Depth</strong></td>
-                <td style="text-align: center; vertical-align: middle;"><strong>Height</strong></td>
+                <td style="text-align: center; vertical-align: middle;"><strong>P</strong></td>
+                <td style="text-align: center; vertical-align: middle;"><strong>L</strong></td>
+                <td style="text-align: center; vertical-align: middle;"><strong>T</strong></td>
             </tr>
         </thead>
         <tbody>

@@ -24,6 +24,10 @@ Invoice
         <div class="row">
             <div class="col-md-12">
                 <div class="input-group mb-3">
+                    <select id="invoice_type" class="form-select">
+                        <option value="Penawaran">Penawaran</option>
+                        <option value="Invoice">Invoice</option>
+                    </select>
                     <input type="search" id="min" class="form-control" value="{{ today()->startOfMonth()->format('Y-m-d') }}">
                     <span class="input-group-text">s/d</span>
                     <input type="search" id="max" class="form-control" value="{{ today()->endOfMonth()->format('Y-m-d') }}">
@@ -106,7 +110,7 @@ Invoice
 
     
     // Refilter the table
-    document.querySelectorAll('#min, #max').forEach((el) => {
+    document.querySelectorAll('#min, #max, #invoice_type').forEach((el) => {
         el.addEventListener('change', () => { 
             dataTable.draw()
         })

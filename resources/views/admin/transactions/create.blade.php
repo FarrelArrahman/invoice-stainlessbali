@@ -82,14 +82,13 @@ Transaksi
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="breakdown">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#breakdownCollapse" aria-expanded="false" aria-controls="breakdownCollapse">
-                                            <span class="breakdown-title" id="breakdown1-title">Breakdown #1</span>
+                                            <span class="breakdown-title" id="breakdown1-title">Main Kitchen</span>
                                         </button>
                                     </h2>
                                     <div id="breakdownCollapse" class="accordion-collapse collapse show" aria-labelledby="breakdown" data-bs-parent="#accordionBreakdown">
                                         <div class="accordion-body">
-                                            <label for="">Nama Breakdown</label>
-                                            <input type="hidden" class="breakdown-index" name="breakdown[]">
-                                            <input type="text" class="form-control w-100 my-2 breakdown-input" data-breakdown-title="breakdown1-title" data-breakdown-title-default="Breakdown #1" name="breakdown[1][name]" placeholder="Masukkan nama breakdown..." autocomplete="off">
+                                            <input type="hidden" class="breakdown-index" name="breakdown[]" value="Main Kitchen">
+                                            <input type="text" class="form-control w-100 my-2 breakdown-input" data-breakdown-title="breakdown1-title" data-breakdown-title-default="Main Kitchen" name="breakdown[1][name]" placeholder="Masukkan nama breakdown..." autocomplete="off">
                                             <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown1" data-breakdown-counter="1"><i class="fa fa-plus me-1"></i> Tambah Manual</button>
                                             <button class="select-item-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal-select-item" data-breakdown="breakdown1" data-breakdown-counter="1"><i class="fa fa-list me-1"></i> Pilih Item</button>
                                             <span class="deleteBreakdownPlaceholder"></span>
@@ -174,7 +173,7 @@ Transaksi
                                             <label for="invoice-type-offer" class="form-label mt-3">Simpan invoice sebagai</label>
                                             <br>
                                             <div class="form-check form-check-inline">
-                                                <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-offer" value="Offer" checked>
+                                                <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-offer" value="Penawaran" checked>
                                                 <label class="form-check-label" for="invoice-type-offer">Penawaran</label>
                                             </div>
                                             <div class="form-check form-check-inline">

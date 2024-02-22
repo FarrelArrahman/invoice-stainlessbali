@@ -16,13 +16,12 @@ class SettingController extends Controller
     public function update(Setting $setting, Request $request)
     {
         $data = [
-            'name' => $request->name,
             'value' => $request->value,
         ];
 
         $setting->update($data);
 
-        return to_route('setting.index')
+        return to_route('settings.index')
             ->with('message', "Berhasil memperbarui note.")
             ->with('status', 'success');
     }

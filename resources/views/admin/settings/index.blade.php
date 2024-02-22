@@ -35,7 +35,7 @@ Pengaturan
                             @csrf
                             <div class="mb-3">
                                 <label for="name">Default Note</label>
-                                <textarea id="setting-value" name="value"></textarea>
+                                <textarea id="setting-value" name="value">{{ $setting->value }}</textarea>
                                 <!-- <input type="text"
                                     class="form-control" id="name" name="name" value="{{ $setting ? $setting->value : '' }}"> -->
                             </div>

@@ -120,7 +120,8 @@ Transaksi
                                                                     </div>
                                                                     <div class="col-8" id="item{{ $item->id }}-image-preview">
                                                                         <h6 class="item-name mt-2">
-                                                                            <input class="border-bottom-input" type="text" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][name]" value="{{ $item->name }}">
+                                                                            <!-- <input class="border-bottom-input" type="text" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][name]" value="{{ $item->name }}"> -->
+                                                                            <textarea style="white-space: pre-line;" class="border-bottom-input" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][name]">{{ $item->name }}</textarea>
                                                                         </h6>
                                                                         <span class="item-brand">
                                                                             Brand:
@@ -137,8 +138,7 @@ Transaksi
                                                                             <input size="4" class="border-bottom-input" type="text" value="{{ $item->height }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][height]">
                                                                         </span> <br>
                                                                         <span class="item-dimension">
-                                                                            Price: {{ $item->formatted_price }}
-                                                                            <input class="border-bottom-input" type="text" value="{{ $item->price }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][price]">
+                                                                            Rp. <input class="border-bottom-input item-price" type="text" value="{{ $item->price }}" name="breakdown[{{ $breakdown->id }}][item][{{ $item->id }}][price]">
                                                                         </span> <br>
                                                                     </div>
                                                                 </div>
@@ -166,107 +166,137 @@ Transaksi
         </div>
 
         <div class="col-lg-4 col-sm-12 mb-4">
-            <div class="card border-0 shadow components-section">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <h1 class="h5 mt-2">Total Harga</h1>
-                            <h1 class="h4" id="total-price-text">Rp 0</h1>
-                            <h1 class="h6 text-danger text-decoration-line-through d-none" id="total-price-before-discount-text">Rp 0</h1>
-                            <div class="mb-3">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="discount-percentage" class="form-label mt-3">Diskon 1 (%)</label>
-                                            <div class="input-group">
-                                                <input type="number" class="form-control discounts" id="discount-percentage" name="discount_percentage" value="0" min="0" max="100">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="discount-nominal" class="form-label mt-3">Diskon 2 (Rp)</label>
-                                            <div class="input-group">
-                                                <input type="number" class="form-control discounts" id="discount-nominal" name="discount_nominal" value="0">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="invoice-type-offer" class="form-label mt-3">Simpan invoice sebagai</label>
-                                    <br>
-                                    <div class="form-check form-check-inline">
-                                        <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-offer" value="Offer">
-                                        <label class="form-check-label" for="invoice-type-offer">Penawaran</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-deal" value="Deal">
-                                        <label class="form-check-label" for="invoice-type-deal">Deal</label>
-                                    </div>
-                                </div>
-                                <div class="mb-3 d-none" id="payment-terms">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <div class="form-group">
-                                                <label for="term" class="form-label mt-3">Termin</label>
-                                                <div class="input-group">
-                                                    <select name="payment_terms" id="term" class="form-select">
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="form-group">
-                                                <label for="dp" class="form-label mt-3">DP</label>
-                                                <div class="input-group">
-                                                    <select name="dp" id="dp" class="form-select">
-                                                        <option value="10">10%</option>
-                                                        <option value="15">15%</option>
-                                                        <option value="20">20%</option>
-                                                        <option value="25">25%</option>
-                                                        <option value="30">30%</option>
-                                                        <option value="40">40%</option>
-                                                        <option value="50">50%</option>
-                                                        <option value="60">60%</option>
-                                                    </select>
+            <div class="row">
+            <div class="col-12 mb-2">
+                    <div class="card border-0 shadow components-section">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="accordion" id="accordionNote">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="noteData">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#noteCollapse" aria-expanded="false" aria-controls="noteCollapse">
+                                                    Ubah note...
+                                                </button>
+                                            </h2>
+                                            <div id="noteCollapse" class="accordion-collapse collapse" aria-labelledby="noteData" data-bs-parent="#accordionNote">
+                                                <div class="accordion-body">
+                                                    <textarea id="note" name="note">{!! $transaction->note !!}</textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="payment-term-breakdown" class="form-label mt-3">Pembayaran</label>
-                                        <table id="payment-term-breakdown" class="table table-centered table-bordered mb-0 rounded">
-                                            <tr>
-                                                <td width="20%">DP</td>
-                                                <td width="80%" id="dp-amount">Rp 0</td>
-                                                <input type="hidden" id="dp-input" name="dp">
-                                            </tr>
-                                            <tr id="term1">
-                                                <td width="20%">Termin 1</td>
-                                                <td width="80%" id="term1-amount">Rp 0</td>
-                                                <input type="hidden" id="term1-input" name="term1">
-                                            </tr>
-                                            <tr id="term2">
-                                                <td width="20%">Termin 2</td>
-                                                <td width="80%" id="term2-amount">Rp 0</td>
-                                                <input type="hidden" id="term2-input" name="term2">
-                                            </tr>
-                                            <tr id="term3" class="d-none">
-                                                <td width="20%">Termin 3</td>
-                                                <td width="80%" id="term3-amount">Rp 0</td>
-                                                <input type="hidden" id="term3-input" name="term3">
-                                            </tr>
-                                        </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="card border-0 shadow components-section">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h1 class="h5 mt-2">Total Harga</h1>
+                                    <h1 class="h4" id="total-price-text">{{ $transaction->formatted_total_price }}</h1>
+                                    <h1 class="h6 text-danger text-decoration-line-through d-none" id="total-price-before-discount-text">Rp 0</h1>
+                                    <div class="mb-3">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label for="discount-percentage" class="form-label mt-3">Diskon 1 (%)</label>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control discounts" id="discount-percentage" name="discount_percentage" value="{{ $transaction->discount_percentage }}" min="0" max="100">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label for="discount-nominal" class="form-label mt-3">Diskon 2 (Rp)</label>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control discounts" id="discount-nominal" name="discount_nominal" value="{{ $transaction->discount_nominal }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="invoice-type-offer" class="form-label mt-3">Simpan invoice sebagai</label>
+                                            <br>
+                                            <div class="form-check form-check-inline">
+                                                <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-offer" value="Offer">
+                                                <label class="form-check-label" for="invoice-type-offer">Penawaran</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-deal" value="Deal">
+                                                <label class="form-check-label" for="invoice-type-deal">Deal</label>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 d-none" id="payment-terms">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label for="term" class="form-label mt-3">Termin</label>
+                                                        <div class="input-group">
+                                                            <select name="payment_terms" id="term" class="form-select">
+                                                                <option value="2">2</option>
+                                                                <option value="3">3</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label for="dp" class="form-label mt-3">DP</label>
+                                                        <div class="input-group">
+                                                            <select name="dp" id="dp" class="form-select">
+                                                                <option value="10">10%</option>
+                                                                <option value="15">15%</option>
+                                                                <option value="20">20%</option>
+                                                                <option value="25">25%</option>
+                                                                <option value="30">30%</option>
+                                                                <option value="40">40%</option>
+                                                                <option value="50">50%</option>
+                                                                <option value="60">60%</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="payment-term-breakdown" class="form-label mt-3">Pembayaran</label>
+                                                <table id="payment-term-breakdown" class="table table-centered table-bordered mb-0 rounded">
+                                                    <tr>
+                                                        <td width="20%">DP</td>
+                                                        <td width="80%" id="dp-amount">Rp 0</td>
+                                                        <input type="hidden" id="dp-input" name="dp">
+                                                    </tr>
+                                                    <tr id="term1">
+                                                        <td width="20%">Termin 1</td>
+                                                        <td width="80%" id="term1-amount">Rp 0</td>
+                                                        <input type="hidden" id="term1-input" name="term1">
+                                                    </tr>
+                                                    <tr id="term2">
+                                                        <td width="20%">Termin 2</td>
+                                                        <td width="80%" id="term2-amount">Rp 0</td>
+                                                        <input type="hidden" id="term2-input" name="term2">
+                                                    </tr>
+                                                    <tr id="term3" class="d-none">
+                                                        <td width="20%">Termin 3</td>
+                                                        <td width="80%" id="term3-amount">Rp 0</td>
+                                                        <input type="hidden" id="term3-input" name="term3">
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-success w-100">Simpan</button>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-success w-100">Simpan</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            
         </div>
 </form>
 
@@ -386,7 +416,8 @@ Transaksi
                     @csrf
                     <div class="mb-3">
                         <label for="name">Nama</label>
-                        <input type="text" class="form-control" id="name" name="name">
+                        <!-- <input type="text" class="form-control" id="name" name="name"> -->
+                        <textarea style="white-space: pre-line;" class="form-control" name="name"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Foto</label>
@@ -442,6 +473,26 @@ Transaksi
 @endsection
 
 @push('custom-scripts')
+<!-- Froala -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js"></script>
+<script>
+    new FroalaEditor('#note', {
+        // Set custom buttons.
+        toolbarButtons: {
+            // Key represents the more button from the toolbar.
+            moreText: {
+                // List of buttons used in the  group.
+                buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
+                // Alignment of the group in the toolbar.
+                align: 'left',
+                // By default, 3 buttons are shown in the main toolbar. The rest of them are available when using the more button.
+                buttonsVisible: 3
+            }
+        },
+        quickInsertEnabled: false
+    })
+</script>
+
 <script type="text/javascript">
     let itemNiceSelect = NiceSelect.bind(document.getElementById("item-nice-select"), {
         searchable: true
@@ -780,7 +831,7 @@ Transaksi
                     </div>
                     <div class="col-8" id="item${itemCounter}-image-preview">
                         <h6 class="item-name mt-2">
-                            <input class="border-bottom-input" type="text" value="${data.name}" name="breakdown[${breakdownCounter}][item][${itemCounter}][name]">
+                            <textarea style="white-space: pre-line;" class="border-bottom-input" name="breakdown[${breakdownCounter}][item][${itemCounter}][name]">${data.name}</textarea>
                         </h6>
                         <span class="item-brand mt-2">
                             Brand: <input class="border-bottom-input" type="text" value="${data.brand}" name="breakdown[${breakdownCounter}][item][${itemCounter}][brand]">

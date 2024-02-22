@@ -67,6 +67,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('items', ItemController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('transactions', TransactionController::class);
+    Route::get('transactions/{transaction}/pdf', [TransactionController::class, 'pdf'])->name('transactions.pdf');
+
     Route::resource('settings', SettingController::class);
     Route::resource('technician_expenditures', TechnicianExpenditureController::class);
     Route::resource('employee_expenditures', EmployeeExpenditureController::class);

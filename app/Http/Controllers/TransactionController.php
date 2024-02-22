@@ -42,7 +42,8 @@ class TransactionController extends Controller
             ->addColumn('action', function($row) {
                 $action = '<form action="' . route('transactions.destroy', $row->id) . '" method="POST">';
                 $action .= '<input type="hidden" name="_token" value="' . csrf_token() . '"><input type="hidden" name="_method" value="DELETE">';
-                $action .= '<a href="' . route('transactions.show', $row->code) . '" class="btn btn-info btn-sm"><i class="fa fa-print"></i></a>';
+                $action .= '<a href="' . route('transactions.show', $row->code) . '" class="btn btn-success btn-sm"><i class="fa fa-eye"></i></a>';
+                $action .= '<a href="' . route('transactions.pdf', $row->code) . '" class="btn btn-info btn-sm"><i class="fa fa-print"></i></a>';
                 $action .= '<a href="' . route('transactions.edit', $row->id) . '" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i></a>';
                 $action .= '<button onclick="return confirm(\'Apakah anda yakin ingin menghapus data ini?\')" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>';
                 $action .= '</form>';
@@ -165,7 +166,15 @@ class TransactionController extends Controller
     public function show($transaction)
     {
         $transaction = Transaction::whereCode($transaction)->first();
-        // return view('admin.transactions.pdf', ['transaction' => $transaction]);
+        return view('admin.transactions.pdf', ['transaction' => $transaction]);
+    }
+
+    /**
+     * Export as pdf.
+     */
+    public function pdf($transaction)
+    {
+        $transaction = Transaction::whereCode($transaction)->first();
         $pdf = PDF::loadView('admin.transactions.pdf', ['transaction' => $transaction]);
 
         return $pdf->stream('invoice-' . $transaction->code . '.pdf');
