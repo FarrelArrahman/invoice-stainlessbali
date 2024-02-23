@@ -25,6 +25,7 @@ Invoice
             <div class="col-md-12">
                 <div class="input-group mb-3">
                     <select id="invoice_type" class="form-select">
+                        <option value="">Semua Tipe</option>
                         <option value="Penawaran">Penawaran</option>
                         <option value="Invoice">Invoice</option>
                     </select>
@@ -81,7 +82,8 @@ Invoice
             url: "{{ route('datatables.transactions') }}",
             data: function(d) {
                 d.start_date = $('#min').val(),
-                d.end_date = $('#max').val()
+                d.end_date = $('#max').val(),
+                d.invoice_type = $('#invoice_type').val()
             }
         },
         order: [[ 0, 'desc' ]],

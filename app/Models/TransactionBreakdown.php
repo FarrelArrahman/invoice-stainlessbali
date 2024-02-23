@@ -47,4 +47,19 @@ class TransactionBreakdown extends Model
     {
         return $this->hasMany(TransactionItem::class, 'transaction_breakdown_id');
     }
+
+    public function getTotalPriceAttribute()
+    {
+        $totalPrice = 0;
+        foreach($this->items as $item) {
+            $totalPrice = $item->price * $item->qty;
+        }
+
+        return $totalPrice;
+    }
+
+    public function getFormattedTotalPriceAttribute()
+    {
+        return "Rp. " . number_format($this->total_price, 0, '', '.');
+    }
 }

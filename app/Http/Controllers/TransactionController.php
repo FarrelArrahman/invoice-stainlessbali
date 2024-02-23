@@ -32,10 +32,16 @@ class TransactionController extends Controller
     {
         $invoices = Transaction::all();
 
-        if( ! empty($request->start_date) && ! empty($request->end_date) ) {
-            $data = $invoices->whereBetween('date', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])->sortByDesc('date');
+        if( ! empty($request->invoice_type) ) {
+            $data = $invoices->where('invoice_type', $request->invoice_type);
         } else {
-            $data = $invoices->whereBetween('date', [today()->startOfMonth()->format('Y-m-d') . ' 00:00:00', today()->endOfMonth()->format('Y-m-d') . ' 23:59:59'])->sortByDesc('date');
+            $data = $invoices;
+        }
+
+        if( ! empty($request->start_date) && ! empty($request->end_date) ) {
+            $data = $data->whereBetween('date', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])->sortByDesc('date');
+        } else {
+            $data = $data->whereBetween('date', [today()->startOfMonth()->format('Y-m-d') . ' 00:00:00', today()->endOfMonth()->format('Y-m-d') . ' 23:59:59'])->sortByDesc('date');
         }
 
         return DataTables::of($data)
@@ -90,7 +96,7 @@ class TransactionController extends Controller
         // $note = Setting::first()->value;
 
         $transactionData = [
-            'code' => $code,
+            'code' => ($request->invoice_type == "Penawaran" ? "OFR-" : "INV-") . $code,
             'handled_by' => NULL,
             'date' => now(),
             'total_price' => $request->total_price_before_discount,
@@ -138,15 +144,15 @@ class TransactionController extends Controller
                         'item_id' => $item['id'] ?? NULL,
                         'image' => ! empty($item['image']) && is_file($item['image']) 
                             ? ($item['image'])->store('public/items') 
-                            : NULL,
+                            : asset('img/no_image.jpg'),
                         'name' => $item['name'],
                         'brand' => $item['brand'],
                         'model' => $item['model'],
-                        'width' => $item['width'],
-                        'depth' => $item['depth'],
-                        'height' => $item['height'],
+                        'width' => $item['width'] ?? -1,
+                        'depth' => $item['depth'] ?? -1,
+                        'height' => $item['height'] ?? -1,
                         'price' => str_replace('.', '', $item['price']),
-                        'qty' => $item['qty'],
+                        'qty' => $item['qty'] ?? -1,
                         'status' => "",
                     ];
 
@@ -174,7 +180,7 @@ class TransactionController extends Controller
      */
     public function pdf($transaction)
     {
-        $transaction = Transaction::whereCode($transaction)->first();
+        $transaction = Transaction::whereCode($transaction)->first();        
         $pdf = PDF::loadView('admin.transactions.pdf', ['transaction' => $transaction]);
 
         return $pdf->stream('invoice-' . $transaction->code . '.pdf');

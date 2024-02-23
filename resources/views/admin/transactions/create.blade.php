@@ -177,8 +177,8 @@ Transaksi
                                                 <label class="form-check-label" for="invoice-type-offer">Penawaran</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-deal" value="Deal">
-                                                <label class="form-check-label" for="invoice-type-deal">Deal</label>
+                                                <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-deal" value="Invoice">
+                                                <label class="form-check-label" for="invoice-type-deal">Invoice</label>
                                             </div>
                                         </div>
                                         <div class="mb-3 d-none" id="payment-terms">
@@ -962,7 +962,7 @@ Transaksi
     })
 
     let invoiceType = (type) => {
-        if (type.value == "Deal") {
+        if (type.value == "Invoice") {
             paymentTerms.classList.remove('d-none')
         } else {
             paymentTerms.classList.add('d-none')
