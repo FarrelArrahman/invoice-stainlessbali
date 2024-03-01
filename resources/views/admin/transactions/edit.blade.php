@@ -1,7 +1,7 @@
 @extends('layout.template')
 
 @section('title')
-Transaksi
+Invoice
 @endsection
 
 @section('content')
@@ -12,19 +12,20 @@ Transaksi
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                         </path>
                     </svg></a></li>
-            <li class="breadcrumb-item"><a href="#">Transaksi</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Edit Transaksi</li>
+            <li class="breadcrumb-item"><a href="#">Invoice</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Invoice</li>
         </ol>
     </nav>
     <div class="d-flex justify-content-between w-100 flex-wrap">
         <div class="mb-3 mb-lg-0">
-            <h1 class="h4">Edit Transaksi</h1>
+            <h1 class="h4">Edit Invoice</h1>
         </div>
     </div>
 </div>
-<form action="{{ route('transactions.store') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('transactions.update', $transaction->id) }}" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="total_price" id="total-price-input">
     <input type="hidden" name="total_price_before_discount" id="total-price-before-discount-input">
+    @method('PUT')
     @csrf
     <div class="row">
         <div class="col-12 mb-4">
@@ -44,18 +45,18 @@ Transaksi
                                             <div id="customer-detail">
                                                 <label for="name">Name</label>
                                                 <div class="input-group mb-3">
-                                                    <input id="customer-name" type="text" class="form-control" name="name">
+                                                    <input id="customer-name" type="text" class="form-control" name="name" value="{{ $transaction->customer->name }}">
                                                     <span data-bs-toggle="modal" data-bs-target="#modal-select-customer" id="select-customer" style="cursor: pointer;" class="input-group-text" id="basic-addon2">
                                                         <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
                                                     </span>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="name">Address</label>
-                                                    <input id="customer-address" type="text" class="form-control" id="address" name="address">
+                                                    <input id="customer-address" type="text" class="form-control" id="address" name="address" value="{{ $transaction->customer->address }}">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="name">Phone Number</label>
-                                                    <input id="customer-phone-number" type="text" class="form-control" id="phone_number" name="phone_number">
+                                                    <input id="customer-phone-number" type="text" class="form-control" id="phone_number" name="phone_number" value="{{ $transaction->customer->phone_number }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -73,13 +74,13 @@ Transaksi
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <h1 class="h5 mt-2">Transaksi</h1>
+                            <h1 class="h5 mt-2">Invoice</h1>
                             <button id="addBreakdown" class="btn btn-primary pull-right" type="button"><i class="fa fa-plus me-1"></i> Tambah Breakdown Baru</button>
                         </div>
 
                         <div class="col-12" id="breakdowns">
                             @foreach($transaction->breakdowns as $breakdown)
-                            <div class="accordion mb-2" id="accordionBreakdown{{ $breakdown->id }}">
+                            <div class="accordion mb-2" id="accordionBreakdown{{ $breakdown->id }}" @if($loop->first) data-breakdown-first="true" @endif>
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="breakdown{{ $breakdown->id }}">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#breakdownCollapse{{ $breakdown->id }}" aria-expanded="false" aria-controls="breakdownCollapse{{ $breakdown->id }}">
@@ -88,7 +89,6 @@ Transaksi
                                     </h2>
                                     <div id="breakdownCollapse" class="accordion-collapse collapse show" aria-labelledby="breakdown" data-bs-parent="#accordionBreakdown">
                                         <div class="accordion-body">
-                                            <label for="">Nama Breakdown</label>
                                             <input type="hidden" class="breakdown-index" name="breakdown[]" value="{{ $breakdown->id }}">
                                             <input type="text" class="form-control w-100 my-2 breakdown-input" data-breakdown-title="breakdown{{ $breakdown->id }}-title" data-breakdown-title-default="{{ $breakdown->breakdown_name }}" name="breakdown[{{ $breakdown->id }}][name]" placeholder="Masukkan nama breakdown..." autocomplete="off" value="{{ $breakdown->breakdown_name }}">
                                             <button class="add-manual-button btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#modal-add-new" data-breakdown="breakdown{{ $breakdown->id }}" data-breakdown-counter="{{ $breakdown->id }}"><i class="fa fa-plus me-1"></i> Tambah Manual</button>
@@ -223,11 +223,11 @@ Transaksi
                                             <label for="invoice-type-offer" class="form-label mt-3">Simpan invoice sebagai</label>
                                             <br>
                                             <div class="form-check form-check-inline">
-                                                <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-offer" value="Offer">
+                                                <input @checked($transaction->invoice_type == "Penawaran") onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-offer" value="Penawaran">
                                                 <label class="form-check-label" for="invoice-type-offer">Penawaran</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-deal" value="Deal">
+                                                <input @checked($transaction->invoice_type == "Invoice") onclick="invoiceType(this)" class="form-check-input" type="radio" name="invoice_type" id="invoice-type-deal" value="Invoice">
                                                 <label class="form-check-label" for="invoice-type-deal">Deal</label>
                                             </div>
                                         </div>
@@ -314,7 +314,7 @@ Transaksi
                     <select name="customer_id" id="customer-nice-select" class="select-customer w-100" placeholder="Pilih customer...">
                         <option value="" disabled selected>--- Pilih customer ---</option>
                         @foreach($customers as $customer)
-                        <option value="{{ $customer->id }}" data-name="{{ $customer->name }}" data-address="{{ $customer->address }}" data-phone-number="{{ $customer->phone_number }}">{{ $customer->name }}</option>
+                        <option @selected($customer->id == $transaction->customer_id) value="{{ $customer->id }}" data-name="{{ $customer->name }}" data-address="{{ $customer->address }}" data-phone-number="{{ $customer->phone_number }}">{{ $customer->name }}</option>
                         @endforeach
                     </select>
                 </div>

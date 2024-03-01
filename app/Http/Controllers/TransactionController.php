@@ -58,8 +58,8 @@ class TransactionController extends Controller
             ->addColumn('customer_name', function($row) {
                 return $row->customer->name;
             })
-            ->addColumn('total_price', function($row) {
-                return $row->formatted_total_price;
+            ->addColumn('grand_total', function($row) {
+                return $row->formatted_grand_total;
             })
             ->editColumn('date', function($row) {
                 return $row->date->format('Y-m-d H:i:s');
@@ -101,7 +101,7 @@ class TransactionController extends Controller
             'date' => now(),
             'total_price' => $request->total_price_before_discount,
             'dp' => $request->dp,
-            'discount_nominal' => $request->discount_nominal,
+            'discount_nominal' => str_replace('.', '', $request->discount_nominal),
             'discount_percentage' => $request->discount_percentage,
             'payment_terms' => $request->payment_terms,
             'status' => TransactionEnum::Unpaid,
@@ -144,7 +144,7 @@ class TransactionController extends Controller
                         'item_id' => $item['id'] ?? NULL,
                         'image' => ! empty($item['image']) && is_file($item['image']) 
                             ? ($item['image'])->store('public/items') 
-                            : asset('img/no_image.jpg'),
+                            : NULL,
                         'name' => $item['name'],
                         'brand' => $item['brand'],
                         'model' => $item['model'],
@@ -172,7 +172,7 @@ class TransactionController extends Controller
     public function show($transaction)
     {
         $transaction = Transaction::whereCode($transaction)->first();
-        return view('admin.transactions.pdf', ['transaction' => $transaction]);
+        return view('admin.transactions.show', ['transaction' => $transaction]);
     }
 
     /**

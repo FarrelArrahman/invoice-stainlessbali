@@ -74,4 +74,6 @@
             outline: none;
         }
     </style>
+
+    @stack('custom-css')
 </head>

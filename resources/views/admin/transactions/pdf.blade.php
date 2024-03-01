@@ -87,7 +87,7 @@
                     <br>
                     {{ str()->upper($transaction->invoice_type) }} KITCHEN EQUIPMENT
                     <br>
-                    {{ $transaction->code }}
+                    <span class="font-size: 8pt">{{ $transaction->code }}</span>
                 </td>
             </tr>
             <tr>
@@ -96,7 +96,7 @@
         </table>
         <table width="100%" style="font-family: sans-serif;" cellpadding="10">
             <tr>
-                <td width="50%" style="">
+                <td width="50%">
                     <table border="0" width="75%" style="border-collapse: collapse;">
                         <tr>
                             <td>Kepada</td>
@@ -128,13 +128,9 @@
         </table>
         <br>
 
-        @foreach($transaction->breakdowns as $breakdown)
         <table border="1" class="items" width="100%" style="border-collapse: collapse;" cellpadding="8">
             <thead>
-                <tr>
-                    <td colspan="9" style="text-align: left">{{ $breakdown->breakdown_name }}</td>
-                </tr>
-                <tr>
+                <tr style="background-color: #333; color: #fff">
                     <td rowspan="2" width="5%" style="text-align: center; vertical-align: middle;"><strong>No</strong></td>
                     <td rowspan="2" width="20%" style="text-align: center; vertical-align: middle;"><strong>Nama</strong></td>
                     <td rowspan="2" width="10%" style="text-align: center; vertical-align: middle;"><strong>Preview</strong></td>
@@ -143,13 +139,18 @@
                     <td rowspan="2" width="5%" style="text-align: center; vertical-align: middle;"><strong>Qty</strong></td>
                     <td rowspan="2" width="20%" style="text-align: center; vertical-align: middle;"><strong>Total</strong></td>
                 </tr>
-                <tr style="text-transform: uppercase;">
+                <tr style="text-transform: uppercase; background-color: #333; color: #fff">
                     <td style="text-align: center; vertical-align: middle;"><strong>P</strong></td>
                     <td style="text-align: center; vertical-align: middle;"><strong>L</strong></td>
                     <td style="text-align: center; vertical-align: middle;"><strong>T</strong></td>
                 </tr>
             </thead>
             <tbody>
+            @foreach($transaction->breakdowns as $breakdown)
+                <tr>
+                    <td colspan="8" style="text-align: left"><strong>{{ $breakdown->breakdown_name }}</strong></td>
+                    <td style="text-align: right">{{ $breakdown->formatted_total_price }}</td>
+                </tr>
                 @foreach($breakdown->items as $item)
                 <tr>
                     <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $loop->iteration }}</td>
@@ -159,26 +160,25 @@
                         <strong>Type</strong>: {{ $item->model }}<br>
                     </td>
                     <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">
-                        @if($item->item_id != NULL || $item->image != NULL)
-                        <img style="padding: 5px;" src="{{ asset($item->image) }}" width="48px">
+                        @if($item->item_id != NULL)
+                        <img style="padding: 5px;" src="{{ Storage::path($item->item->image) }}" width="48px">
+                        @elseif($item->item_id == NULL && $item->image != NULL)
+                        <img style="padding: 5px;" src="{{ Storage::path($item->image) }}" width="48px">
                         @endif
                     </td>
-                    <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->width < 0 ? $item->width : "" }}</td>
-                    <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->depth < 0 ? $item->depth : "" }}</td>
-                    <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->height < 0 ? $item->height : "" }}</td>
+                    <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->width > 0 ? $item->width : "" }}</td>
+                    <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->depth > 0 ? $item->depth : "" }}</td>
+                    <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->height > 0 ? $item->height : "" }}</td>
                     <td style="padding: 0px 7px; line-height: 20px; text-align: right; vertical-align: middle;">{{ $item->formatted_price }}</td>
-                    <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->qty < 0 ? $item->qty : "" }}</td>
+                    <td style="padding: 0px 7px; line-height: 20px; text-align: center; vertical-align: middle;">{{ $item->qty > 0 ? $item->qty : "" }}</td>
                     <td style="padding: 0px 7px; line-height: 20px; text-align: right; vertical-align: middle;">{{ $item->formatted_total_price }}</td>
                 </tr>
                 @endforeach
-                <tr>
-                    <td colspan="8" align="right"><strong>Total</strong></td>
-                    <td align="right">{{ $breakdown->formatted_total_price }}</td>
-                </tr>
+            @endforeach
             </tbody>
         </table>
-        @endforeach
 
+        @if(count($transaction->breakdowns) > 1)
         <table width="100%" style="font-family: sans-serif;">
             <tr>
                 <td>
@@ -225,7 +225,7 @@
                 </td>
             </tr>
         </table>
-
+        @endif
         <br>
 
         <div style="width: 100%; height: auto;">

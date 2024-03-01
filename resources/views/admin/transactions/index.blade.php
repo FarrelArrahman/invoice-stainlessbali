@@ -94,7 +94,7 @@ Invoice
             {data: 'code', name: 'code'},
             {data: 'customer_name', name: 'customer_name'},
             {data: 'date', name: 'date'},
-            {data: 'total_price', name: 'total_price'},
+            {data: 'grand_total', name: 'grand_total'},
             {
                 data: 'action', 
                 name: 'action', 

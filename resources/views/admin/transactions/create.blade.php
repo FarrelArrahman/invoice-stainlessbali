@@ -1,7 +1,7 @@
 @extends('layout.template')
 
 @section('title')
-Transaksi
+Invoice
 @endsection
 
 @section('content')
@@ -12,13 +12,13 @@ Transaksi
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                         </path>
                     </svg></a></li>
-            <li class="breadcrumb-item"><a href="#">Transaksi</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Tambah Transaksi</li>
+            <li class="breadcrumb-item"><a href="#">Invoice</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tambah Invoice</li>
         </ol>
     </nav>
     <div class="d-flex justify-content-between w-100 flex-wrap">
         <div class="mb-3 mb-lg-0">
-            <h1 class="h4">Tambah Transaksi</h1>
+            <h1 class="h4">Tambah Invoice</h1>
         </div>
     </div>
 </div>
@@ -73,7 +73,7 @@ Transaksi
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <h1 class="h5 mt-2">Transaksi</h1>
+                            <h1 class="h5 mt-2">Invoice</h1>
                             <button id="addBreakdown" class="btn btn-primary pull-right" type="button"><i class="fa fa-plus me-1"></i> Tambah Breakdown Baru</button>
                         </div>
 
@@ -495,6 +495,10 @@ Transaksi
     })
 
     VMasker(document.querySelector(`#new-price`)).maskMoney({
+        precision: 0
+    })
+
+    VMasker(document.querySelector(`#discount-percentage`)).maskMoney({
         precision: 0
     })
     

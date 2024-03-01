@@ -50,6 +50,16 @@ class Transaction extends Model
     ];
 
     // Attribute
+    public function getGrandTotalAttribute()
+    {
+        return $this->total_price - round($this->total_price * ($this->discount_percentage / 100)) - $this->discount_nominal;
+    }
+
+    public function getFormattedGrandTotalAttribute()
+    {
+        return "Rp. " . number_format($this->grand_total, 0, '', '.');
+    }
+
     public function getFormattedTotalPriceAttribute()
     {
         return "Rp. " . number_format($this->total_price, 0, '', '.');
